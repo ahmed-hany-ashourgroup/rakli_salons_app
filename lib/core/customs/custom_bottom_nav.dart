@@ -48,13 +48,13 @@ class CustomBottomNavBar extends StatelessWidget {
                     onTap: () => onTap(0),
                   ),
                   _NavBarItem(
-                    icon: Assets.assetsImagesShopSvg,
+                    icon: Assets.assetsImagesAppointments,
                     label: "Shop",
                     isSelected: selectedIndex == 1,
                     onTap: () => onTap(1),
                   ),
                   _NavBarItem(
-                    icon: Assets.assetsImagesAddress,
+                    icon: Assets.assetsImagesServices,
                     label: "Location",
                     isSelected: selectedIndex == 2,
                     onTap: () => onTap(2),

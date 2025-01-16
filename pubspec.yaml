@@ -33,6 +33,7 @@ dependencies:
   dartz: ^0.10.1
   device_preview: ^1.2.0
   dio: ^5.7.0
+  fl_chart: ^0.70.2
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.6
@@ -53,8 +54,6 @@ dependencies:
   url_launcher: ^6.3.1
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -62,10 +61,11 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+  flutter_test:
+    sdk: flutter
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
 # The following section is specific to Flutter packages.
 flutter:
 

@@ -65,7 +65,7 @@ class AppRouter {
       path: kSignUpView,
       builder: (context, state) => BlocProvider(
         create: (context) => SignUpCubit(),
-        child: const SignUpView(),
+        child: const BusinessSignUpView(),
       ),
     ),
     GoRoute(

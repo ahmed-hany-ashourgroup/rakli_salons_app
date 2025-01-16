@@ -151,44 +151,57 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
   }
 
   Widget _buildVerificationStep() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Please enter verification code sent to your email",
-          style: AppStyles.regular16.copyWith(color: Colors.black),
-        ),
-        const SizedBox(height: 16),
-        CustomTextField(
-          hint: "Code",
-          hintColor: kbackGroundColor.withValues(alpha: 0.5),
-          controller: codeController,
-          keyboardType: TextInputType.number,
-          borderColor: kbackGroundColor,
-        ),
-        const SizedBox(height: 24),
-        Row(
-          children: [
-            Expanded(
-              child: CustomButton(
-                title: Text(
-                  "Verify Code",
-                  style: AppStyles.bold16.copyWith(color: Colors.white),
-                ),
-                onPressed: () {
-                  if (codeController.text.isNotEmpty) {
-                    context
-                        .read<ConfirmationCodeCubit>()
-                        .confirmCodeResetPassword(
-                            code: codeController.text,
-                            email: emailController.text);
-                  }
-                },
-              ),
-            ),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            const Color(0xFFFFE4D6), // Darker beige
+            const Color(0xFFFFF5EC), // Light beige
           ],
+          stops: const [0.0, 1.0],
         ),
-      ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Please enter verification code sent to your email",
+            style: AppStyles.regular16.copyWith(color: Colors.black),
+          ),
+          const SizedBox(height: 16),
+          CustomTextField(
+            hint: "Code",
+            hintColor: kbackGroundColor.withValues(alpha: 0.5),
+            controller: codeController,
+            keyboardType: TextInputType.number,
+            borderColor: kbackGroundColor,
+          ),
+          const SizedBox(height: 24),
+          Row(
+            children: [
+              Expanded(
+                child: CustomButton(
+                  title: Text(
+                    "Verify Code",
+                    style: AppStyles.bold16.copyWith(color: Colors.white),
+                  ),
+                  onPressed: () {
+                    if (codeController.text.isNotEmpty) {
+                      context
+                          .read<ConfirmationCodeCubit>()
+                          .confirmCodeResetPassword(
+                              code: codeController.text,
+                              email: emailController.text);
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
