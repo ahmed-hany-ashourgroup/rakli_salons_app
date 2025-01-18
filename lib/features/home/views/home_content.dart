@@ -153,7 +153,13 @@ class _HomeContentState extends State<HomeContent> {
             isIncrease: true,
           ),
         ),
-      ],
+      ].map((card) {
+        return SizedBox(
+          height: 150, // Set a fixed height for all cards
+          width: MediaQuery.of(context).size.width / 2 - 24,
+          child: card,
+        );
+      }).toList(),
     );
   }
 
@@ -165,7 +171,6 @@ class _HomeContentState extends State<HomeContent> {
     Widget? trailing,
   ) {
     return Container(
-      width: MediaQuery.of(context).size.width / 2 - 24,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -212,205 +217,205 @@ class _HomeContentState extends State<HomeContent> {
       ),
     );
   }
-}
 
-Widget _buildAnalyticsChart() {
-  return Container(
-    height: 200,
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(12),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey.withOpacity(0.1),
-          spreadRadius: 1,
-          blurRadius: 4,
-        ),
-      ],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Analytics',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+  Widget _buildAnalyticsChart() {
+    return Container(
+      height: 200,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 4,
           ),
-        ),
-        const SizedBox(height: 16),
-        Expanded(
-          child: BarChart(
-            BarChartData(
-              barGroups: _getBarGroups(),
-              borderData: FlBorderData(show: false),
-              gridData: FlGridData(show: false),
-              titlesData: FlTitlesData(
-                leftTitles: AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-                bottomTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    getTitlesWidget: (value, meta) {
-                      const months = [
-                        'Jan',
-                        'Feb',
-                        'Mar',
-                        'Apr',
-                        'May',
-                        'Jun',
-                        'Jul',
-                        'Aug'
-                      ];
-                      return Text(
-                        months[value.toInt()],
-                        style: const TextStyle(fontSize: 10),
-                      );
-                    },
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Analytics',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Expanded(
+            child: BarChart(
+              BarChartData(
+                barGroups: _getBarGroups(),
+                borderData: FlBorderData(show: false),
+                gridData: FlGridData(show: false),
+                titlesData: FlTitlesData(
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      getTitlesWidget: (value, meta) {
+                        const months = [
+                          'Jan',
+                          'Feb',
+                          'Mar',
+                          'Apr',
+                          'May',
+                          'Jun',
+                          'Jul',
+                          'Aug'
+                        ];
+                        return Text(
+                          months[value.toInt()],
+                          style: const TextStyle(fontSize: 10),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
-    ),
-  );
-}
-
-List<BarChartGroupData> _getBarGroups() {
-  const months = [0, 1, 2, 3, 4, 5, 6, 7];
-  final oldCustomers = [20, 40, 100, 150, 60, 90, 40, 50];
-  final newCustomers = [30, 60, 140, 80, 70, 50, 30, 40];
-
-  return List.generate(months.length, (index) {
-    return BarChartGroupData(
-      x: months[index],
-      barRods: [
-        BarChartRodData(
-          toY: oldCustomers[index].toDouble(),
-          color: Colors.blue,
-          width: 8,
-        ),
-        BarChartRodData(
-          toY: newCustomers[index].toDouble(),
-          color: Colors.green,
-          width: 8,
-        ),
-      ],
+        ],
+      ),
     );
-  });
-}
+  }
 
-Widget _buildGenderDistribution() {
-  return Container(
-    height: 200,
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(12),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey.withOpacity(0.1),
-          spreadRadius: 1,
-          blurRadius: 4,
-        ),
-      ],
-    ),
-    child: PieChart(
-      PieChartData(
-        sections: [
-          PieChartSectionData(
-            value: 30,
+  List<BarChartGroupData> _getBarGroups() {
+    const months = [0, 1, 2, 3, 4, 5, 6, 7];
+    final oldCustomers = [20, 40, 100, 150, 60, 90, 40, 50];
+    final newCustomers = [30, 60, 140, 80, 70, 50, 30, 40];
+
+    return List.generate(months.length, (index) {
+      return BarChartGroupData(
+        x: months[index],
+        barRods: [
+          BarChartRodData(
+            toY: oldCustomers[index].toDouble(),
             color: Colors.blue,
-            title: 'Male\n30%',
-            radius: 80,
+            width: 8,
           ),
-          PieChartSectionData(
-            value: 70,
-            color: Colors.pink,
-            title: 'Female\n70%',
-            radius: 80,
+          BarChartRodData(
+            toY: newCustomers[index].toDouble(),
+            color: Colors.green,
+            width: 8,
           ),
         ],
-      ),
-    ),
-  );
-}
+      );
+    });
+  }
 
-Widget _buildRevenueChart() {
-  return Container(
-    height: 200,
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(12),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey.withOpacity(0.1),
-          spreadRadius: 1,
-          blurRadius: 4,
-        ),
-      ],
-    ),
-    child: LineChart(
-      LineChartData(
-        gridData: FlGridData(show: false),
-        titlesData: FlTitlesData(
-          leftTitles: AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
-          bottomTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              getTitlesWidget: (value, meta) {
-                const months = [
-                  'Jan',
-                  'Feb',
-                  'Mar',
-                  'Apr',
-                  'May',
-                  'Jun',
-                  'Jul',
-                  'Aug'
-                ];
-                return Text(
-                  months[value.toInt()],
-                  style: const TextStyle(fontSize: 10),
-                );
-              },
-            ),
-          ),
-        ),
-        borderData: FlBorderData(show: false),
-        lineBarsData: [
-          LineChartBarData(
-            spots: const [
-              FlSpot(0, 1000),
-              FlSpot(1, 1800),
-              FlSpot(2, 1600),
-              FlSpot(3, 2200),
-              FlSpot(4, 1800),
-              FlSpot(5, 2000),
-              FlSpot(6, 1800),
-              FlSpot(7, 1600),
-            ],
-            isCurved: true,
-            color: Colors.blue.withOpacity(0.5),
-            barWidth: 4,
-            isStrokeCapRound: true,
-            dotData: FlDotData(show: false),
-            belowBarData: BarAreaData(
-              show: true,
-              color: Colors.blue.withOpacity(0.1),
-            ),
+  Widget _buildGenderDistribution() {
+    return Container(
+      height: 200,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 4,
           ),
         ],
       ),
-    ),
-  );
+      child: PieChart(
+        PieChartData(
+          sections: [
+            PieChartSectionData(
+              value: 30,
+              color: Colors.blue,
+              title: 'Male\n30%',
+              radius: 80,
+            ),
+            PieChartSectionData(
+              value: 70,
+              color: Colors.pink,
+              title: 'Female\n70%',
+              radius: 80,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRevenueChart() {
+    return Container(
+      height: 200,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 4,
+          ),
+        ],
+      ),
+      child: LineChart(
+        LineChartData(
+          gridData: FlGridData(show: false),
+          titlesData: FlTitlesData(
+            leftTitles: AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                getTitlesWidget: (value, meta) {
+                  const months = [
+                    'Jan',
+                    'Feb',
+                    'Mar',
+                    'Apr',
+                    'May',
+                    'Jun',
+                    'Jul',
+                    'Aug'
+                  ];
+                  return Text(
+                    months[value.toInt()],
+                    style: const TextStyle(fontSize: 10),
+                  );
+                },
+              ),
+            ),
+          ),
+          borderData: FlBorderData(show: false),
+          lineBarsData: [
+            LineChartBarData(
+              spots: const [
+                FlSpot(0, 1000),
+                FlSpot(1, 1800),
+                FlSpot(2, 1600),
+                FlSpot(3, 2200),
+                FlSpot(4, 1800),
+                FlSpot(5, 2000),
+                FlSpot(6, 1800),
+                FlSpot(7, 1600),
+              ],
+              isCurved: true,
+              color: Colors.blue.withOpacity(0.5),
+              barWidth: 4,
+              isStrokeCapRound: true,
+              dotData: FlDotData(show: false),
+              belowBarData: BarAreaData(
+                show: true,
+                color: Colors.blue.withOpacity(0.1),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class _TrendIndicator extends StatelessWidget {

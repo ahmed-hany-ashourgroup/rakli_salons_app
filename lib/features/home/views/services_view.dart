@@ -5,7 +5,6 @@ import 'package:rakli_salons_app/core/theme/theme_constants.dart';
 import 'package:rakli_salons_app/core/utils/app_router.dart';
 import 'package:rakli_salons_app/core/utils/app_styles.dart';
 import 'package:rakli_salons_app/features/home/data/models/service_model.dart';
-import 'package:rakli_salons_app/features/home/views/add_edit_service_view.dart';
 import 'package:rakli_salons_app/features/home/views/widgets/service_item.dart';
 
 class ServicesView extends StatelessWidget {
@@ -48,6 +47,8 @@ class ServicesView extends StatelessWidget {
       ),
     ];
     return Scaffold(
+      backgroundColor: Color(0xffEFEFEF),
+
       body: Padding(
         padding: const EdgeInsets.all(22),
         child: Column(
@@ -92,6 +93,23 @@ class ServicesView extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+      // Add a Floating Action Button (FAB) to add a new service
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 82),
+        child: FloatingActionButton(
+          onPressed: () {
+            GoRouter.of(context).push(
+              AppRouter.kAddEditServiceView,
+              extra: {'isEditMode': false},
+            );
+          },
+          backgroundColor: kPrimaryColor, // Use your primary color
+          child: const Icon(
+            Icons.add,
+            color: Colors.white, // Icon color
+          ),
         ),
       ),
     );

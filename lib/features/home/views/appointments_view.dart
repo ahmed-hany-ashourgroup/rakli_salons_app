@@ -45,6 +45,7 @@ class _AppointmentsViewState extends State<AppointmentsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xffEFEFEF),
       body: Padding(
         padding: const EdgeInsets.all(22),
         child: Column(
