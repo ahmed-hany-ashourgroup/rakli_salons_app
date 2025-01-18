@@ -1,5 +1,7 @@
 enum AppointmentStatus { pending, confirmed, cancelled, completed }
 
+enum ViewPeriod { daily, weekly, monthly, yearly }
+
 class Appointment {
   final String? requestUserName;
   AppointmentStatus? status;

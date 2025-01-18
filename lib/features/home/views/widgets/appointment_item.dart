@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rakli_salons_app/core/customs/custom_confirmation_dialog.dart';
 import 'package:rakli_salons_app/core/utils/app_styles.dart';
 import 'package:rakli_salons_app/core/utils/size_config.dart';
 import 'package:rakli_salons_app/features/home/data/models/appointment_model.dart';
@@ -53,109 +54,108 @@ class _AppointmentItemState extends State<AppointmentItem> {
         child: SizedBox(
           width: SizeConfig.screenwidth,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Top Row: Request User Name, Price, and Close Icon
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  // Request User Name and Price
+                  Row(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            widget.appointment.requestUserName ?? "Unknown",
-                            style: AppStyles.bold16,
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            "\$${widget.appointment.price?.toStringAsFixed(0) ?? "0"}",
-                            style: AppStyles.bold16,
-                          ),
-                          SizedBox(
-                            width: SizeConfig.screenwidth! * 0.38,
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.close, color: Colors.red),
-                            onPressed: () {},
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
                       Text(
-                        "Services: Hair, Body Massage",
-                        style: AppStyles.regular14,
+                        widget.appointment.requestUserName ?? "Unknown",
+                        style: AppStyles.bold22,
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(width: 8),
                       Text(
-                        "Time: ${TimeOfDay.fromDateTime(widget.appointment.date ?? DateTime.now()).format(context)}",
-                        style: AppStyles.regular14,
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          Text(
-                            "State: ",
-                            style: AppStyles.regular14,
-                          ),
-                          Icon(
-                            Icons.circle,
-                            size: 12,
-                            color: _getStatusColor(widget.appointment.status ??
-                                AppointmentStatus.pending),
-                          ),
-                          const SizedBox(
-                              width:
-                                  4), // Space between the circle and the dropdown
-                          DropdownButton<AppointmentStatus>(
-                            alignment: AlignmentDirectional.centerStart,
-                            iconDisabledColor: Colors.white,
-                            iconEnabledColor: Colors.black,
-
-                            selectedItemBuilder: (context) =>
-                                List.generate(4, (index) {
-                              return DropdownMenuItem<AppointmentStatus>(
-                                child: Text(
-                                  widget.appointment.status?.name ?? "",
-                                  style: AppStyles.regular14
-                                      .copyWith(color: Colors.black),
-                                ),
-                              );
-                            }),
-
-                            iconSize: 24,
-                            value: widget.appointment.status,
-                            underline:
-                                const SizedBox(), // Removes the default underline
-                            icon: const Icon(Icons.arrow_drop_down),
-                            dropdownColor: const Color(0xFF8B1818),
-                            style: AppStyles.regular14,
-                            items: AppointmentStatus.values.map((status) {
-                              return DropdownMenuItem<AppointmentStatus>(
-                                value: status,
-                                child: Text(
-                                  status.name,
-                                  style: AppStyles.regular14.copyWith(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (AppointmentStatus? newStatus) {
-                              if (newStatus != null) {
-                                setState(() {
-                                  widget.appointment.status = newStatus;
-                                });
-                              }
-                            },
-                          ),
-                        ],
+                        "\$${widget.appointment.price?.toStringAsFixed(0) ?? "0"}",
+                        style: AppStyles.bold16,
                       ),
                     ],
                   ),
+                  // Close Icon
+                  IconButton(
+                    icon: const Icon(Icons.close, color: Colors.red),
+                    onPressed: () {
+                      showCustomConfirmationDialog(
+                        context: context,
+                        title: "Delete Appointment",
+                        message:
+                            "Are you sure you want to delete this Appointment? This action is permanent and cannot be undone. All associated data will be permanently removed.",
+                        confirmButtonText: "Delete Appointment",
+                        onConfirm: () {},
+                      );
+                    },
+                  ),
                 ],
               ),
-              const SizedBox(height: 16),
+              // Services
+              Text(
+                "Services: Hair, Body Massage",
+                style: AppStyles.regular14,
+              ),
+              // Time
+              Text(
+                "Time: ${TimeOfDay.fromDateTime(widget.appointment.date ?? DateTime.now()).format(context)}",
+                style: AppStyles.regular14,
+              ),
+              // State and Dropdown
+              Row(
+                children: [
+                  Text(
+                    "State: ",
+                    style: AppStyles.regular14,
+                  ),
+                  Icon(
+                    Icons.circle,
+                    size: 12,
+                    color: _getStatusColor(
+                        widget.appointment.status ?? AppointmentStatus.pending),
+                  ),
+                  const SizedBox(width: 4),
+                  DropdownButton<AppointmentStatus>(
+                    alignment: AlignmentDirectional.centerStart,
+                    iconDisabledColor: Colors.white,
+                    iconEnabledColor: Colors.black,
+                    selectedItemBuilder: (context) => List.generate(4, (index) {
+                      return DropdownMenuItem<AppointmentStatus>(
+                        child: Text(
+                          widget.appointment.status?.name ?? "",
+                          style:
+                              AppStyles.regular14.copyWith(color: Colors.black),
+                        ),
+                      );
+                    }),
+                    iconSize: 24,
+                    value: widget.appointment.status,
+                    underline:
+                        const SizedBox(), // Removes the default underline
+                    icon: const Icon(Icons.arrow_drop_down),
+                    dropdownColor: const Color(0xFF8B1818),
+                    style: AppStyles.regular14,
+                    items: AppointmentStatus.values.map((status) {
+                      return DropdownMenuItem<AppointmentStatus>(
+                        value: status,
+                        child: Text(
+                          status.name,
+                          style: AppStyles.regular14.copyWith(
+                            color: Colors.white,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (AppointmentStatus? newStatus) {
+                      if (newStatus != null) {
+                        setState(() {
+                          widget.appointment.status = newStatus;
+                        });
+                      }
+                    },
+                  ),
+                ],
+              ),
+              // Comment TextField
               TextField(
                 controller: _commentController,
                 maxLines: null,

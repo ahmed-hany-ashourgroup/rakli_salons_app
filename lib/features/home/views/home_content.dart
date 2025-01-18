@@ -1,6 +1,9 @@
 // Updated HomeContent Widget
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:rakli_salons_app/core/theme/theme_constants.dart';
+import 'package:rakli_salons_app/core/utils/app_styles.dart';
+import 'package:rakli_salons_app/features/home/views/appointments_view.dart';
 
 class HomeContent extends StatefulWidget {
   const HomeContent({super.key});
@@ -10,8 +13,7 @@ class HomeContent extends StatefulWidget {
 }
 
 class _HomeContentState extends State<HomeContent> {
-  String selectedPeriod = 'Weekly';
-  final List<String> periods = ['Daily', 'Weekly', 'Monthly', 'Yearly'];
+  ViewPeriod selectedPeriod = ViewPeriod.weekly; // Use enum for selected period
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +45,7 @@ class _HomeContentState extends State<HomeContent> {
     );
   }
 
+  // Period Selector with Enum and Dropdown Menu
   Widget _buildPeriodSelector() {
     return Container(
       decoration: BoxDecoration(
@@ -56,11 +59,12 @@ class _HomeContentState extends State<HomeContent> {
           ),
         ],
       ),
-      child: PopupMenuButton<String>(
+      child: PopupMenuButton<ViewPeriod>(
+        color: kPrimaryColor,
         initialValue: selectedPeriod,
-        onSelected: (String value) {
+        onSelected: (ViewPeriod period) {
           setState(() {
-            selectedPeriod = value;
+            selectedPeriod = period;
           });
         },
         child: Padding(
@@ -69,7 +73,7 @@ class _HomeContentState extends State<HomeContent> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                selectedPeriod,
+                _getPeriodText(selectedPeriod), // Convert enum to display text
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
@@ -81,15 +85,33 @@ class _HomeContentState extends State<HomeContent> {
           ),
         ),
         itemBuilder: (BuildContext context) {
-          return periods.map((String period) {
-            return PopupMenuItem<String>(
+          return ViewPeriod.values.map((ViewPeriod period) {
+            return PopupMenuItem<ViewPeriod>(
               value: period,
-              child: Text(period),
+              child: Text(
+                _getPeriodText(period),
+                style: AppStyles.regular14.copyWith(
+                    color: Colors.white), // Convert enum to display text
+              ),
             );
           }).toList();
         },
       ),
     );
+  }
+
+  // Helper function to convert enum to display text
+  String _getPeriodText(ViewPeriod period) {
+    switch (period) {
+      case ViewPeriod.daily:
+        return 'Daily';
+      case ViewPeriod.weekly:
+        return 'Weekly';
+      case ViewPeriod.monthly:
+        return 'Monthly';
+      case ViewPeriod.yearly:
+        return 'Yearly';
+    }
   }
 
   Widget _buildStatisticsCards() {

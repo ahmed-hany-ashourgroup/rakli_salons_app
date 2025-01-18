@@ -1,7 +1,9 @@
 // Custom App Bar Widget
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rakli_salons_app/core/theme/theme_constants.dart';
+import 'package:rakli_salons_app/core/utils/app_router.dart';
 import 'package:rakli_salons_app/core/utils/assets.dart';
 
 class CustomAdminAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -32,7 +34,9 @@ class CustomAdminAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         IconButton(
           icon: const Icon(Icons.notifications, color: kSecondaryColor),
-          onPressed: () {},
+          onPressed: () {
+            GoRouter.of(context).push(AppRouter.kNotificationsView);
+          },
           iconSize: 34,
         ),
       ],

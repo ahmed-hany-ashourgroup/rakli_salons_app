@@ -61,9 +61,11 @@ class CustomConfirmationDialog extends StatelessWidget {
             // Confirm Button
             CustomButton(
               hpadding: 82,
-              title: Text(
-                confirmButtonText,
-                style: AppStyles.bold16.copyWith(color: Colors.black),
+              title: FittedBox(
+                child: Text(
+                  confirmButtonText,
+                  style: AppStyles.bold16.copyWith(color: Colors.black),
+                ),
               ),
               onPressed: onConfirm,
               color: kSecondaryColor,

@@ -9,8 +9,11 @@ import 'package:rakli_salons_app/features/auth/views/confirmation_code_view.dart
 import 'package:rakli_salons_app/features/auth/views/forgot_password_view.dart';
 import 'package:rakli_salons_app/features/auth/views/login_view.dart';
 import 'package:rakli_salons_app/features/auth/views/sign_up_view.dart';
+import 'package:rakli_salons_app/features/home/data/models/service_model.dart';
+import 'package:rakli_salons_app/features/home/views/add_edit_service_view.dart';
 import 'package:rakli_salons_app/features/home/views/filter_view.dart';
 import 'package:rakli_salons_app/features/home/views/home_view.dart';
+import 'package:rakli_salons_app/features/home/views/notifications_view.dart';
 import 'package:rakli_salons_app/features/splash/views/account_selection_view.dart';
 import 'package:rakli_salons_app/features/splash/views/splash_view.dart';
 
@@ -25,6 +28,8 @@ class AppRouter {
   static const String kFilterView = '/filter';
   static const String kForgotPasswordView = '/forgot-password';
   static const String kConfirmationCodeView = '/confirmation-code';
+  static const String kNotificationsView = '/notifications';
+  static const String kAddEditServiceView = '/add-edit-service';
 
   static const String kHomeView = '/home';
 
@@ -71,6 +76,23 @@ class AppRouter {
     GoRoute(
       path: kHomeView,
       builder: (context, state) => const HomeView(),
+    ),
+    GoRoute(
+        path: kAddEditServiceView,
+        builder: (context, state) {
+          if (state.extra != null) {
+            Map data = state.extra as Map;
+            return AddEditServiceView(
+              service: data['service'] as ServiceModel?,
+              isEditMode: data['isEditMode'],
+            );
+          } else {
+            return const HomeView();
+          }
+        }),
+    GoRoute(
+      path: kNotificationsView,
+      builder: (context, state) => const NotificationsView(),
     ),
     GoRoute(
       path: kFilterView,
