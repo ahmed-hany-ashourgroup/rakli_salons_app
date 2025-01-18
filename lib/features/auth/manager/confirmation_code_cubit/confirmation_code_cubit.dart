@@ -19,7 +19,7 @@ class ConfirmationCodeCubit extends Cubit<ConfirmationCodeState> {
         "email": SalonsUserCubit.user.email,
         "verification_code": code
       });
-      emit(ConfirmationCodeSuccess(user: UserModel.fromJson(response)));
+      emit(ConfirmationCodeSuccess(user: SalonUserModel.fromJson(response)));
       Logger.info(response.toString());
     } catch (e) {
       emit(ConfirmationCodeFailed(errMessage: e.toString()));
@@ -34,7 +34,7 @@ class ConfirmationCodeCubit extends Cubit<ConfirmationCodeState> {
             "email": SalonsUserCubit.user.email,
             "verification_code": code
           });
-      emit(ConfirmationCodeSuccess(user: UserModel.fromJson(response)));
+      emit(ConfirmationCodeSuccess(user: SalonUserModel.fromJson(response)));
       Logger.info(response.toString());
     } catch (e) {
       emit(ConfirmationCodeFailed(errMessage: e.toString()));
@@ -47,7 +47,7 @@ class ConfirmationCodeCubit extends Cubit<ConfirmationCodeState> {
       emit(ConfirmationCodeLoading());
       final response = await _apiService.post('auth/verify-reset-code',
           data: {"email": email, "reset_code": code});
-      emit(ConfirmationCodeSuccess(user: UserModel.fromJson(response)));
+      emit(ConfirmationCodeSuccess(user: SalonUserModel.fromJson(response)));
       Logger.info(response.toString());
     } catch (e) {
       emit(ConfirmationCodeFailed(errMessage: e.toString()));

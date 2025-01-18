@@ -1,4 +1,4 @@
-class UserModel {
+class SalonUserModel {
   int? id;
   String? name;
   String? email;
@@ -9,8 +9,10 @@ class UserModel {
   DateTime? createdAt;
   DateTime? updatedAt;
   String? token;
+  String? image;
+  String? cover;
 
-  UserModel({
+  SalonUserModel({
     this.id,
     this.name,
     this.email,
@@ -21,12 +23,15 @@ class UserModel {
     this.password,
     this.token,
     this.address,
+    this.image,
+    this.cover,
   });
 
-  UserModel.fromJson(Map<String, dynamic> json) {
+  SalonUserModel.fromJson(Map<String, dynamic> json) {
     final userData = json['data']?['user'] ?? json['user'];
     if (userData != null) {
       id = userData['id'];
+
       name = userData['name'];
       email = userData['email'];
       phone = userData['phone'];
@@ -37,6 +42,8 @@ class UserModel {
       updatedAt = userData['updated_at'] != null
           ? DateTime.parse(userData['updated_at'])
           : null;
+      image = userData['image'];
+      cover = userData['cover'];
     }
     // Check both possible token locations
     token = json['data']?['token'] ?? json['token'];
@@ -52,6 +59,8 @@ class UserModel {
         'verification_code': verificationCode,
         'created_at': createdAt?.toIso8601String(),
         'updated_at': updatedAt?.toIso8601String(),
+        'image': image,
+        'cover': cover
       },
       'token': token,
     };

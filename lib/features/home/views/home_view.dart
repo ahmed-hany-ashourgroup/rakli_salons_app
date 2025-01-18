@@ -4,6 +4,7 @@ import 'package:rakli_salons_app/core/customs/custom_bottom_nav.dart';
 import 'package:rakli_salons_app/core/customs/custom_drawer.dart';
 import 'package:rakli_salons_app/features/home/views/appointments_view.dart';
 import 'package:rakli_salons_app/features/home/views/home_content.dart';
+import 'package:rakli_salons_app/features/home/views/prfofile_view.dart';
 import 'package:rakli_salons_app/features/home/views/services_view.dart';
 
 class HomeView extends StatefulWidget {
@@ -20,6 +21,7 @@ class _HomeViewState extends State<HomeView> {
     const HomeContent(),
     const AppointmentsView(),
     const ServicesView(),
+    const ProfileView()
   ];
 
   final PageController _pageController = PageController();

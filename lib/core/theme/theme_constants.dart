@@ -9,9 +9,9 @@ const kBorderColor = Color(0xffE8BD81);
 
 class AppTheme {
   final lightTheme = ThemeData(
-    primaryColor: Color(0xffE8BD81),
-    brightness: Brightness.light,
-  );
+      primaryColor: Color(0xffE8BD81),
+      brightness: Brightness.light,
+      scaffoldBackgroundColor: Color(0xffEFEFEF));
   final darkTheme = ThemeData(
     primaryColor: Color(0xffE8BD81),
     brightness: Brightness.dark,

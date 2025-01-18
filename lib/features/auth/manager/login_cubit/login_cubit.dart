@@ -16,7 +16,7 @@ class LoginCubit extends Cubit<LoginState> {
   LoginCubit() : super(LoginInitial());
   final ApiService _apiService = getIt<ApiService>();
 
-  Future<Either<Failure, UserModel>> login(
+  Future<Either<Failure, SalonUserModel>> login(
       String email, String password) async {
     emit(LoginLoading());
     try {
@@ -33,7 +33,7 @@ class LoginCubit extends Cubit<LoginState> {
         );
       }
 
-      final userModel = UserModel.fromJson(response);
+      final userModel = SalonUserModel.fromJson(response);
       SalonsUserCubit.user = userModel;
       Logger.info('UserModel: $userModel');
       emit(LoginSuccess(user: userModel));
