@@ -29,7 +29,11 @@ abstract class AppStyles {
     fontWeight: FontWeight.w400,
     fontSize: 16,
   );
-
+  static TextStyle regular14 = TextStyle(
+    fontFamily: fontFamily,
+    fontWeight: FontWeight.w400,
+    fontSize: 14,
+  );
   static TextStyle regular15 = TextStyle(
     fontFamily: fontFamily,
     fontWeight: FontWeight.w400,
