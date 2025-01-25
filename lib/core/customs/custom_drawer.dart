@@ -39,7 +39,6 @@ class CustomDrawer extends StatelessWidget {
             ),
             _buildDrawerItem(Icons.add_box, 'Add Products', () {}),
             _buildDrawerItem(Icons.shopping_bag, 'Shop', () {}),
-            _buildDrawerItem(Icons.people, 'Staff Management', () {}),
             _buildDrawerItem(Icons.assessment, 'Reports', () {}),
             _buildDrawerItem(Icons.card_membership, 'Subscription', () {}),
             _buildDrawerItem(Icons.help, 'Help & Support', () {}),

@@ -66,16 +66,13 @@ class _FilterViewState extends State<FilterView> {
               Row(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.arrow_back),
+                    icon: const Icon(Icons.arrow_back_ios_new),
                     onPressed: () => Navigator.pop(context),
                   ),
-                  const Expanded(
+                  Expanded(
                     child: Text(
                       'Filter',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: AppStyles.bold24,
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -110,6 +107,7 @@ class _FilterViewState extends State<FilterView> {
                     // Date display
                     Row(
                       children: [
+                        Icon(Icons.calendar_month),
                         Text(
                           DateFormat('yyyy / MM / dd').format(selectedDate),
                           style: const TextStyle(fontSize: 14),

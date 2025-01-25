@@ -162,7 +162,8 @@ class _AppointmentItemState extends State<AppointmentItem> {
                   contentPadding: const EdgeInsets.all(8),
                   fillColor: const Color(0xffD9D9D9),
                   suffixIcon: IconButton(
-                      onPressed: () {},
+                      onPressed:
+                          _commentController.text.isNotEmpty ? () {} : null,
                       icon: Icon(
                         Icons.send,
                         color: Colors.black,
