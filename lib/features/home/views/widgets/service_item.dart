@@ -33,8 +33,6 @@ class _AppointmentItemState extends State<ServicetItem> {
         return Colors.green;
       case ServiceState.inactive:
         return Colors.red;
-      default:
-        return Colors.grey;
     }
   }
 

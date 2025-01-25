@@ -39,8 +39,6 @@ class _AppointmentItemState extends State<AppointmentItem> {
         return Colors.red;
       case AppointmentStatus.completed:
         return Colors.blue;
-      default:
-        return Colors.grey;
     }
   }
 
@@ -163,8 +161,15 @@ class _AppointmentItemState extends State<AppointmentItem> {
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.all(8),
                   fillColor: const Color(0xffD9D9D9),
+                  suffixIcon: IconButton(
+                      onPressed: () {},
+                      icon: Icon(
+                        Icons.send,
+                        color: Colors.black,
+                      )),
                   filled: true,
-                  hintText: "Add a comment",
+                  prefixIcon: Icon(Icons.comment, color: Colors.grey),
+                  hintText: " Add a comment",
                   hintStyle: AppStyles.regular14.copyWith(color: Colors.grey),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),

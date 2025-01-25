@@ -213,8 +213,9 @@ class _BusinessSignUpViewState extends State<BusinessSignUpView> {
                     validator: (value) {
                       if (value?.isEmpty ?? true) return 'Please enter email';
                       final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-                      if (!emailRegex.hasMatch(value!))
+                      if (!emailRegex.hasMatch(value!)) {
                         return 'Invalid email format';
+                      }
                       return null;
                     },
                   ),
