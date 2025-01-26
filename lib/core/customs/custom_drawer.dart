@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rakli_salons_app/core/customs/custom_confirmation_dialog.dart';
+import 'package:rakli_salons_app/core/utils/app_router.dart';
 import 'package:rakli_salons_app/features/auth/manager/log_out_cubit/log_out_cubit.dart';
 
 class CustomDrawer extends StatelessWidget {
@@ -37,7 +39,9 @@ class CustomDrawer extends StatelessWidget {
                 ],
               ),
             ),
-            _buildDrawerItem(Icons.add_box, 'Add Products', () {}),
+            _buildDrawerItem(Icons.add_box, 'My Products', () {
+              GoRouter.of(context).push(AppRouter.kMyProductsView);
+            }),
             _buildDrawerItem(Icons.shopping_bag, 'Shop', () {}),
             _buildDrawerItem(Icons.assessment, 'Reports', () {}),
             _buildDrawerItem(Icons.card_membership, 'Subscription', () {}),

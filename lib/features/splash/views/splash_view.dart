@@ -43,7 +43,7 @@ class _SplashViewState extends State<SplashView>
   void _navigateToNextView() {
     Future.delayed(const Duration(seconds: 2), () {
       if (mounted) {
-        GoRouter.of(context).go(AppRouter.kAccountSelectionView);
+        GoRouter.of(context).go(AppRouter.kHomeView);
       }
     });
   }

@@ -9,11 +9,16 @@ import 'package:rakli_salons_app/features/auth/views/confirmation_code_view.dart
 import 'package:rakli_salons_app/features/auth/views/forgot_password_view.dart';
 import 'package:rakli_salons_app/features/auth/views/login_view.dart';
 import 'package:rakli_salons_app/features/auth/views/sign_up_view.dart';
-import 'package:rakli_salons_app/features/home/data/models/service_model.dart';
+import 'package:rakli_salons_app/features/home/data/models/models/product_model.dart';
+import 'package:rakli_salons_app/features/home/data/models/models/service_model.dart';
 import 'package:rakli_salons_app/features/home/views/add_edit_service_view.dart';
+import 'package:rakli_salons_app/features/home/views/add_product_view.dart';
+import 'package:rakli_salons_app/features/home/views/favorites_view.dart';
 import 'package:rakli_salons_app/features/home/views/filter_view.dart';
 import 'package:rakli_salons_app/features/home/views/home_view.dart';
+import 'package:rakli_salons_app/features/home/views/my_products_view.dart';
 import 'package:rakli_salons_app/features/home/views/notifications_view.dart';
+import 'package:rakli_salons_app/features/home/views/orders_view.dart';
 import 'package:rakli_salons_app/features/splash/views/account_selection_view.dart';
 import 'package:rakli_salons_app/features/splash/views/splash_view.dart';
 
@@ -30,8 +35,12 @@ class AppRouter {
   static const String kConfirmationCodeView = '/confirmation-code';
   static const String kNotificationsView = '/notifications';
   static const String kAddEditServiceView = '/add-edit-service';
-
   static const String kHomeView = '/home';
+  static const String kAddProductView = '/add-product';
+
+  static const String kMyProductsView = '/my-products';
+  static const String kFavoritesView = '/favorites';
+  static const String kOrdersView = '/orders';
 
   static final GoRouter router = GoRouter(routes: [
     GoRoute(
@@ -42,6 +51,31 @@ class AppRouter {
       path: kAccountSelectionView,
       builder: (context, state) => const AccountSelectionView(),
     ),
+    GoRoute(
+      path: kOrdersView,
+      builder: (context, state) => const OrdersView(),
+    ),
+    GoRoute(
+      path: kFavoritesView,
+      builder: (context, state) => const FavoritesView(),
+    ),
+    GoRoute(
+      path: kMyProductsView,
+      builder: (context, state) => MyProductsView(),
+    ),
+    GoRoute(
+        path: kAddProductView,
+        builder: (context, state) {
+          if (state.extra != null) {
+            Map data = state.extra as Map;
+            return AddProductView(
+              product: data['product'] as ProductModel?,
+              isEditMode: data['isEditMode'],
+            );
+          } else {
+            return const HomeView();
+          }
+        }),
     GoRoute(
       path: kForgotPasswordView,
       builder: (context, state) => MultiBlocProvider(

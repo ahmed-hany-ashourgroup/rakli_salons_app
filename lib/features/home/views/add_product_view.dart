@@ -3,30 +3,30 @@ import 'package:rakli_salons_app/core/customs/custom_app_bar.dart';
 import 'package:rakli_salons_app/core/customs/custom_button.dart';
 import 'package:rakli_salons_app/core/theme/theme_constants.dart';
 import 'package:rakli_salons_app/core/utils/app_styles.dart';
-import 'package:rakli_salons_app/core/utils/logger.dart';
-import 'package:rakli_salons_app/features/home/data/models/models/service_model.dart';
+import 'package:rakli_salons_app/features/home/data/models/models/product_model.dart';
 
-class AddEditServiceView extends StatefulWidget {
-  final ServiceModel? service;
+class AddProductView extends StatefulWidget {
+  final ProductModel? product;
   final bool isEditMode;
 
-  const AddEditServiceView({
+  const AddProductView({
     super.key,
-    this.service,
+    this.product,
     required this.isEditMode,
   });
 
   @override
-  _AddEditServiceViewState createState() => _AddEditServiceViewState();
+  _AddProductViewState createState() => _AddProductViewState();
 }
 
-class _AddEditServiceViewState extends State<AddEditServiceView> {
+class _AddProductViewState extends State<AddProductView> {
   final _formKey = GlobalKey<FormState>();
-  late TextEditingController _titleController;
+  late TextEditingController _nameController;
   late TextEditingController _descriptionController;
   late TextEditingController _priceController;
-  late ServiceState _selectedState;
-  late Gender _selectedGender;
+  late TextEditingController _discountController;
+  late String _productType;
+  late String _stockStatus;
 
   @override
   void initState() {
@@ -35,20 +35,23 @@ class _AddEditServiceViewState extends State<AddEditServiceView> {
   }
 
   void _initializeControllers() {
-    _titleController = TextEditingController(text: widget.service?.title ?? '');
+    _nameController = TextEditingController(text: widget.product?.name ?? '');
     _descriptionController =
-        TextEditingController(text: widget.service?.description ?? '');
+        TextEditingController(text: widget.product?.description ?? '');
     _priceController =
-        TextEditingController(text: widget.service?.price?.toString() ?? '');
-    _selectedState = widget.service?.state ?? ServiceState.active;
-    _selectedGender = widget.service?.gender ?? Gender.male;
+        TextEditingController(text: widget.product?.price?.toString() ?? '');
+    _discountController = TextEditingController();
+    _productType =
+        widget.product?.isCollection == true ? 'collection' : 'product';
+    _stockStatus = 'Available'; // Default status
   }
 
   @override
   void dispose() {
-    _titleController.dispose();
+    _nameController.dispose();
     _descriptionController.dispose();
     _priceController.dispose();
+    _discountController.dispose();
     super.dispose();
   }
 
@@ -101,7 +104,7 @@ class _AddEditServiceViewState extends State<AddEditServiceView> {
       ),
       child: CustomAppBar(
         title: Text(
-          widget.isEditMode ? 'Edit Service' : 'Add Service',
+          widget.isEditMode ? 'Edit Product' : 'Add Product',
           style: AppStyles.bold20.copyWith(color: Colors.black),
         ),
         icon: TextButton(
@@ -136,16 +139,16 @@ class _AddEditServiceViewState extends State<AddEditServiceView> {
           _buildSectionTitle('Basic Information'),
           const SizedBox(height: 24),
           _buildTextField(
-            controller: _titleController,
-            label: 'Service Title',
-            hint: 'Enter service title',
+            controller: _nameController,
+            label: 'Product Name',
+            hint: 'Enter product name',
             prefixIcon: Icons.title,
           ),
           const SizedBox(height: 20),
           _buildTextField(
             controller: _descriptionController,
             label: 'Description',
-            hint: 'Enter service description',
+            hint: 'Enter product description',
             maxLines: 6,
             prefixIcon: Icons.description,
           ),
@@ -155,14 +158,42 @@ class _AddEditServiceViewState extends State<AddEditServiceView> {
           _buildTextField(
             controller: _priceController,
             label: 'Price',
-            hint: 'Enter service price',
+            hint: 'Enter product price',
             keyboardType: TextInputType.number,
             prefixIcon: Icons.attach_money,
           ),
           const SizedBox(height: 20),
-          _buildGenderDropdown(),
+          _buildTextField(
+            controller: _discountController,
+            label: 'Discount in percentage',
+            hint: 'Enter discount percentage',
+            keyboardType: TextInputType.number,
+            prefixIcon: Icons.discount,
+          ),
           const SizedBox(height: 20),
-          _buildStateToggle(),
+          _buildDropdown(
+            'Product Type',
+            ['product', 'collection'],
+            _productType,
+            (value) {
+              setState(() {
+                _productType = value!;
+              });
+            },
+            prefixIcon: Icons.category,
+          ),
+          const SizedBox(height: 20),
+          _buildDropdown(
+            'Stock Status',
+            ['Available', 'Unavailable'],
+            _stockStatus,
+            (value) {
+              setState(() {
+                _stockStatus = value!;
+              });
+            },
+            prefixIcon: Icons.inventory,
+          ),
         ],
       ),
     );
@@ -222,12 +253,18 @@ class _AddEditServiceViewState extends State<AddEditServiceView> {
     );
   }
 
-  Widget _buildGenderDropdown() {
+  Widget _buildDropdown(
+    String label,
+    List<String> items,
+    String value,
+    Function(String?) onChanged, {
+    required IconData prefixIcon,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Gender',
+          label,
           style: AppStyles.regular14.copyWith(color: Colors.grey[700]),
         ),
         const SizedBox(height: 8),
@@ -236,70 +273,32 @@ class _AddEditServiceViewState extends State<AddEditServiceView> {
             color: Colors.grey[100],
             borderRadius: BorderRadius.circular(12),
           ),
-          child: DropdownButtonFormField<Gender>(
-            value: _selectedGender,
+          child: DropdownButtonFormField<String>(
+            value: value,
             decoration: InputDecoration(
-              prefixIcon: Icon(Icons.people, color: kPrimaryColor, size: 20),
+              prefixIcon: Icon(prefixIcon, color: kPrimaryColor, size: 20),
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(horizontal: 16),
             ),
-            items: Gender.values.map((Gender gender) {
-              return DropdownMenuItem<Gender>(
-                value: gender,
+            items: items.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
                 child: Text(
-                  gender.toString().split('.').last,
+                  value,
                   style: AppStyles.regular16,
                 ),
               );
             }).toList(),
-            onChanged: (Gender? value) {
-              setState(() {
-                _selectedGender = value!;
-              });
+            onChanged: onChanged,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return '$label is required';
+              }
+              return null;
             },
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildStateToggle() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.toggle_on, color: kPrimaryColor, size: 20),
-          const SizedBox(width: 12),
-          Text(
-            'Service Status',
-            style: AppStyles.regular16,
-          ),
-          const Spacer(),
-          Switch.adaptive(
-            value: _selectedState == ServiceState.active,
-            onChanged: (value) {
-              setState(() {
-                _selectedState =
-                    value ? ServiceState.active : ServiceState.inactive;
-              });
-            },
-            activeColor: kPrimaryColor,
-          ),
-          const SizedBox(width: 8),
-          Text(
-            _selectedState == ServiceState.active ? 'Active' : 'Inactive',
-            style: AppStyles.regular14.copyWith(
-              color: _selectedState == ServiceState.active
-                  ? kPrimaryColor
-                  : Colors.grey,
-            ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -321,11 +320,11 @@ class _AddEditServiceViewState extends State<AddEditServiceView> {
           child: CustomButton(
             title: FittedBox(
               child: Text(
-                widget.isEditMode ? 'Save Changes' : 'Add Service',
+                widget.isEditMode ? 'Save Changes' : 'Add Product',
                 style: AppStyles.regular16.copyWith(color: Colors.white),
               ),
             ),
-            onPressed: _saveService,
+            onPressed: _saveProduct,
             color: kPrimaryColor,
           ),
         ),
@@ -338,17 +337,16 @@ class _AddEditServiceViewState extends State<AddEditServiceView> {
     _initializeControllers();
   }
 
-  void _saveService() {
+  void _saveProduct() {
     if (_formKey.currentState!.validate()) {
-      final service = ServiceModel(
-        title: _titleController.text,
+      final product = ProductModel(
+        name: _nameController.text,
         description: _descriptionController.text,
         price: double.tryParse(_priceController.text),
-        state: _selectedState,
-        gender: _selectedGender,
+        isCollection: _productType == 'collection',
       );
 
-      Logger.info('Service saved: $service');
+      // Save the product logic here
       Navigator.pop(context);
     }
   }

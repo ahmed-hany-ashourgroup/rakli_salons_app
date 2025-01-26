@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rakli_salons_app/core/theme/theme_constants.dart';
+import 'package:rakli_salons_app/core/utils/app_router.dart';
 import 'package:rakli_salons_app/core/utils/app_styles.dart';
 import 'package:rakli_salons_app/core/utils/assets.dart';
 
@@ -114,7 +116,7 @@ class ProfileView extends StatelessWidget {
               child: TabBarView(
                 children: [
                   _buildProfileTab(),
-                  _buildAccountTab(),
+                  _buildAccountTab(context: context),
                 ],
               ),
             ),
@@ -124,7 +126,7 @@ class ProfileView extends StatelessWidget {
     );
   }
 
-  Widget _buildAccountTab() {
+  Widget _buildAccountTab({required BuildContext context}) {
     return SingleChildScrollView(
       padding: EdgeInsets.all(16),
       child: Column(
@@ -134,7 +136,9 @@ class ProfileView extends StatelessWidget {
           CustomProfileTile(
             iconPath: Assets.assetsImagesHeart, // Replace with your icon path
             title: 'Favorite',
-            onTap: () {},
+            onTap: () {
+              GoRouter.of(context).push(AppRouter.kFavoritesView);
+            },
             iconColor: Colors.white,
           ),
           // Change Password
@@ -148,7 +152,9 @@ class ProfileView extends StatelessWidget {
           CustomProfileTile(
             iconPath: Assets.assetsImagesOrder, // Replace with your icon path
             title: 'Order',
-            onTap: () {},
+            onTap: () {
+              GoRouter.of(context).push(AppRouter.kOrdersView);
+            },
             iconColor: Colors.white,
           ),
           SizedBox(height: 20),

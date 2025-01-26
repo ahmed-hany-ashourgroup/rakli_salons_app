@@ -5,7 +5,7 @@ import 'package:rakli_salons_app/core/utils/app_router.dart';
 import 'package:rakli_salons_app/core/utils/app_styles.dart';
 import 'package:rakli_salons_app/core/utils/size_config.dart';
 import 'package:rakli_salons_app/features/home/data/models/appointment_model.dart';
-import 'package:rakli_salons_app/features/home/data/models/service_model.dart';
+import 'package:rakli_salons_app/features/home/data/models/models/service_model.dart';
 
 class ServicetItem extends StatefulWidget {
   final ServiceModel serviceModel;
