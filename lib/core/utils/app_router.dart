@@ -21,8 +21,8 @@ import 'package:rakli_salons_app/features/home/views/my_products_view.dart';
 import 'package:rakli_salons_app/features/home/views/notifications_view.dart';
 import 'package:rakli_salons_app/features/home/views/orders_view.dart';
 import 'package:rakli_salons_app/features/home/views/product_details_view.dart';
+import 'package:rakli_salons_app/features/home/views/products_view.dart';
 import 'package:rakli_salons_app/features/home/views/reports_view.dart';
-import 'package:rakli_salons_app/features/home/views/shop_view.dart';
 import 'package:rakli_salons_app/features/splash/views/account_selection_view.dart';
 import 'package:rakli_salons_app/features/splash/views/splash_view.dart';
 
@@ -80,7 +80,7 @@ class AppRouter {
     ),
     GoRoute(
       path: kShopView,
-      builder: (context, state) => const ShopView(),
+      builder: (context, state) => const ProductsView(),
     ),
     GoRoute(
       path: kCartView,
