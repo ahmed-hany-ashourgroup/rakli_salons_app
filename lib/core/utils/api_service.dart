@@ -21,8 +21,7 @@ class ApiService {
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) {
         // Add Authorization header if the token is available
-        final token = SalonsUserCubit
-            .user.token; // Replace with your actual token retrieval logic
+        final token = SalonsUserCubit.user.token;
         if (token != null && token.isNotEmpty) {
           options.headers['Authorization'] = 'Bearer $token';
         }
@@ -47,9 +46,11 @@ class ApiService {
   Future<dynamic> get(String endpoint,
       {Map<String, dynamic>? queryParameters}) async {
     try {
+      Logger.info(
+          "allll  ${"$baseUrl$endpoint?${queryParameters?.entries.map((e) => '${e.key}=${e.value}').join('&')}"}");
       final response =
           await _dio.get(endpoint, queryParameters: queryParameters);
-      Logger.info(response.data);
+      Logger.info(response.data.toString());
       return response.data;
     } catch (e) {
       Logger.error('Error: $e');
@@ -77,17 +78,23 @@ class ApiService {
         Logger.error('Error Status Code: ${e.response?.statusCode}');
         Logger.error('Error Response Data: ${e.response?.data}');
 
-        // If there's validation errors, they're usually in response.data
+        // Handle validation errors (status code 422)
         if (e.response?.statusCode == 422) {
           final errorData = e.response?.data;
-          throw DioException(
-            requestOptions: e.requestOptions,
-            response: e.response,
-            error: errorData is Map
-                ? errorData['message'] ?? errorData.toString()
-                : errorData.toString(),
-          );
+          if (errorData is Map && errorData['errors'] != null) {
+            // Extract validation error messages
+            final errors = errorData['errors'] as Map<String, dynamic>;
+            final errorMessages = errors.values
+                .map((errorList) => errorList.join(', '))
+                .join(', ');
+            throw Failure('Validation error: $errorMessages');
+          } else {
+            throw Failure(errorData['message'] ?? 'Validation error occurred');
+          }
         }
+
+        // Handle other server errors
+        throw Failure(e.response?.data['message'] ?? 'An error occurred');
       }
       Logger.error('Error: $e');
       throw handleDioError(e);
@@ -97,10 +104,10 @@ class ApiService {
   Future<dynamic> put(String endpoint, {dynamic data}) async {
     try {
       final response = await _dio.put(endpoint, data: data);
-      Logger.info(response.data);
+      Logger.info(response.data.toString());
       return response.data;
     } catch (e) {
-      Logger.error('Error: $e');
+      Logger.error('Error: ${e.toString()}');
       throw handleDioError(e);
     }
   }
@@ -116,43 +123,40 @@ class ApiService {
     }
   }
 
-  DioException handleDioError(dynamic error) {
+  Failure handleDioError(dynamic error) {
     if (error is DioException) {
       Logger.error('Error: $error');
-      return error;
-    }
-    Logger.error('Error: $error');
-
-    return DioException(
-      requestOptions: RequestOptions(path: ''),
-      error: error.toString(),
-    );
-  }
-
-  Failure handleError(dynamic error) {
-    if (error is DioException) {
       switch (error.type) {
         case DioExceptionType.connectionTimeout:
-          return Failure('Connection timeout');
+          return Failure(
+              'Connection timeout. Please check your internet connection.');
         case DioExceptionType.receiveTimeout:
-          return Failure('Receive timeout');
+          return Failure('Server took too long to respond. Please try again.');
         case DioExceptionType.sendTimeout:
-          return Failure('Send timeout');
+          return Failure(
+              'Request timed out. Please check your internet connection.');
         case DioExceptionType.badResponse:
           final statusCode = error.response?.statusCode ?? 500;
-          return Failure(
-            'Error $statusCode: ${error.response?.data['message'] ?? 'Unknown error'}',
-          );
+          if (statusCode == 401) {
+            return Failure('Unauthorized. Please log in again.');
+          } else if (statusCode == 404) {
+            return Failure('Resource not found.');
+          } else if (statusCode == 500) {
+            return Failure('Server error. Please try again later.');
+          } else {
+            return Failure('An error occurred. Status code: $statusCode');
+          }
         case DioExceptionType.cancel:
-          return Failure('Request cancelled');
+          return Failure('Request cancelled.');
         case DioExceptionType.unknown:
-          return Failure('Unexpected error: ${error.message}');
+          return Failure('An unexpected error occurred. Please try again.');
         case DioExceptionType.badCertificate:
-          return Failure('Bad certificate: ${error.message}');
+          return Failure('Invalid certificate. Please contact support.');
         case DioExceptionType.connectionError:
-          return Failure('Connection error: ${error.message}');
+          return Failure(
+              'Connection error. Please check your internet connection.');
       }
     }
-    return Failure('Unknown error occurred');
+    return Failure('An unknown error occurred. Please try again.');
   }
 }

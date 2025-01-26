@@ -3,12 +3,15 @@ import 'package:rakli_salons_app/core/theme/theme_constants.dart';
 
 class CustomSearchField extends StatelessWidget {
   final VoidCallback? onTap;
+  final TextEditingController? controller;
+  final void Function(String)? onChanged;
 
   const CustomSearchField({
     super.key,
     this.onTap,
+    this.controller,
+    this.onChanged,
   });
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -41,6 +44,8 @@ class CustomSearchField extends StatelessWidget {
               Expanded(
                 child: TextField(
                   enabled: onTap == null,
+                  controller: controller,
+                  onChanged: onChanged,
                   decoration: InputDecoration(
                     hintText: 'Search',
                     hintStyle: const TextStyle(

@@ -13,12 +13,16 @@ import 'package:rakli_salons_app/features/home/data/models/models/product_model.
 import 'package:rakli_salons_app/features/home/data/models/models/service_model.dart';
 import 'package:rakli_salons_app/features/home/views/add_edit_service_view.dart';
 import 'package:rakli_salons_app/features/home/views/add_product_view.dart';
+import 'package:rakli_salons_app/features/home/views/cart_view.dart';
 import 'package:rakli_salons_app/features/home/views/favorites_view.dart';
 import 'package:rakli_salons_app/features/home/views/filter_view.dart';
 import 'package:rakli_salons_app/features/home/views/home_view.dart';
 import 'package:rakli_salons_app/features/home/views/my_products_view.dart';
 import 'package:rakli_salons_app/features/home/views/notifications_view.dart';
 import 'package:rakli_salons_app/features/home/views/orders_view.dart';
+import 'package:rakli_salons_app/features/home/views/product_details_view.dart';
+import 'package:rakli_salons_app/features/home/views/reports_view.dart';
+import 'package:rakli_salons_app/features/home/views/shop_view.dart';
 import 'package:rakli_salons_app/features/splash/views/account_selection_view.dart';
 import 'package:rakli_salons_app/features/splash/views/splash_view.dart';
 
@@ -37,6 +41,11 @@ class AppRouter {
   static const String kAddEditServiceView = '/add-edit-service';
   static const String kHomeView = '/home';
   static const String kAddProductView = '/add-product';
+  static const String kProductDetailsView = '/product-details';
+
+  static const String kReportsView = '/reports';
+  static const String kShopView = '/shop';
+  static const String kCartView = '/cart';
 
   static const String kMyProductsView = '/my-products';
   static const String kFavoritesView = '/favorites';
@@ -56,8 +65,26 @@ class AppRouter {
       builder: (context, state) => const OrdersView(),
     ),
     GoRoute(
+      path: kProductDetailsView,
+      builder: (context, state) => ProductDetailsView(
+        product: state.extra as ProductModel,
+      ),
+    ),
+    GoRoute(
       path: kFavoritesView,
       builder: (context, state) => const FavoritesView(),
+    ),
+    GoRoute(
+      path: kReportsView,
+      builder: (context, state) => const ReportsView(),
+    ),
+    GoRoute(
+      path: kShopView,
+      builder: (context, state) => const ShopView(),
+    ),
+    GoRoute(
+      path: kCartView,
+      builder: (context, state) => const CartView(),
     ),
     GoRoute(
       path: kMyProductsView,

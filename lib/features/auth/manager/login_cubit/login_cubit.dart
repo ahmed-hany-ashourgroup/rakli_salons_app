@@ -39,7 +39,7 @@ class LoginCubit extends Cubit<LoginState> {
       emit(LoginSuccess(user: userModel));
       return Right(userModel);
     } catch (e) {
-      final failure = _apiService.handleError(e);
+      final failure = _apiService.handleDioError(e);
       emit(LoginFailed(errMessage: failure.message));
       return Left(failure);
     }
