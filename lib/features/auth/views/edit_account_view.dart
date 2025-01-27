@@ -4,6 +4,7 @@ import 'package:rakli_salons_app/core/customs/custom_button.dart';
 import 'package:rakli_salons_app/core/customs/custom_textfield.dart';
 import 'package:rakli_salons_app/core/theme/theme_constants.dart';
 import 'package:rakli_salons_app/core/utils/app_styles.dart';
+import 'package:rakli_salons_app/core/utils/toast_service.dart';
 
 class EditProfileView extends StatefulWidget {
   const EditProfileView({super.key});
@@ -79,11 +80,8 @@ class _EditProfileViewState extends State<EditProfileView> {
                     ),
                     onPressed: () {
                       // Handle update logic
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Account details updated!"),
-                        ),
-                      );
+                      ToastService.showCustomToast(
+                          message: "Account details updated!");
                     },
                   ),
                 ),

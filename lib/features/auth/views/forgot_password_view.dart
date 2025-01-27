@@ -5,6 +5,7 @@ import 'package:rakli_salons_app/core/customs/custom_button.dart';
 import 'package:rakli_salons_app/core/customs/custom_textfield.dart';
 import 'package:rakli_salons_app/core/theme/theme_constants.dart';
 import 'package:rakli_salons_app/core/utils/app_styles.dart';
+import 'package:rakli_salons_app/core/utils/toast_service.dart';
 import 'package:rakli_salons_app/features/auth/manager/confirmation_code_cubit/confirmation_code_cubit.dart';
 import 'package:rakli_salons_app/features/auth/manager/reset_password_cubit/reset_password_cubit.dart';
 
@@ -37,8 +38,8 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                 Navigator.pop(context);
               }
             } else if (state is ResetPasswordFailed) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.errMessage)),
+              ToastService.showCustomToast(
+                message: state.errMessage,
               );
             }
           },
@@ -48,8 +49,8 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
             if (state is ConfirmationCodeSuccess) {
               setState(() => step = 3);
             } else if (state is ConfirmationCodeFailed) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.errMessage)),
+              ToastService.showCustomToast(
+                message: state.errMessage,
               );
             }
           },
@@ -235,20 +236,16 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                 onPressed: () {
                   if (newPasswordController.text.isEmpty ||
                       confirmPasswordController.text.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Please fill in all fields"),
-                      ),
+                    ToastService.showCustomToast(
+                      message: "Please fill all fields",
                     );
                     return;
                   }
 
                   if (newPasswordController.text !=
                       confirmPasswordController.text) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Passwords do not match!"),
-                      ),
+                    ToastService.showCustomToast(
+                      message: "Passwords do not match",
                     );
                     return;
                   }

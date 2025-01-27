@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rakli_salons_app/features/auth/manager/Business_Registration_Cubit/Business_Registration_Cubit.dart';
 import 'package:rakli_salons_app/features/auth/manager/confirmation_code_cubit/confirmation_code_cubit.dart';
 import 'package:rakli_salons_app/features/auth/manager/login_cubit/login_cubit.dart';
 import 'package:rakli_salons_app/features/auth/manager/reset_password_cubit/reset_password_cubit.dart';
-import 'package:rakli_salons_app/features/auth/manager/sign_up_cubit/sign_up_cubit.dart';
 import 'package:rakli_salons_app/features/auth/views/confirmation_code_view.dart';
 import 'package:rakli_salons_app/features/auth/views/forgot_password_view.dart';
 import 'package:rakli_salons_app/features/auth/views/login_view.dart';
@@ -130,7 +130,7 @@ class AppRouter {
     GoRoute(
       path: kSignUpView,
       builder: (context, state) => BlocProvider(
-        create: (context) => SignUpCubit(),
+        create: (context) => BusinessRegistrationCubit(),
         child: const BusinessSignUpView(),
       ),
     ),

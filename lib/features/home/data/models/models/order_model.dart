@@ -10,7 +10,7 @@ class OrderModel {
   final String? createdAt;
   final String? updatedAt;
   final String? state;
-  final SalonUserModel? user;
+  final BuisnessUserModel? user;
 
   OrderModel({
     this.id,
@@ -42,7 +42,9 @@ class OrderModel {
       createdAt: json['created_at'] as String?,
       updatedAt: json['updated_at'] as String?,
       state: json['state'] as String?,
-      user: json['user'] != null ? SalonUserModel.fromJson(json['user']) : null,
+      user: json['user'] != null
+          ? BuisnessUserModel.fromJson(json['user'])
+          : null,
     );
   }
 }

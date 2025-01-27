@@ -4,6 +4,7 @@ import 'package:rakli_salons_app/core/customs/custom_button.dart';
 import 'package:rakli_salons_app/core/customs/custom_textfield.dart';
 import 'package:rakli_salons_app/core/theme/theme_constants.dart';
 import 'package:rakli_salons_app/core/utils/app_styles.dart';
+import 'package:rakli_salons_app/core/utils/toast_service.dart';
 
 class ChangePasswordView extends StatefulWidget {
   const ChangePasswordView({super.key});
@@ -82,11 +83,8 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                           // Handle password reset logic
                           Navigator.pop(context);
                         } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Passwords do not match!"),
-                            ),
-                          );
+                          ToastService.showCustomToast(
+                              message: "Passwords do not match");
                         }
                       },
                     ),

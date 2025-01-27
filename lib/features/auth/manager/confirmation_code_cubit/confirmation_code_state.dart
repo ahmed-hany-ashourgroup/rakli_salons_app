@@ -6,7 +6,7 @@ sealed class ConfirmationCodeState {}
 final class ConfirmationCodeInitial extends ConfirmationCodeState {}
 
 final class ConfirmationCodeSuccess extends ConfirmationCodeState {
-  final SalonUserModel user;
+  final BuisnessUserModel user;
 
   ConfirmationCodeSuccess({required this.user});
 }

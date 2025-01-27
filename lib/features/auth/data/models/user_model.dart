@@ -1,40 +1,56 @@
-class SalonUserModel {
+// business_registration_model.dart
+class BuisnessUserModel {
   int? id;
   String? name;
   String? email;
   String? phone;
   String? password;
   String? address;
+  String? role;
   String? verificationCode;
   DateTime? createdAt;
   DateTime? updatedAt;
   String? token;
-  String? image;
+  String? photo;
   String? cover;
+  String? tradeLicense;
+  String? taxRegistration;
+  String? idCard;
+  double? latitude;
+  double? longitude;
+  String? method;
 
-  SalonUserModel({
+  BuisnessUserModel({
     this.id,
     this.name,
     this.email,
     this.phone,
+    this.password,
+    this.address,
+    this.role,
     this.verificationCode,
     this.createdAt,
     this.updatedAt,
-    this.password,
     this.token,
-    this.address,
-    this.image,
+    this.photo,
     this.cover,
+    this.tradeLicense,
+    this.taxRegistration,
+    this.idCard,
+    this.latitude,
+    this.longitude,
+    this.method,
   });
 
-  SalonUserModel.fromJson(Map<String, dynamic> json) {
+  BuisnessUserModel.fromJson(Map<String, dynamic> json) {
     final userData = json['data']?['user'] ?? json['user'];
     if (userData != null) {
       id = userData['id'];
-
       name = userData['name'];
       email = userData['email'];
       phone = userData['phone'];
+      address = userData['address'];
+      role = userData['role'];
       verificationCode = userData['verification_code'];
       createdAt = userData['created_at'] != null
           ? DateTime.parse(userData['created_at'])
@@ -42,27 +58,29 @@ class SalonUserModel {
       updatedAt = userData['updated_at'] != null
           ? DateTime.parse(userData['updated_at'])
           : null;
-      image = userData['image'];
+      photo = userData['photo'];
       cover = userData['cover'];
+      tradeLicense = userData['trade_license'];
+      taxRegistration = userData['tax_registration'];
+      idCard = userData['id_card'];
+      latitude = userData['latitude']?.toDouble();
+      longitude = userData['longitude']?.toDouble();
+      method = userData['method'];
     }
-    // Check both possible token locations
     token = json['data']?['token'] ?? json['token'];
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'user': {
-        'id': id,
-        'name': name,
-        'email': email,
-        'phone': phone,
-        'verification_code': verificationCode,
-        'created_at': createdAt?.toIso8601String(),
-        'updated_at': updatedAt?.toIso8601String(),
-        'image': image,
-        'cover': cover
-      },
-      'token': token,
+      'business_name': name,
+      'email': email,
+      'password': password,
+      'phone': phone,
+      'address': address,
+      'role': role,
+      'latitude': latitude,
+      'longitude': longitude,
+      'method': method,
     };
   }
 }

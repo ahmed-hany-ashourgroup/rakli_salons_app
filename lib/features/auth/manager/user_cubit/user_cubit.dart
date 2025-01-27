@@ -6,5 +6,5 @@ part 'user_state.dart';
 
 class SalonsUserCubit extends Cubit<UserState> {
   SalonsUserCubit() : super(UserInitial());
-  static SalonUserModel user = SalonUserModel();
+  static BuisnessUserModel user = BuisnessUserModel();
 }
