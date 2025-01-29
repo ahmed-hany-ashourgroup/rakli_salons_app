@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:rakli_salons_app/core/utils/app_styles.dart';
-import 'package:rakli_salons_app/core/utils/assets.dart';
+import 'package:rakli_salons_app/features/auth/data/models/user_model.dart';
 
 // ------------------------------
 class ProfileHeader extends StatelessWidget {
-  const ProfileHeader({super.key});
+  final BuisnessUserModel user;
+
+  const ProfileHeader({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -33,26 +35,25 @@ class ProfileHeader extends StatelessWidget {
                       bottomLeft: Radius.circular(32),
                       bottomRight: Radius.circular(32),
                     ),
-                    image: DecorationImage(
-                      image: AssetImage(Assets.assetsImagesCover),
-                      fit: BoxFit.cover,
-                    ),
+                    image: user.cover != null
+                        ? DecorationImage(
+                            image: NetworkImage(user.cover!),
+                            fit: BoxFit.cover,
+                          )
+                        : null,
                   ),
                 ),
               ),
               Positioned(
                 top: MediaQuery.of(context).padding.top,
                 right: 16,
-                child: IconButton(
-                  icon: const Icon(Icons.edit_rounded, color: Colors.white),
-                  onPressed: () {},
-                ),
+                child: const Icon(Icons.edit_rounded, color: Colors.white),
               ),
               Positioned(
                 top: MediaQuery.of(context).padding.top + 8,
                 left: 16,
                 child: Text(
-                  'Mall Beauty Salon',
+                  user.name ?? 'Unknown',
                   style: AppStyles.bold24.copyWith(color: Colors.white),
                 ),
               ),
@@ -62,15 +63,11 @@ class ProfileHeader extends StatelessWidget {
         Positioned(
           right: 16,
           top: 100,
-          child: Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 4),
-            ),
-            child: CircleAvatar(
-              radius: 50,
-              backgroundImage: AssetImage(Assets.assetsImagesProfilephoto),
-            ),
+          child: CircleAvatar(
+            radius: 50,
+            backgroundImage:
+                user.photo != null ? NetworkImage(user.photo!) : null,
+            backgroundColor: Colors.grey[300],
           ),
         ),
       ],

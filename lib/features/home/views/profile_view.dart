@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rakli_salons_app/core/theme/theme_constants.dart';
 import 'package:rakli_salons_app/core/utils/assets.dart';
+import 'package:rakli_salons_app/features/auth/manager/user_cubit/user_cubit.dart';
 import 'package:rakli_salons_app/features/home/views/widgets/profile_header.dart';
 import 'package:rakli_salons_app/features/home/views/widgets/profile_tab_bar.dart';
 
@@ -15,7 +16,9 @@ class ProfileView extends StatelessWidget {
       child: Scaffold(
         body: Column(
           children: [
-            const ProfileHeader(),
+            ProfileHeader(
+              user: SalonsUserCubit.user,
+            ),
             const SizedBox(height: 16),
             const ProfileTabBar(),
             const Expanded(

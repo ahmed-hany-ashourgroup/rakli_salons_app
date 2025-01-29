@@ -67,7 +67,7 @@ class _AppointmentItemState extends State<AppointmentItem> {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        "\$${widget.appointment.price?.toStringAsFixed(0) ?? "0"}",
+                        "\$${widget.appointment.price.toStringAsFixed(0) ?? "0"}",
                         style: AppStyles.bold16,
                       ),
                     ],
@@ -119,7 +119,7 @@ class _AppointmentItemState extends State<AppointmentItem> {
                     selectedItemBuilder: (context) => List.generate(4, (index) {
                       return DropdownMenuItem<AppointmentStatus>(
                         child: Text(
-                          widget.appointment.status?.name ?? "",
+                          widget.appointment.status.name ?? "",
                           style:
                               AppStyles.regular14.copyWith(color: Colors.black),
                         ),

@@ -4,7 +4,8 @@ import 'package:rakli_salons_app/core/theme/theme_constants.dart';
 import 'package:rakli_salons_app/core/utils/app_router.dart';
 import 'package:rakli_salons_app/core/utils/app_styles.dart';
 import 'package:rakli_salons_app/core/utils/assets.dart';
-import 'package:rakli_salons_app/features/home/views/prfofile_view.dart';
+import 'package:rakli_salons_app/features/auth/manager/user_cubit/user_cubit.dart';
+import 'package:rakli_salons_app/features/home/views/profile_view.dart';
 
 class ProfileTabBar extends StatelessWidget {
   const ProfileTabBar({super.key});
@@ -37,7 +38,6 @@ class ProfileTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const VideoSection(),
           const SizedBox(height: 16),
           const SalonInformation(),
           const SizedBox(height: 150),
@@ -52,23 +52,22 @@ class SalonInformation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = SalonsUserCubit.user;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            Text('Mall Beauty Salon', style: AppStyles.bold24),
+            Text(user.name ?? 'Business Name', style: AppStyles.bold24),
             const SizedBox(width: 8),
             const Icon(Icons.verified, color: kPrimaryColor),
           ],
         ),
         const SizedBox(height: 16),
-        Text('Description', style: AppStyles.medium20),
+        Text('Address', style: AppStyles.medium20),
         const SizedBox(height: 8),
-        Text(
-          'Hair cutting and styling is the art of manipulating hair to achieve a desired look...',
-          style: AppStyles.regular16,
-        ),
+        Text(user.address ?? 'No address provided', style: AppStyles.regular16),
         const SizedBox(height: 16),
         const LocationInfo(),
       ],
@@ -81,13 +80,16 @@ class LocationInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = SalonsUserCubit.user;
+
     return Column(
       children: [
         Row(
           children: [
             const Icon(Icons.location_on, color: kPrimaryColor),
             const SizedBox(width: 8),
-            Text('13 km', style: AppStyles.regular16),
+            Text(user.address ?? 'Location not set',
+                style: AppStyles.regular16),
           ],
         ),
         const SizedBox(height: 16),
@@ -95,7 +97,7 @@ class LocationInfo extends StatelessWidget {
           children: [
             const Icon(Icons.phone, color: kPrimaryColor),
             const SizedBox(width: 8),
-            Text('+20 11 5757 4822', style: AppStyles.regular16),
+            Text(user.phone ?? 'No phone number', style: AppStyles.regular16),
           ],
         ),
       ],

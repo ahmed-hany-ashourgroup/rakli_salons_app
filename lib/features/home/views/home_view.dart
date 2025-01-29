@@ -6,7 +6,7 @@ import 'package:rakli_salons_app/core/customs/custom_drawer.dart';
 import 'package:rakli_salons_app/features/home/manager/get_services_cubit/get_services_cubit.dart';
 import 'package:rakli_salons_app/features/home/views/appointments_view.dart';
 import 'package:rakli_salons_app/features/home/views/home_content.dart';
-import 'package:rakli_salons_app/features/home/views/prfofile_view.dart';
+import 'package:rakli_salons_app/features/home/views/profile_view.dart';
 import 'package:rakli_salons_app/features/home/views/services_view.dart';
 
 class HomeView extends StatefulWidget {
