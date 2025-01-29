@@ -1,4 +1,3 @@
-// business_registration_model.dart
 class BuisnessUserModel {
   int? id;
   String? name;
@@ -43,29 +42,45 @@ class BuisnessUserModel {
   });
 
   BuisnessUserModel.fromJson(Map<String, dynamic> json) {
-    final userData = json['data']?['user'] ?? json['user'];
-    if (userData != null) {
-      id = userData['id'];
-      name = userData['name'];
-      email = userData['email'];
-      phone = userData['phone'];
-      address = userData['address'];
-      role = userData['role'];
-      verificationCode = userData['verification_code'];
-      createdAt = userData['created_at'] != null
-          ? DateTime.parse(userData['created_at'])
+    final accountData = json['data']?['account'] ?? json['account'];
+    if (accountData != null) {
+      id = accountData['id'];
+      name = accountData['business_name']; // Map 'business_name' to 'name'
+      email = accountData['email'];
+      phone = accountData['phone'];
+      address = accountData['address'];
+      role = accountData['role'];
+      verificationCode = accountData['verification_code'];
+      createdAt = accountData['created_at'] != null
+          ? DateTime.parse(accountData['created_at'])
           : null;
-      updatedAt = userData['updated_at'] != null
-          ? DateTime.parse(userData['updated_at'])
+      updatedAt = accountData['updated_at'] != null
+          ? DateTime.parse(accountData['updated_at'])
           : null;
-      photo = userData['photo'];
-      cover = userData['cover'];
-      tradeLicense = userData['trade_license'];
-      taxRegistration = userData['tax_registration'];
-      idCard = userData['id_card'];
-      latitude = userData['latitude']?.toDouble();
-      longitude = userData['longitude']?.toDouble();
-      method = userData['method'];
+
+      // Handle nested 'photos' object and prepend base URL
+      final photosData = accountData['photos'];
+      if (photosData != null) {
+        photo = photosData['photo'] != null
+            ? "http://89.116.110.219/storage/${photosData['photo']}"
+            : null;
+        tradeLicense = photosData['trade_license'] != null
+            ? "http://89.116.110.219/storage/${photosData['trade_license']}"
+            : null;
+        taxRegistration = photosData['tax_registration'] != null
+            ? "http://89.116.110.219/storage/${photosData['tax_registration']}"
+            : null;
+        cover = photosData['cover'] != null
+            ? "http://89.116.110.219/storage/${photosData['cover']}"
+            : null;
+        idCard = photosData['id_card'] != null
+            ? "http://89.116.110.219/storage/${photosData['id_card']}"
+            : null;
+      }
+
+      latitude = double.tryParse(accountData['latitude'] ?? '');
+      longitude = double.tryParse(accountData['longitude'] ?? '');
+      method = accountData['method'];
     }
     token = json['data']?['token'] ?? json['token'];
   }

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rakli_salons_app/core/customs/custom_search_field.dart';
 import 'package:rakli_salons_app/core/theme/theme_constants.dart';
-import 'package:rakli_salons_app/core/utils/app_router.dart';
 import 'package:rakli_salons_app/core/utils/app_styles.dart';
-import 'package:rakli_salons_app/features/home/data/models/appointment_model.dart';
+import 'package:rakli_salons_app/features/home/manager/get_appointments_cubit/get_appointments_cubit.dart';
 import 'package:rakli_salons_app/features/home/views/widgets/appointment_item.dart';
 
 class AppointmentsView extends StatefulWidget {
@@ -15,32 +14,14 @@ class AppointmentsView extends StatefulWidget {
 }
 
 class _AppointmentsViewState extends State<AppointmentsView> {
-  List<Appointment> appointments = [
-    Appointment(
-      requestUserName: "Saud Karim",
-      status: AppointmentStatus.pending,
-      price: 130,
-      date: DateTime.now(),
-      comment: null,
-    ),
-    Appointment(
-      requestUserName: "Saud Karim",
-      status: AppointmentStatus.cancelled,
-      price: 130,
-      date: DateTime.now(),
-      comment: null,
-    ),
-    Appointment(
-      requestUserName: "Saud Karim",
-      status: AppointmentStatus.confirmed,
-      price: 130,
-      date: DateTime.now(),
-      comment:
-          "Lorem LoremLoremLorem loremIoremLoremLorem IoremIorem LoremLoremLoremLorem loremIoremLoremLoremLorem",
-    ),
-  ];
-
+  late GetAppointmentsCubit _appointmentsCubit;
   ViewPeriod selectedPeriod = ViewPeriod.daily;
+
+  @override
+  void initState() {
+    super.initState();
+    _appointmentsCubit = GetAppointmentsCubit()..fetchAppointments();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,29 +34,19 @@ class _AppointmentsViewState extends State<AppointmentsView> {
           children: [
             Row(
               children: [
-                // Wrap CustomSearchField with Expanded
-                Expanded(
-                  child: CustomSearchField(),
-                ),
-                const SizedBox(
-                    width: 12), // Add spacing between search field and button
+                Expanded(child: CustomSearchField()),
+                const SizedBox(width: 12),
                 CircleAvatar(
                   backgroundColor: kSecondaryColor,
                   child: IconButton(
-                    onPressed: () {
-                      GoRouter.of(context).push(AppRouter.kFilterView);
-                    },
-                    icon: Icon(
-                      Icons.filter_alt,
-                      color: kPrimaryColor,
-                      size: 28,
-                    ),
+                    onPressed: () {},
+                    icon:
+                        Icon(Icons.filter_alt, color: kPrimaryColor, size: 28),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 32),
-            // Clickable Text with Dropdown Menu
             PopupMenuButton<ViewPeriod>(
               initialValue: ViewPeriod.daily,
               color: kPrimaryColor,
@@ -98,10 +69,7 @@ class _AppointmentsViewState extends State<AppointmentsView> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    _getPeriodText(selectedPeriod),
-                    style: AppStyles.bold20,
-                  ),
+                  Text(_getPeriodText(selectedPeriod), style: AppStyles.bold20),
                   const SizedBox(width: 8),
                   const Icon(Icons.arrow_drop_down, size: 24),
                 ],
@@ -109,11 +77,24 @@ class _AppointmentsViewState extends State<AppointmentsView> {
             ),
             const SizedBox(height: 16),
             Expanded(
-              child: ListView.builder(
-                itemCount: appointments.length,
-                physics: const BouncingScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return AppointmentItem(appointment: appointments[index]);
+              child: BlocBuilder<GetAppointmentsCubit, GetAppointmentsState>(
+                bloc: _appointmentsCubit,
+                builder: (context, state) {
+                  if (state is GetAppointmentsLoading) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (state is GetAppointmentsFailed) {
+                    return Center(child: Text(state.errMessage));
+                  } else if (state is GetAppointmentsSuccess) {
+                    return ListView.builder(
+                      itemCount: state.appointments.length,
+                      physics: const BouncingScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return AppointmentItem(
+                            appointment: state.appointments[index]);
+                      },
+                    );
+                  }
+                  return Center(child: Text("No appointments found"));
                 },
               ),
             ),
@@ -123,7 +104,6 @@ class _AppointmentsViewState extends State<AppointmentsView> {
     );
   }
 
-  // Helper function to get the display text for the selected period
   String _getPeriodText(ViewPeriod period) {
     switch (period) {
       case ViewPeriod.daily:

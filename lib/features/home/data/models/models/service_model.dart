@@ -9,12 +9,13 @@ class ServiceModel {
   final String? updatedAt;
   final int? active;
   final Gender? gender;
-  ServiceState? state;
+  ServiceState state;
 
   ServiceModel({
     this.id,
     this.businessId,
     this.title,
+    this.state = ServiceState.active,
     this.description,
     this.price,
     this.promotions,
@@ -22,7 +23,6 @@ class ServiceModel {
     this.updatedAt,
     this.active,
     this.gender,
-    this.state,
   });
 
   factory ServiceModel.fromJson(Map<String, dynamic> json) {
@@ -36,7 +36,7 @@ class ServiceModel {
       createdAt: json['created_at'] as String?,
       updatedAt: json['updated_at'] as String?,
       active: json['active'] as int?,
-      gender: json['gender'] as Gender?,
+      gender: json['gender'] == 'male' ? Gender.male : Gender.female,
     );
   }
 

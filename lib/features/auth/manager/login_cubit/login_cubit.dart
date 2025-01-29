@@ -21,7 +21,7 @@ class LoginCubit extends Cubit<LoginState> {
     emit(LoginLoading());
     try {
       final response = await _apiService
-          .post('auth/login', data: {'email': email, 'password': password});
+          .post('business/login', data: {'email': email, 'password': password});
 
       // Log the response for debugging
       Logger.info('Login Response: $response');

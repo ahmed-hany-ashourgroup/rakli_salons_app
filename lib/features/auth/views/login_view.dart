@@ -135,10 +135,9 @@ class _LoginViewState extends State<LoginView> {
                       onPressed: () async {
                         if (formKey.currentState!.validate()) {
                           formKey.currentState!.save();
-                          GoRouter.of(context).go(AppRouter.kHomeView);
 
-                          // await BlocProvider.of<LoginCubit>(context).login(
-                          //     emailController.text, passwordController.text);
+                          await BlocProvider.of<LoginCubit>(context).login(
+                              emailController.text, passwordController.text);
                         } else {
                           setState(() {
                             autovalidateMode = AutovalidateMode.always;

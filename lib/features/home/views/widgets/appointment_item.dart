@@ -5,7 +5,7 @@ import 'package:rakli_salons_app/core/utils/size_config.dart';
 import 'package:rakli_salons_app/features/home/data/models/appointment_model.dart';
 
 class AppointmentItem extends StatefulWidget {
-  final Appointment appointment;
+  final AppointmentsModel appointment;
 
   const AppointmentItem({super.key, required this.appointment});
 
