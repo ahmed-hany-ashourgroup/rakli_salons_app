@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rakli_salons_app/core/customs/custom_admin_appbar.dart';
 import 'package:rakli_salons_app/core/customs/custom_bottom_nav.dart';
 import 'package:rakli_salons_app/core/customs/custom_drawer.dart';
+import 'package:rakli_salons_app/features/home/manager/get_services_cubit/get_services_cubit.dart';
 import 'package:rakli_salons_app/features/home/views/appointments_view.dart';
 import 'package:rakli_salons_app/features/home/views/home_content.dart';
 import 'package:rakli_salons_app/features/home/views/prfofile_view.dart';
@@ -20,7 +22,10 @@ class _HomeViewState extends State<HomeView> {
   final List<Widget> _pages = [
     const HomeContent(),
     const AppointmentsView(),
-    const ServicesView(),
+    BlocProvider(
+      create: (context) => GetServicesCubit(),
+      child: const ServicesView(),
+    ),
     const ProfileView()
   ];
 

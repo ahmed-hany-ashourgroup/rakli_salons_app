@@ -11,6 +11,8 @@ import 'package:rakli_salons_app/features/auth/views/login_view.dart';
 import 'package:rakli_salons_app/features/auth/views/sign_up_view.dart';
 import 'package:rakli_salons_app/features/home/data/models/models/product_model.dart';
 import 'package:rakli_salons_app/features/home/data/models/models/service_model.dart';
+import 'package:rakli_salons_app/features/home/manager/add_new_service_cubit/add_service_cubit.dart';
+import 'package:rakli_salons_app/features/home/manager/get_services_cubit/get_services_cubit.dart';
 import 'package:rakli_salons_app/features/home/views/add_edit_service_view.dart';
 import 'package:rakli_salons_app/features/home/views/add_product_view.dart';
 import 'package:rakli_salons_app/features/home/views/cart_view.dart';
@@ -143,9 +145,19 @@ class AppRouter {
         builder: (context, state) {
           if (state.extra != null) {
             Map data = state.extra as Map;
-            return AddEditServiceView(
-              service: data['service'] as ServiceModel?,
-              isEditMode: data['isEditMode'],
+            return MultiBlocProvider(
+              providers: [
+                BlocProvider(
+                  create: (context) => AddServiceCubit(),
+                ),
+                BlocProvider(
+                  create: (context) => GetServicesCubit(),
+                ),
+              ],
+              child: AddEditServiceView(
+                service: data['service'] as ServiceModel?,
+                isEditMode: data['isEditMode'],
+              ),
             );
           } else {
             return const HomeView();

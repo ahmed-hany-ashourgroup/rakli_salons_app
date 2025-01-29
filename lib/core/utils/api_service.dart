@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:rakli_salons_app/core/errors/api_error.dart';
 import 'package:rakli_salons_app/core/errors/failure.dart';
 import 'package:rakli_salons_app/core/utils/logger.dart';
+import 'package:rakli_salons_app/features/auth/manager/user_cubit/user_cubit.dart';
 
 final String baseUrl = 'http://89.116.110.219/api/';
 
@@ -20,9 +21,8 @@ class ApiService {
         )) {
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) {
-        // final token = SalonsUserCubit.user.token;
-        final token = "198|PYqbwCtHZJ5N84PY39RAyXlyXIJip1Spot1764z9dd151c8b";
-        if (token.isNotEmpty) {
+        final token = SalonsUserCubit.user.token;
+        if (token != null && token.isNotEmpty) {
           options.headers['Authorization'] = 'Bearer $token';
         }
         return handler.next(options);

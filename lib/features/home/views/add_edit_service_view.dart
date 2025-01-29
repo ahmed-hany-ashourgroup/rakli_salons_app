@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rakli_salons_app/core/customs/custom_app_bar.dart';
 import 'package:rakli_salons_app/core/customs/custom_button.dart';
 import 'package:rakli_salons_app/core/theme/theme_constants.dart';
 import 'package:rakli_salons_app/core/utils/app_styles.dart';
-import 'package:rakli_salons_app/core/utils/logger.dart';
+import 'package:rakli_salons_app/core/utils/toast_service.dart';
 import 'package:rakli_salons_app/features/home/data/models/models/service_model.dart';
+import 'package:rakli_salons_app/features/home/manager/add_new_service_cubit/add_service_cubit.dart';
+import 'package:rakli_salons_app/features/home/manager/get_services_cubit/get_services_cubit.dart';
 
 class AddEditServiceView extends StatefulWidget {
   final ServiceModel? service;
@@ -25,6 +28,7 @@ class _AddEditServiceViewState extends State<AddEditServiceView> {
   late TextEditingController _titleController;
   late TextEditingController _descriptionController;
   late TextEditingController _priceController;
+  late TextEditingController _promotionsController;
   late ServiceState _selectedState;
   late Gender _selectedGender;
 
@@ -40,6 +44,8 @@ class _AddEditServiceViewState extends State<AddEditServiceView> {
         TextEditingController(text: widget.service?.description ?? '');
     _priceController =
         TextEditingController(text: widget.service?.price?.toString() ?? '');
+    _promotionsController = TextEditingController(
+        text: widget.service?.promotions?.toString() ?? '');
     _selectedState = widget.service?.state ?? ServiceState.active;
     _selectedGender = widget.service?.gender ?? Gender.male;
   }
@@ -49,39 +55,81 @@ class _AddEditServiceViewState extends State<AddEditServiceView> {
     _titleController.dispose();
     _descriptionController.dispose();
     _priceController.dispose();
+    _promotionsController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[50],
-      body: SafeArea(
-        child: Column(
-          children: [
-            _buildAppBar(),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 32),
-                        _buildFormSection(),
-                        const SizedBox(height: 32),
-                        _buildActionButtons(),
-                        const SizedBox(height: 32),
-                      ],
-                    ),
+    return BlocProvider(
+      create: (context) => AddServiceCubit(),
+      child: BlocConsumer<AddServiceCubit, AddServiceState>(
+        listener: (context, state) {
+          if (state is AddServiceSuccess) {
+            ToastService.showCustomToast(
+              message: state.message,
+              type: ToastType.success,
+            );
+            Navigator.pop(context, true);
+          } else if (state is AddServiceFailure) {
+            ToastService.showCustomToast(
+              message: state.error,
+              type: ToastType.error,
+            );
+          }
+        },
+        builder: (context, state) {
+          return Scaffold(
+            backgroundColor: Colors.grey[50],
+            body: SafeArea(
+              child: Stack(
+                children: [
+                  Column(
+                    children: [
+                      _buildAppBar(),
+                      if (state is AddServiceLoading)
+                        const LinearProgressIndicator(
+                          color: kPrimaryColor,
+                        ),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 24.0),
+                            child: Form(
+                              key: _formKey,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 32),
+                                  _buildFormSection(),
+                                  const SizedBox(height: 32),
+                                  _buildActionButtons(state, context),
+                                  const SizedBox(height: 32),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
+                  if (state is AddServiceLoading)
+                    const Positioned.fill(
+                      child: ColoredBox(
+                        color: Colors.black26,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: kPrimaryColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -160,6 +208,15 @@ class _AddEditServiceViewState extends State<AddEditServiceView> {
             prefixIcon: Icons.attach_money,
           ),
           const SizedBox(height: 20),
+          _buildTextField(
+            controller: _promotionsController,
+            label: 'Promotions (Optional)',
+            hint: 'Enter promotion amount',
+            keyboardType: TextInputType.number,
+            prefixIcon: Icons.local_offer,
+            isRequired: false,
+          ),
+          const SizedBox(height: 20),
           _buildGenderDropdown(),
           const SizedBox(height: 20),
           _buildStateToggle(),
@@ -182,6 +239,7 @@ class _AddEditServiceViewState extends State<AddEditServiceView> {
     required IconData prefixIcon,
     int maxLines = 1,
     TextInputType keyboardType = TextInputType.text,
+    bool isRequired = true,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -211,12 +269,18 @@ class _AddEditServiceViewState extends State<AddEditServiceView> {
           maxLines: maxLines,
           keyboardType: keyboardType,
           style: AppStyles.regular16,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return '$label is required';
-            }
-            return null;
-          },
+          validator: isRequired
+              ? (value) {
+                  if (value == null || value.isEmpty) {
+                    return '$label is required';
+                  }
+                  if (keyboardType == TextInputType.number &&
+                      double.tryParse(value) == null) {
+                    return 'Please enter a valid number';
+                  }
+                  return null;
+                }
+              : null,
         ),
       ],
     );
@@ -303,7 +367,7 @@ class _AddEditServiceViewState extends State<AddEditServiceView> {
     );
   }
 
-  Widget _buildActionButtons() {
+  Widget _buildActionButtons(AddServiceState state, BuildContext context) {
     return Row(
       children: [
         Expanded(
@@ -312,7 +376,7 @@ class _AddEditServiceViewState extends State<AddEditServiceView> {
               'Reset',
               style: AppStyles.regular16.copyWith(color: Colors.white),
             ),
-            onPressed: _resetForm,
+            onPressed: state is AddServiceLoading ? () {} : _resetForm,
             color: kBorderColor,
           ),
         ),
@@ -325,7 +389,11 @@ class _AddEditServiceViewState extends State<AddEditServiceView> {
                 style: AppStyles.regular16.copyWith(color: Colors.white),
               ),
             ),
-            onPressed: _saveService,
+            onPressed: state is AddServiceLoading
+                ? () {}
+                : () {
+                    _saveService(context: context);
+                  },
             color: kPrimaryColor,
           ),
         ),
@@ -338,18 +406,34 @@ class _AddEditServiceViewState extends State<AddEditServiceView> {
     _initializeControllers();
   }
 
-  void _saveService() {
+  void _saveService({required BuildContext context}) async {
     if (_formKey.currentState!.validate()) {
-      final service = ServiceModel(
-        title: _titleController.text,
-        description: _descriptionController.text,
-        price: double.tryParse(_priceController.text),
-        state: _selectedState,
-        gender: _selectedGender,
-      );
+      final price = double.parse(_priceController.text);
+      final promotions = _promotionsController.text.isNotEmpty
+          ? double.parse(_promotionsController.text)
+          : null;
+      final gender = _selectedGender == Gender.male ? 'male' : 'female';
 
-      Logger.info('Service saved: $service');
-      Navigator.pop(context);
+      if (widget.isEditMode && widget.service != null) {
+        context.read<AddServiceCubit>().updateService(
+              serviceId: widget.service!.id!,
+              title: _titleController.text,
+              description: _descriptionController.text,
+              price: price,
+              gender: gender,
+              promotions: promotions,
+            );
+        await context.read<GetServicesCubit>().fetchServices();
+      } else {
+        context.read<AddServiceCubit>().addService(
+              title: _titleController.text,
+              description: _descriptionController.text,
+              price: price,
+              gender: gender,
+              promotions: promotions,
+            );
+        await context.read<GetServicesCubit>().fetchServices();
+      }
     }
   }
 }
