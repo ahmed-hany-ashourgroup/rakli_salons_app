@@ -232,7 +232,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                                         ? null
                                         : widget.product.details?.first['size']
                                             .toString(), // Use the first size in details if not a collection
-                                    price: widget.product.price,
+                                    price: widget.product.price!.toDouble(),
                                     isCollection: widget.product.isCollection,
                                   );
 

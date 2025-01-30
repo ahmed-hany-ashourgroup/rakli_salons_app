@@ -14,8 +14,8 @@ class ProductModel {
   final int? createdBy;
   final String? creatorType;
   final List<Map<String, dynamic>>? details; // Details list
-  final double? price; // Price fetched from details
-  final int? size; // Size fetched from details
+  final num? price; // Price fetched from details
+  final num? size; // Size fetched from details
   final bool isCollection; // Flag to differentiate collections and products
 
   ProductModel({
@@ -77,7 +77,7 @@ class ProductModel {
       price: firstDetail != null
           ? (firstDetail['price'] as num).toDouble()
           : json['price'] != null
-              ? double.parse(json['price'].toString())
+              ? num.parse(json['price'].toString())
               : null, // Fetch price from details or directly from JSON
       size: firstDetail != null
           ? firstDetail['size'] as int?

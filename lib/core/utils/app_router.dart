@@ -12,9 +12,10 @@ import 'package:rakli_salons_app/features/auth/views/sign_up_view.dart';
 import 'package:rakli_salons_app/features/home/data/models/models/product_model.dart';
 import 'package:rakli_salons_app/features/home/data/models/models/service_model.dart';
 import 'package:rakli_salons_app/features/home/manager/add_new_service_cubit/add_service_cubit.dart';
+import 'package:rakli_salons_app/features/home/manager/get_my_products_cubit.dart/get_my_products_cubit.dart';
 import 'package:rakli_salons_app/features/home/manager/get_services_cubit/get_services_cubit.dart';
+import 'package:rakli_salons_app/features/home/views/add_edit_product_view.dart';
 import 'package:rakli_salons_app/features/home/views/add_edit_service_view.dart';
-import 'package:rakli_salons_app/features/home/views/add_product_view.dart';
 import 'package:rakli_salons_app/features/home/views/cart_view.dart';
 import 'package:rakli_salons_app/features/home/views/favorites_view.dart';
 import 'package:rakli_salons_app/features/home/views/filter_view.dart';
@@ -90,14 +91,17 @@ class AppRouter {
     ),
     GoRoute(
       path: kMyProductsView,
-      builder: (context, state) => MyProductsView(),
+      builder: (context, state) => BlocProvider(
+        create: (context) => GetMyProductsCubit(),
+        child: MyProductsView(),
+      ),
     ),
     GoRoute(
         path: kAddProductView,
         builder: (context, state) {
           if (state.extra != null) {
             Map data = state.extra as Map;
-            return AddProductView(
+            return AddEditProductView(
               product: data['product'] as ProductModel?,
               isEditMode: data['isEditMode'],
             );

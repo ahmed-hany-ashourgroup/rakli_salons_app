@@ -1,8 +1,9 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:rakli_salons_app/core/errors/api_error.dart';
 import 'package:rakli_salons_app/core/errors/failure.dart';
 import 'package:rakli_salons_app/core/utils/logger.dart';
-import 'package:rakli_salons_app/features/auth/manager/user_cubit/user_cubit.dart';
 
 final String baseUrl = 'http://89.116.110.219/api/';
 
@@ -21,8 +22,9 @@ class ApiService {
         )) {
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) {
-        final token = SalonsUserCubit.user.token;
-        if (token != null && token.isNotEmpty) {
+        // final token = SalonsUserCubit.user.token;
+        final token = "209|yGGN0cD9rnjRUIeKk7UIy05jBzptEdROeHHURATUe5b5eadd";
+        if (token.isNotEmpty) {
           options.headers['Authorization'] = 'Bearer $token';
         }
         return handler.next(options);
@@ -60,19 +62,35 @@ class ApiService {
 
   Future<Map<String, dynamic>> post(String endpoint, {dynamic data}) async {
     try {
-      Logger.info('Request Data: $data');
-      final Response response = await _dio.post(endpoint, data: data);
+      FormData formData;
+
+      if (data is Map<String, dynamic> && data.containsKey('image')) {
+        // If the image is a File object (new image being uploaded)
+        if (data['image'] is String && File(data['image']).existsSync()) {
+          formData = FormData.fromMap({
+            ...data,
+            'image': await MultipartFile.fromFile(
+              data['image'],
+              filename: data['image'].split('/').last,
+            ),
+          });
+        } else {
+          // If it's just a URL string (no change in image)
+          formData = FormData.fromMap(data);
+        }
+      } else {
+        formData = FormData.fromMap(data);
+      }
+
+      Logger.info('Request Data: $formData');
+      final Response response = await _dio.post(endpoint, data: formData);
       Logger.info('Response: ${response.data}');
 
-      // Check if the response is a Map
       if (response.data is Map<String, dynamic>) {
         final responseData = response.data as Map<String, dynamic>;
-
-        // Check if the request was successful
         if (responseData['success'] == true) {
-          return responseData; // Return the response for successful requests
+          return responseData;
         } else {
-          // Handle cases where 'success' is false
           throw DioException(
             requestOptions: RequestOptions(path: endpoint),
             response: response,
@@ -81,7 +99,6 @@ class ApiService {
           );
         }
       } else {
-        // Handle invalid response format
         throw DioException(
           requestOptions: RequestOptions(path: endpoint),
           error:
@@ -94,11 +111,51 @@ class ApiService {
     }
   }
 
-  Future<dynamic> put(String endpoint, {dynamic data}) async {
+  Future<Map<String, dynamic>> put(String endpoint, {dynamic data}) async {
     try {
-      final response = await _dio.put(endpoint, data: data);
-      Logger.info(response.data.toString());
-      return response.data;
+      FormData formData;
+
+      if (data is Map<String, dynamic> && data.containsKey('image')) {
+        // If the image is a File object (new image being uploaded)
+        if (data['image'] is String && File(data['image']).existsSync()) {
+          formData = FormData.fromMap({
+            ...data,
+            'image': await MultipartFile.fromFile(
+              data['image'],
+              filename: data['image'].split('/').last,
+            ),
+          });
+        } else {
+          // If it's just a URL string (no change in image)
+          formData = FormData.fromMap(data);
+        }
+      } else {
+        formData = FormData.fromMap(data);
+      }
+
+      Logger.info('Request Data: $formData');
+      final Response response = await _dio.put(endpoint, data: formData);
+      Logger.info('Response: ${response.data}');
+
+      if (response.data is Map<String, dynamic>) {
+        final responseData = response.data as Map<String, dynamic>;
+        if (responseData['success'] == true) {
+          return responseData;
+        } else {
+          throw DioException(
+            requestOptions: RequestOptions(path: endpoint),
+            response: response,
+            type: DioExceptionType.badResponse,
+            error: responseData['message'] ?? 'Request failed',
+          );
+        }
+      } else {
+        throw DioException(
+          requestOptions: RequestOptions(path: endpoint),
+          error:
+              'Invalid response format: expected Map<String, dynamic>, got ${response.data.runtimeType}',
+        );
+      }
     } catch (e) {
       Logger.error('Error: $e');
       throw handleDioError(e);

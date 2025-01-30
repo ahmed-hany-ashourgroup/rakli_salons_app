@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rakli_salons_app/core/customs/custom_confirmation_dialog.dart';
 import 'package:rakli_salons_app/core/utils/app_router.dart';
 import 'package:rakli_salons_app/features/auth/manager/log_out_cubit/log_out_cubit.dart';
+import 'package:rakli_salons_app/features/auth/manager/user_cubit/user_cubit.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
@@ -23,17 +25,18 @@ class CustomDrawer extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const CircleAvatar(
+                  CircleAvatar(
                     radius: 30,
-                    backgroundImage: AssetImage('assets/salon_logo.png'),
+                    backgroundImage: CachedNetworkImageProvider(
+                        SalonsUserCubit.user.photo ?? ''),
                   ),
                   const SizedBox(height: 10),
-                  const Text(
-                    'Mall Beauty Salon',
+                  Text(
+                    SalonsUserCubit.user.name ?? '',
                     style: TextStyle(color: Colors.white, fontSize: 18),
                   ),
                   Text(
-                    'salon.beautymall.com',
+                    SalonsUserCubit.user.email ?? '',
                     style: TextStyle(color: Colors.white.withOpacity(0.7)),
                   ),
                 ],
