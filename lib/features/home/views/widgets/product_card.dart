@@ -76,7 +76,7 @@ class ProductCard extends StatelessWidget {
                     const Spacer(),
                     // Product Details
                     Text(
-                      product.name!,
+                      product.title!,
                       style: AppStyles.bold14.copyWith(
                         color: Colors.white.withOpacity(0.7),
                         fontSize: 16,
@@ -98,12 +98,12 @@ class ProductCard extends StatelessWidget {
                           size: 16,
                         ),
                         const SizedBox(width: 4),
-                        Text(
-                          product.rating.toString(),
-                          style: AppStyles.regular13.copyWith(
-                            color: Colors.white.withOpacity(0.7),
-                          ),
-                        ),
+                        // Text(
+                        //   product.rating.toString(),
+                        //   style: AppStyles.regular13.copyWith(
+                        //     color: Colors.white.withOpacity(0.7),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ],

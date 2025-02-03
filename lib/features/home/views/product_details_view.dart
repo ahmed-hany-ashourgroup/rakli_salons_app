@@ -83,11 +83,11 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    widget.product.name!,
+                    widget.product.title!,
                     style: AppStyles.bold24.copyWith(color: Colors.black),
                   ),
                   Text(
-                    '\$${widget.product.price?.toStringAsFixed(2) ?? 0}',
+                    '\$${widget.product.price ?? 0}',
                     style: AppStyles.bold24.copyWith(color: Colors.black),
                   ),
                 ],
@@ -131,10 +131,10 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                     itemSize: 24.0,
                   ),
                   const SizedBox(width: 8),
-                  Text(
-                    widget.product.rating?.toStringAsFixed(1) ?? 'N/A',
-                    style: AppStyles.light16.copyWith(color: Colors.black),
-                  ),
+                  // Text(
+                  //   widget.product.rating?.toStringAsFixed(1) ?? 'N/A',
+                  //   style: AppStyles.light16.copyWith(color: Colors.black),
+                  // ),
                 ],
               ),
             ),
@@ -228,12 +228,9 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                                       AddToCartRequestModel(
                                     id: widget.product.id,
                                     quantity: productQuantity,
-                                    size: widget.product.isCollection
-                                        ? null
-                                        : widget.product.details?.first['size']
-                                            .toString(), // Use the first size in details if not a collection
-                                    price: widget.product.price!.toDouble(),
-                                    isCollection: widget.product.isCollection,
+                                    size: widget.product.size,
+                                    price:
+                                        double.tryParse(widget.product.price!),
                                   );
 
                                   // Call the cubit to add to cart

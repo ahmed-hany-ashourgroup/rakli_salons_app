@@ -46,9 +46,13 @@ class BusinessRegistrationCubit extends Cubit<BusinessRegistrationState> {
         'latitude': latitude,
         'longitude': longitude,
         'method': method,
-        'photo':
-            await MultipartFile.fromFile(photo.path, filename: 'photo.jpg'),
       });
+
+      // Add photo file
+      formData.files.add(MapEntry(
+        'photo',
+        await MultipartFile.fromFile(photo.path, filename: 'photo.jpg'),
+      ));
 
       // Add conditional files based on role
       if (role == 'salon') {
@@ -82,7 +86,7 @@ class BusinessRegistrationCubit extends Cubit<BusinessRegistrationState> {
       final response =
           await _apiService.post('business/register', data: formData);
 
-      Logger.info('Registration Response: $response');
+      Logger.info('Registration Response: ${response.toString()}');
 
       // Check if the request was successful based on the 'success' field
       if (response['success'] == true) {

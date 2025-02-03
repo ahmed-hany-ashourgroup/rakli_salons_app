@@ -22,12 +22,16 @@ class GetProductsCubit extends Cubit<GetProductsState> {
 
       // Convert collections to ProductModel with isCollection = true
       final List<ProductModel> collections = collectionsData
-          .map((json) => ProductModel.fromJson(json, isCollection: true))
+          .map((json) => ProductModel.fromJson(
+                json,
+              ))
           .toList();
 
       // Convert unassigned products to ProductModel with isCollection = false
       final List<ProductModel> unassignedProducts = unassignedProductsData
-          .map((json) => ProductModel.fromJson(json, isCollection: false))
+          .map((json) => ProductModel.fromJson(
+                json,
+              ))
           .toList();
 
       // Combine collections and unassigned products into a single list

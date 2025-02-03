@@ -1,6 +1,6 @@
-import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,30 +8,9 @@ import 'package:rakli_salons_app/core/customs/custom_app_bar.dart';
 import 'package:rakli_salons_app/core/customs/custom_button.dart';
 import 'package:rakli_salons_app/core/theme/theme_constants.dart';
 import 'package:rakli_salons_app/core/utils/app_styles.dart';
-import 'package:rakli_salons_app/core/utils/logger.dart';
 import 'package:rakli_salons_app/core/utils/toast_service.dart';
 import 'package:rakli_salons_app/features/home/data/models/models/product_model.dart';
 import 'package:rakli_salons_app/features/home/manager/add_edit_product_cubit/add_edit_prodcut_cubit.dart';
-
-enum ProductType { product, collection }
-
-class PriceSizeEntry {
-  final TextEditingController sizeController;
-  final TextEditingController priceController;
-
-  PriceSizeEntry()
-      : sizeController = TextEditingController(),
-        priceController = TextEditingController();
-
-  Map<String, dynamic> toJson() => {
-        'size': int.tryParse(sizeController.text) ?? "0",
-        'price': int.tryParse(priceController.text) ?? 0,
-      };
-  void dispose() {
-    sizeController.dispose();
-    priceController.dispose();
-  }
-}
 
 class AddEditProductView extends StatefulWidget {
   final ProductModel? product;
@@ -48,32 +27,30 @@ class AddEditProductView extends StatefulWidget {
 }
 
 class _AddEditProductViewState extends State<AddEditProductView> {
-  final List<PriceSizeEntry> _priceSizeEntries = [];
-
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _titleController;
   late TextEditingController _descriptionController;
   late TextEditingController _priceController;
+  late TextEditingController _sizeController;
+  late TextEditingController _collectionIdController;
   File? _pickedImage;
-  ProductType _selectedProductType = ProductType.product;
-  bool _isAvailable = true;
 
   @override
   void initState() {
     super.initState();
     _initializeControllers();
-    _selectedProductType = widget.product?.isCollection ?? false
-        ? ProductType.collection
-        : ProductType.product;
-    _addPriceSizeEntry();
   }
 
   void _initializeControllers() {
-    _titleController = TextEditingController(text: widget.product?.name ?? '');
+    _titleController = TextEditingController(text: widget.product?.title ?? '');
     _descriptionController =
         TextEditingController(text: widget.product?.description ?? '');
     _priceController =
         TextEditingController(text: widget.product?.price?.toString() ?? '');
+    _sizeController =
+        TextEditingController(text: widget.product?.size?.toString() ?? '');
+    _collectionIdController = TextEditingController(
+        text: widget.product?.collectionId?.toString() ?? '');
   }
 
   @override
@@ -81,23 +58,9 @@ class _AddEditProductViewState extends State<AddEditProductView> {
     _titleController.dispose();
     _descriptionController.dispose();
     _priceController.dispose();
-    for (var entry in _priceSizeEntries) {
-      entry.dispose();
-    }
+    _sizeController.dispose();
+    _collectionIdController.dispose();
     super.dispose();
-  }
-
-  void _addPriceSizeEntry() {
-    setState(() {
-      _priceSizeEntries.add(PriceSizeEntry());
-    });
-  }
-
-  void _removePriceSizeEntry(int index) {
-    setState(() {
-      _priceSizeEntries[index].dispose();
-      _priceSizeEntries.removeAt(index);
-    });
   }
 
   Future<void> _pickImage() async {
@@ -187,105 +150,6 @@ class _AddEditProductViewState extends State<AddEditProductView> {
     );
   }
 
-  Widget _buildPriceSizeSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Price & Size Combinations',
-              style: AppStyles.bold16.copyWith(color: kPrimaryColor),
-            ),
-            IconButton(
-              icon: Icon(Icons.add_circle, color: kPrimaryColor),
-              onPressed: _addPriceSizeEntry,
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: _priceSizeEntries.length,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _priceSizeEntries[index].sizeController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          labelText: 'Size',
-                          hintText: 'Enter size',
-                          filled: true,
-                          fillColor: Colors.white,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Required';
-                          }
-                          if (double.tryParse(value) == null) {
-                            return 'Invalid number';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _priceSizeEntries[index].priceController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          labelText: 'Price',
-                          hintText: 'Enter price',
-                          filled: true,
-                          fillColor: Colors.white,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Required';
-                          }
-                          if (double.tryParse(value) == null) {
-                            return 'Invalid number';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    if (_priceSizeEntries.length > 1)
-                      IconButton(
-                        icon: Icon(Icons.remove_circle, color: Colors.red[400]),
-                        onPressed: () => _removePriceSizeEntry(index),
-                      ),
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
-      ],
-    );
-  }
-
   Widget _buildAppBar() {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -354,19 +218,30 @@ class _AddEditProductViewState extends State<AddEditProductView> {
           const SizedBox(height: 32),
           _buildSectionTitle('Pricing & Details'),
           const SizedBox(height: 24),
-          // _buildTextField(
-          //   controller: _priceController,
-          //   label: 'Price',
-          //   hint: 'Enter product price',
-          //   keyboardType: TextInputType.number,
-          //   prefixIcon: Icons.attach_money,
-          // ),
+          _buildTextField(
+            controller: _priceController,
+            label: 'Price',
+            hint: 'Enter product price',
+            keyboardType: TextInputType.number,
+            prefixIcon: Icons.attach_money,
+          ),
           const SizedBox(height: 20),
-          _buildProductTypeDropdown(),
+          _buildTextField(
+            controller: _sizeController,
+            label: 'Size',
+            hint: 'Enter product size',
+            keyboardType: TextInputType.number,
+            prefixIcon: Icons.straighten,
+          ),
           const SizedBox(height: 20),
-          _buildStockStatusToggle(),
-          const SizedBox(height: 32),
-          _buildPriceSizeSection(),
+          _buildTextField(
+            controller: _collectionIdController,
+            label: 'Collection ID',
+            hint: 'Enter collection ID (optional)',
+            keyboardType: TextInputType.number,
+            prefixIcon: Icons.category,
+            isRequired: false,
+          ),
         ],
       ),
     );
@@ -414,94 +289,6 @@ class _AddEditProductViewState extends State<AddEditProductView> {
                           size: 40,
                         ),
                       ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildProductTypeDropdown() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Product Type',
-          style: AppStyles.regular14.copyWith(color: Colors.grey[700]),
-        ),
-        const SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.grey[100],
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: DropdownButtonFormField<ProductType>(
-            value: _selectedProductType,
-            decoration: InputDecoration(
-              prefixIcon: Icon(Icons.category, color: kPrimaryColor, size: 20),
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-            ),
-            items: ProductType.values.map((ProductType type) {
-              return DropdownMenuItem<ProductType>(
-                value: type,
-                child: Text(
-                  type.toString().split('.').last,
-                  style: AppStyles.regular16,
-                ),
-              );
-            }).toList(),
-            onChanged: (ProductType? value) {
-              setState(() {
-                _selectedProductType = value!;
-              });
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildStockStatusToggle() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Stock Status',
-          style: AppStyles.regular14.copyWith(color: Colors.grey[700]),
-        ),
-        const SizedBox(height: 8),
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.grey[100],
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Row(
-            children: [
-              Icon(Icons.inventory, color: kPrimaryColor, size: 20),
-              const SizedBox(width: 12),
-              Text(
-                'Available',
-                style: AppStyles.regular16,
-              ),
-              const Spacer(),
-              Switch.adaptive(
-                value: _isAvailable,
-                onChanged: (value) {
-                  setState(() {
-                    _isAvailable = value;
-                  });
-                },
-                activeColor: kPrimaryColor,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                _isAvailable ? 'Available' : 'Unavailable',
-                style: AppStyles.regular14.copyWith(
-                  color: _isAvailable ? kPrimaryColor : Colors.grey,
-                ),
-              ),
-            ],
           ),
         ),
       ],
@@ -608,40 +395,58 @@ class _AddEditProductViewState extends State<AddEditProductView> {
     _initializeControllers();
     setState(() {
       _pickedImage = null;
-      _selectedProductType = ProductType.product;
-      _isAvailable = true;
     });
   }
 
   void _saveProduct({required BuildContext context}) async {
     if (_formKey.currentState!.validate()) {
-      final detailsJson =
-          jsonEncode(_priceSizeEntries.map((entry) => entry.toJson()).toList());
+      final price = num.parse(_priceController.text);
+      final size = num.parse(_sizeController.text);
+      final collectionId = int.tryParse(_collectionIdController.text);
+
+      // Create form data
+      final formData = FormData.fromMap({
+        'title': _titleController.text,
+        'description': _descriptionController.text,
+        'price': price.toString(),
+        'size': size.toString(),
+        'collection_id': collectionId ?? '',
+        'product_type': 'product',
+        'stock_status': 'available',
+        if (widget.isEditMode && widget.product != null) '_method': "PUT",
+      });
 
       if (widget.isEditMode && widget.product != null) {
+        // For update, only add image if a new one is picked
+        if (_pickedImage != null) {
+          formData.files.add(MapEntry(
+            'image',
+            await MultipartFile.fromFile(_pickedImage!.path,
+                filename: 'product.jpg'),
+          ));
+        }
+
         context.read<AddEditProductCubit>().updateProduct(
               id: widget.product!.id!,
-              title: _titleController.text,
-              description: _descriptionController.text,
-              details: detailsJson, // Send the price-size array
-              image: _pickedImage?.path ?? widget.product!.image!,
-              productType: _selectedProductType == ProductType.product
-                  ? 'product'
-                  : 'collection',
-              stockStatus: _isAvailable ? 'available' : 'unavailable',
+              data: formData,
             );
       } else {
-        Logger.info(detailsJson.toString());
-        context.read<AddEditProductCubit>().addProduct(
-              title: _titleController.text,
-              description: _descriptionController.text,
-              details: detailsJson, // Send the price-size array
-              image: _pickedImage!.path,
-              productType: _selectedProductType == ProductType.product
-                  ? 'product'
-                  : 'collection',
-              stockStatus: _isAvailable ? 'available' : 'unavailable',
-            );
+        if (_pickedImage == null) {
+          ToastService.showCustomToast(
+            message: 'Please select an image',
+            type: ToastType.error,
+          );
+          return;
+        }
+
+        // For new product, add the image file
+        formData.files.add(MapEntry(
+          'image',
+          await MultipartFile.fromFile(_pickedImage!.path,
+              filename: 'product.jpg'),
+        ));
+
+        context.read<AddEditProductCubit>().addProduct(data: formData);
       }
     }
   }

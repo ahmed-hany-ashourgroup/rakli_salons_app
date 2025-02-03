@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
 import 'package:rakli_salons_app/core/utils/service_locator.dart';
 
@@ -11,28 +12,13 @@ class AddEditProductCubit extends Cubit<AddEditProductState> {
   final ApiService _apiService = getIt<ApiService>();
 
   Future<void> addProduct({
-    required String title,
-    required String description,
-    required String details, // Updated parameter
-    required String image,
-    double? discount,
-    required String productType,
-    required String stockStatus,
+    required FormData data,
   }) async {
     emit(AddEditProductLoading());
     try {
       final response = await _apiService.post(
         'products/store',
-        data: {
-          'title': title,
-          'description': description,
-          'details':
-              details, // This will be sent as [{"size":50, "price":20.5}, ...]
-          'image': image,
-          'discount': discount,
-          'product_type': productType,
-          'stock_status': stockStatus,
-        },
+        data: data,
       );
       emit(AddEditProductSuccess());
     } catch (e) {
@@ -42,29 +28,13 @@ class AddEditProductCubit extends Cubit<AddEditProductState> {
 
   Future<void> updateProduct({
     required int id,
-    required String title,
-    required String description,
-    required String details, // Updated parameter
-    required String image,
-    double? discount,
-    required String productType,
-    required String stockStatus,
+    required FormData data,
   }) async {
     emit(AddEditProductLoading());
     try {
-      final response = await _apiService.put(
+      final response = await _apiService.post(
         'products/update/$id',
-        data: {
-          'title': title,
-          'description': description,
-          'details':
-              details, // This will be sent as [{"size":50, "price":20.5}, ...]
-          'image': image,
-          'discount': discount,
-          'product_type': productType,
-          'stock_status': stockStatus,
-          '_method': 'PUT',
-        },
+        data: data,
       );
       emit(AddEditProductSuccess());
     } catch (e) {

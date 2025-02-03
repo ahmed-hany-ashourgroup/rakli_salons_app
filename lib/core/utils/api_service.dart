@@ -23,7 +23,7 @@ class ApiService {
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) {
         // final token = SalonsUserCubit.user.token;
-        final token = "209|yGGN0cD9rnjRUIeKk7UIy05jBzptEdROeHHURATUe5b5eadd";
+        final token = "12|MYmh08On7oMASklGZH0fHLhk8kN4sJREKMGsf6eX0c6a7ca7";
         if (token.isNotEmpty) {
           options.headers['Authorization'] = 'Bearer $token';
         }
@@ -62,28 +62,33 @@ class ApiService {
 
   Future<Map<String, dynamic>> post(String endpoint, {dynamic data}) async {
     try {
-      FormData formData;
+      dynamic requestData;
+      Options options = Options();
 
       if (data is Map<String, dynamic> && data.containsKey('image')) {
-        // If the image is a File object (new image being uploaded)
         if (data['image'] is String && File(data['image']).existsSync()) {
-          formData = FormData.fromMap({
+          // If image is a local file, convert it to MultipartFile
+          requestData = FormData.fromMap({
             ...data,
             'image': await MultipartFile.fromFile(
               data['image'],
               filename: data['image'].split('/').last,
             ),
           });
+
+          // Set content type for FormData
+          options.contentType = Headers.multipartFormDataContentType;
         } else {
-          // If it's just a URL string (no change in image)
-          formData = FormData.fromMap(data);
+          // If it's just a URL or no image, send as JSON
+          requestData = data;
         }
       } else {
-        formData = FormData.fromMap(data);
+        requestData = data;
       }
 
-      Logger.info('Request Data: $formData');
-      final Response response = await _dio.post(endpoint, data: formData);
+      final Response response =
+          await _dio.post(endpoint, data: requestData, options: options);
+
       Logger.info('Response: ${response.data}');
 
       if (response.data is Map<String, dynamic>) {

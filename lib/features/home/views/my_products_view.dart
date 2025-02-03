@@ -107,7 +107,7 @@ class ProductItem extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          product.name ?? 'No Name',
+                          product.title ?? 'No Name',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -116,13 +116,22 @@ class ProductItem extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      const Icon(Icons.star, color: Colors.amber, size: 16),
-                      Text(
-                        ' ${product.rating?.toStringAsFixed(1) ?? '0.0'}',
-                        style: const TextStyle(fontSize: 14),
-                      ),
+                      // const Icon(Icons.star, color: Colors.amber, size: 16),
+                      // Text(
+                      //   ' ${product.rating?.toStringAsFixed(1) ?? '0.0'}',
+                      //   style: const TextStyle(fontSize: 14),
+                      // ),
                       const SizedBox(width: 8),
-                      Icon(Icons.edit, size: 18, color: Colors.grey[700]),
+                      GestureDetector(
+                          onTap: () {
+                            GoRouter.of(context)
+                                .push(AppRouter.kAddProductView, extra: {
+                              'isEditMode': true,
+                              'product': product,
+                            });
+                          },
+                          child: Icon(Icons.edit,
+                              size: 18, color: Colors.grey[700])),
                       const SizedBox(width: 8),
                       const Icon(Icons.close, color: Colors.red, size: 18),
                     ],
@@ -131,7 +140,7 @@ class ProductItem extends StatelessWidget {
 
                   // Price
                   Text(
-                    '\$${product.price?.toStringAsFixed(2) ?? '0.00'}',
+                    '\$${product.price ?? '0.00'}',
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
