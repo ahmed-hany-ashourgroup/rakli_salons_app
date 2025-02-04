@@ -386,7 +386,7 @@ class CartItemWidget extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            '\$${product.price?.toStringAsFixed(2) ?? ''}',
+            '\$${product.price ?? ''}',
             style: AppStyles.light16.copyWith(color: Colors.grey),
           ),
         ],

@@ -83,7 +83,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    widget.product.title!,
+                    widget.product.name!,
                     style: AppStyles.bold24.copyWith(color: Colors.black),
                   ),
                   Text(
@@ -228,9 +228,9 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                                       AddToCartRequestModel(
                                     id: widget.product.id,
                                     quantity: productQuantity,
-                                    size: widget.product.size,
-                                    price:
-                                        double.tryParse(widget.product.price!),
+                                    size: widget.product.size.toString(),
+                                    price: double.tryParse(
+                                        widget.product.price.toString()),
                                   );
 
                                   // Call the cubit to add to cart

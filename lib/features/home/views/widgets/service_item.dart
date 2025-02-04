@@ -129,7 +129,7 @@ class _AppointmentItemState extends State<ServicetItem> {
                   selectedItemBuilder: (context) => List.generate(4, (index) {
                     return DropdownMenuItem<AppointmentStatus>(
                       child: Text(
-                        widget.serviceModel.state?.name ?? "",
+                        widget.serviceModel.state.name ?? "",
                         style:
                             AppStyles.regular14.copyWith(color: Colors.black),
                       ),

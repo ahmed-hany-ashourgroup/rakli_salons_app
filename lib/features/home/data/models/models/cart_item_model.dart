@@ -3,7 +3,7 @@ class CartItemModel {
   final bool? isCollection;
   final int? quantity;
   final String? size;
-  final double? price;
+  final String? price;
   final String? title;
   final String? image;
 
@@ -24,7 +24,7 @@ class CartItemModel {
       isCollection: json['is_collection'] as bool?,
       quantity: json['quantity'] as int?,
       size: json['size'] as String?,
-      price: (json['price'] as num?)?.toDouble(),
+      price: json['price'] as String ?? '',
       title: json['title'] as String?,
       image: json['image'] as String?,
     );

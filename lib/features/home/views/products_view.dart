@@ -9,8 +9,10 @@ import 'package:rakli_salons_app/core/utils/app_router.dart';
 import 'package:rakli_salons_app/core/utils/app_styles.dart';
 import 'package:rakli_salons_app/core/utils/assets.dart';
 import 'package:rakli_salons_app/features/home/data/models/models/product_model.dart';
+import 'package:rakli_salons_app/features/home/manager/Products_wish_list_cubit/products_wish_list_cubit.dart';
 import 'package:rakli_salons_app/features/home/manager/get_products_cubit/get_products_cubit.dart';
 import 'package:rakli_salons_app/features/home/manager/search_cubit/search_cubit.dart';
+import 'package:rakli_salons_app/features/home/views/widgets/cart_bottom_sheet.dart';
 import 'package:rakli_salons_app/features/home/views/widgets/product_card.dart';
 
 class ProductsView extends StatefulWidget {
@@ -28,6 +30,8 @@ class _ProductsViewState extends State<ProductsView> {
   void initState() {
     super.initState();
     context.read<GetProductsCubit>().getAllProducts();
+    // Fetch wishlist when view initializes
+    context.read<ProductsWishListCubit>().getProductsWishlist();
   }
 
   @override
@@ -78,7 +82,12 @@ class _ProductsViewState extends State<ProductsView> {
                       const SizedBox(width: 15),
                       GestureDetector(
                         onTap: () {
-                          GoRouter.of(context).push(AppRouter.kCartView);
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            builder: (context) => const CartBottomSheet(),
+                          );
                         },
                         child: SvgPicture.asset(
                           Assets.assetsImagesCart,

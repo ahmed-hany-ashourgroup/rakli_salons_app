@@ -11,9 +11,13 @@ import 'package:rakli_salons_app/features/auth/views/login_view.dart';
 import 'package:rakli_salons_app/features/auth/views/sign_up_view.dart';
 import 'package:rakli_salons_app/features/home/data/models/models/product_model.dart';
 import 'package:rakli_salons_app/features/home/data/models/models/service_model.dart';
+import 'package:rakli_salons_app/features/home/manager/Products_wish_list_cubit/products_wish_list_cubit.dart';
 import 'package:rakli_salons_app/features/home/manager/add_new_service_cubit/add_service_cubit.dart';
+import 'package:rakli_salons_app/features/home/manager/add_to_cart_cubit/add_to_cart_cubit.dart';
 import 'package:rakli_salons_app/features/home/manager/get_my_products_cubit.dart/get_my_products_cubit.dart';
+import 'package:rakli_salons_app/features/home/manager/get_products_cubit/get_products_cubit.dart';
 import 'package:rakli_salons_app/features/home/manager/get_services_cubit/get_services_cubit.dart';
+import 'package:rakli_salons_app/features/home/manager/search_cubit/search_cubit.dart';
 import 'package:rakli_salons_app/features/home/views/add_edit_product_view.dart';
 import 'package:rakli_salons_app/features/home/views/add_edit_service_view.dart';
 import 'package:rakli_salons_app/features/home/views/cart_view.dart';
@@ -75,7 +79,10 @@ class AppRouter {
     ),
     GoRoute(
       path: kFavoritesView,
-      builder: (context, state) => const FavoritesView(),
+      builder: (context, state) => BlocProvider(
+        create: (context) => ProductsWishListCubit(),
+        child: const FavoritesView(),
+      ),
     ),
     GoRoute(
       path: kReportsView,
@@ -83,7 +90,23 @@ class AppRouter {
     ),
     GoRoute(
       path: kShopView,
-      builder: (context, state) => const ProductsView(),
+      builder: (context, state) => MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => GetProductsCubit(),
+          ),
+          BlocProvider(
+            create: (context) => AddToCartCubit(),
+          ),
+          BlocProvider(
+            create: (context) => SearchCubit(),
+          ),
+          BlocProvider(
+            create: (context) => ProductsWishListCubit(),
+          ),
+        ],
+        child: const ProductsView(),
+      ),
     ),
     GoRoute(
       path: kCartView,

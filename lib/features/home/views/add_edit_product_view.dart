@@ -42,7 +42,7 @@ class _AddEditProductViewState extends State<AddEditProductView> {
   }
 
   void _initializeControllers() {
-    _titleController = TextEditingController(text: widget.product?.title ?? '');
+    _titleController = TextEditingController(text: widget.product?.name ?? '');
     _descriptionController =
         TextEditingController(text: widget.product?.description ?? '');
     _priceController =

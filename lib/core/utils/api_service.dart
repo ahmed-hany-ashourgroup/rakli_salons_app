@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:rakli_salons_app/core/errors/api_error.dart';
 import 'package:rakli_salons_app/core/errors/failure.dart';
 import 'package:rakli_salons_app/core/utils/logger.dart';
+import 'package:rakli_salons_app/features/auth/manager/user_cubit/user_cubit.dart';
 
 final String baseUrl = 'http://89.116.110.219/api/';
 
@@ -23,7 +24,8 @@ class ApiService {
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) {
         // final token = SalonsUserCubit.user.token;
-        final token = "12|MYmh08On7oMASklGZH0fHLhk8kN4sJREKMGsf6eX0c6a7ca7";
+        final token = "13|D5igqdSuIduLsY5QpiAUhuI61cwIfbFvmRJnjg1212b04d0e";
+        SalonsUserCubit.user.id = 2;
         if (token.isNotEmpty) {
           options.headers['Authorization'] = 'Bearer $token';
         }
@@ -170,7 +172,7 @@ class ApiService {
   Future<dynamic> delete(String endpoint, {dynamic data}) async {
     try {
       final response = await _dio.delete(endpoint, data: data);
-      Logger.info(response.data);
+      Logger.info(response.data.toString());
       return response.data;
     } catch (e) {
       Logger.error('Error: $e');

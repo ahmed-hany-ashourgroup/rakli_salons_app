@@ -48,9 +48,6 @@ class CustomDrawer extends StatelessWidget {
             _buildDrawerItem(Icons.shopping_bag, 'Shop', () {
               GoRouter.of(context).push(AppRouter.kShopView);
             }),
-            _buildDrawerItem(Icons.assessment, 'Reports', () {
-              GoRouter.of(context).push(AppRouter.kReportsView);
-            }),
             _buildDrawerItem(Icons.card_membership, 'Subscription', () {}),
             _buildDrawerItem(Icons.help, 'Help & Support', () {}),
             Divider(),
