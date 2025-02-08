@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rakli_salons_app/core/customs/custom_search_field.dart';
 import 'package:rakli_salons_app/core/theme/theme_constants.dart';
 import 'package:rakli_salons_app/core/utils/app_router.dart';
 import 'package:rakli_salons_app/core/utils/app_styles.dart';
@@ -33,28 +32,28 @@ class _ServicesViewState extends State<ServicesView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                const Expanded(
-                  child: CustomSearchField(),
-                ),
-                const SizedBox(width: 12),
-                CircleAvatar(
-                  backgroundColor: kSecondaryColor,
-                  child: IconButton(
-                    onPressed: () {
-                      GoRouter.of(context).push(AppRouter.kFilterView);
-                    },
-                    icon: Icon(
-                      Icons.filter_alt,
-                      color: kPrimaryColor,
-                      size: 28,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 32),
+            // Row(
+            //   children: [
+            //     const Expanded(
+            //       child: CustomSearchField(),
+            //     ),
+            //     const SizedBox(width: 12),
+            //     CircleAvatar(
+            //       backgroundColor: kSecondaryColor,
+            //       child: IconButton(
+            //         onPressed: () {
+            //           GoRouter.of(context).push(AppRouter.kFilterView);
+            //         },
+            //         icon: Icon(
+            //           Icons.filter_alt,
+            //           color: kPrimaryColor,
+            //           size: 28,
+            //         ),
+            //       ),
+            //     ),
+            //   ],
+            // ),
+            // const SizedBox(height: 32),
             Text(
               "Services",
               style: AppStyles.bold20,

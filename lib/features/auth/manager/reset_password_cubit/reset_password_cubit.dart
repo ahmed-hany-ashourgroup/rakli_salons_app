@@ -13,7 +13,7 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> {
   Future<void> requestResetPassword(String email) async {
     emit(ResetPasswordLoading());
     try {
-      await _apiService.post('auth/request-password-reset', data: {
+      await _apiService.post('business/request-password-reset', data: {
         'email': email,
         'method': 'email',
       });

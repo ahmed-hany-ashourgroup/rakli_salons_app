@@ -14,7 +14,10 @@ import 'package:rakli_salons_app/features/home/data/models/models/service_model.
 import 'package:rakli_salons_app/features/home/manager/Products_wish_list_cubit/products_wish_list_cubit.dart';
 import 'package:rakli_salons_app/features/home/manager/add_new_service_cubit/add_service_cubit.dart';
 import 'package:rakli_salons_app/features/home/manager/add_to_cart_cubit/add_to_cart_cubit.dart';
+import 'package:rakli_salons_app/features/home/manager/filter_cubit/filter_cubit.dart';
 import 'package:rakli_salons_app/features/home/manager/get_my_products_cubit.dart/get_my_products_cubit.dart';
+import 'package:rakli_salons_app/features/home/manager/get_notifications_cubit/get_notifications_cubit.dart';
+import 'package:rakli_salons_app/features/home/manager/get_orders_cubit/get_orders_cubit.dart';
 import 'package:rakli_salons_app/features/home/manager/get_products_cubit/get_products_cubit.dart';
 import 'package:rakli_salons_app/features/home/manager/get_services_cubit/get_services_cubit.dart';
 import 'package:rakli_salons_app/features/home/manager/search_cubit/search_cubit.dart';
@@ -30,6 +33,7 @@ import 'package:rakli_salons_app/features/home/views/orders_view.dart';
 import 'package:rakli_salons_app/features/home/views/product_details_view.dart';
 import 'package:rakli_salons_app/features/home/views/products_view.dart';
 import 'package:rakli_salons_app/features/home/views/reports_view.dart';
+import 'package:rakli_salons_app/features/home/views/subscription_view.dart';
 import 'package:rakli_salons_app/features/splash/views/account_selection_view.dart';
 import 'package:rakli_salons_app/features/splash/views/splash_view.dart';
 
@@ -57,6 +61,7 @@ class AppRouter {
   static const String kMyProductsView = '/my-products';
   static const String kFavoritesView = '/favorites';
   static const String kOrdersView = '/orders';
+  static const String kSubscriptionView = '/subscription';
 
   static final GoRouter router = GoRouter(routes: [
     GoRoute(
@@ -69,7 +74,10 @@ class AppRouter {
     ),
     GoRoute(
       path: kOrdersView,
-      builder: (context, state) => const OrdersView(),
+      builder: (context, state) => BlocProvider(
+        create: (context) => GetOrdersCubit(),
+        child: const OrdersView(),
+      ),
     ),
     GoRoute(
       path: kProductDetailsView,
@@ -103,6 +111,9 @@ class AppRouter {
           ),
           BlocProvider(
             create: (context) => ProductsWishListCubit(),
+          ),
+          BlocProvider(
+            create: (context) => FilterCubit(),
           ),
         ],
         child: const ProductsView(),
@@ -165,7 +176,10 @@ class AppRouter {
     ),
     GoRoute(
       path: kHomeView,
-      builder: (context, state) => const HomeView(),
+      builder: (context, state) => BlocProvider(
+        create: (context) => GetNotificationsCubit(),
+        child: const HomeView(),
+      ),
     ),
     GoRoute(
         path: kAddEditServiceView,
@@ -192,11 +206,18 @@ class AppRouter {
         }),
     GoRoute(
       path: kNotificationsView,
-      builder: (context, state) => const NotificationsView(),
+      builder: (context, state) => BlocProvider(
+        create: (context) => GetNotificationsCubit(),
+        child: const NotificationsView(),
+      ),
     ),
     GoRoute(
       path: kFilterView,
       builder: (context, state) => const FilterView(),
+    ),
+    GoRoute(
+      path: kSubscriptionView,
+      builder: (context, state) => const SubscriptionView(),
     ),
   ]);
 }

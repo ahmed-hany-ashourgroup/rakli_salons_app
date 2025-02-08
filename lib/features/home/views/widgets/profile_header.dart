@@ -45,11 +45,6 @@ class ProfileHeader extends StatelessWidget {
                 ),
               ),
               Positioned(
-                top: MediaQuery.of(context).padding.top,
-                right: 16,
-                child: const Icon(Icons.edit_rounded, color: Colors.white),
-              ),
-              Positioned(
                 top: MediaQuery.of(context).padding.top + 8,
                 left: 16,
                 child: Text(

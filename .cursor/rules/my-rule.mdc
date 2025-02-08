@@ -1,0 +1,61 @@
+---
+description: 
+globs: 
+---
+Here’s a **Cursor AI Editor Project Rule** tailored to your development workflow:  
+
+---
+
+### **Cursor AI Project Rules**  
+
+1. **Architecture & State Management:**  
+   - Use **MVVM** (Model-View-ViewModel) architecture for clean separation of concerns.  
+   - Use **BLoC (Business Logic Component)** or **Cubit** for state management.  
+   - Each feature module should have its own BLoC/Cubit.  
+
+2. **UI & Design Principles:**  
+   - Follow **Material 3** guidelines and ensure **adaptive UI** for different screen sizes.  
+   - Maintain **consistent typography, spacing, and theme** throughout the app.  
+   - Implement **dark mode** and **light mode** support.  
+
+3. **Service-Oriented Development:**  
+   - Every core functionality must be handled via a **dedicated service class**.  
+   - Example services:  
+     - **API Service** → Handles all API requests using `Dio`.  
+     - **Location Service** → Fetches user location and permissions.  
+     - **Theme Service** → Manages app theming (dark/light mode).  
+     - **Localization Service** → Handles multiple languages support.  
+
+4. **Networking & API Integration:**  
+   - Use **Dio** for all API requests.  
+   - Implement **interceptors** for authentication, logging, and error handling.  
+   - Use **Repository Pattern** to separate data sources from UI.  
+
+5. **Localization & Multi-language Support:**  
+   - Ensure the app supports multiple languages.  
+   - Store language strings in `arb` files.  
+   - Provide a **language switcher** in the settings.  
+
+6. **Theme & Styling:**  
+   - Define global **primary and secondary colors** in `ThemeData`.  
+   - Use `Google Fonts` for typography consistency.  
+   - Implement **responsive UI** using `MediaQuery` and `LayoutBuilder`.  
+
+7. **Navigation & Routing:**  
+   - Use **GoRouter** for navigation with deep linking support.  
+   - Separate navigation logic into a `Routes` class.  
+
+8. **Error Handling & Logging:**  
+   - Implement a **global error handler** for API failures.  
+   - Use **Sentry or Firebase Crashlytics** for error reporting.  
+   - Show user-friendly **snackbars** for errors instead of raw exceptions.  
+
+9. **Performance Optimization:**  
+   - Use `flutter_bloc` **lazy loading** to reduce memory consumption.  
+   - Implement **caching** for API responses where needed.  
+   - Optimize images with `flutter_cache_manager`.  
+
+10. **Testing & CI/CD:**  
+   - Write **unit tests** for core functionalities.  
+   - Implement **widget tests** for UI consistency.  
+   - Use **GitHub Actions** or **Codemagic** for automated CI/CD.  

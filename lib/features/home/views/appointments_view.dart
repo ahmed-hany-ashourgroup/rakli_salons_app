@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rakli_salons_app/core/customs/custom_search_field.dart';
 import 'package:rakli_salons_app/core/theme/theme_constants.dart';
 import 'package:rakli_salons_app/core/utils/app_styles.dart';
+import 'package:rakli_salons_app/core/utils/size_config.dart';
 import 'package:rakli_salons_app/features/home/manager/get_appointments_cubit/get_appointments_cubit.dart';
 import 'package:rakli_salons_app/features/home/views/widgets/appointment_item.dart';
 
@@ -32,21 +32,21 @@ class _AppointmentsViewState extends State<AppointmentsView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Expanded(child: CustomSearchField()),
-                const SizedBox(width: 12),
-                CircleAvatar(
-                  backgroundColor: kSecondaryColor,
-                  child: IconButton(
-                    onPressed: () {},
-                    icon:
-                        Icon(Icons.filter_alt, color: kPrimaryColor, size: 28),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 32),
+            // Row(
+            //   children: [
+            //     Expanded(child: CustomSearchField()),
+            //     const SizedBox(width: 12),
+            //     CircleAvatar(
+            //       backgroundColor: kSecondaryColor,
+            //       child: IconButton(
+            //         onPressed: () {},
+            //         icon:
+            //             Icon(Icons.filter_alt, color: kPrimaryColor, size: 28),
+            //       ),
+            //     ),
+            //   ],
+            // ),
+            // const SizedBox(height: 32),
             PopupMenuButton<ViewPeriod>(
               initialValue: ViewPeriod.daily,
               color: kPrimaryColor,
@@ -85,13 +85,20 @@ class _AppointmentsViewState extends State<AppointmentsView> {
                   } else if (state is GetAppointmentsFailed) {
                     return Center(child: Text(state.errMessage));
                   } else if (state is GetAppointmentsSuccess) {
-                    return ListView.builder(
-                      itemCount: state.appointments.length,
-                      physics: const BouncingScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return AppointmentItem(
-                            appointment: state.appointments[index]);
-                      },
+                    return Column(
+                      children: [
+                        SizedBox(
+                          height: SizeConfig.screenhieght! * 0.7,
+                          child: ListView.builder(
+                            itemCount: state.appointments.length,
+                            physics: const BouncingScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return AppointmentItem(
+                                  appointment: state.appointments[index]);
+                            },
+                          ),
+                        ),
+                      ],
                     );
                   }
                   return Center(child: Text("No appointments found"));

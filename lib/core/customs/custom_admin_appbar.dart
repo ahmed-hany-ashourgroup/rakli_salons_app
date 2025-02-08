@@ -1,10 +1,10 @@
 // Custom App Bar Widget
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rakli_salons_app/core/theme/theme_constants.dart';
 import 'package:rakli_salons_app/core/utils/app_router.dart';
-import 'package:rakli_salons_app/core/utils/assets.dart';
+import 'package:rakli_salons_app/features/home/manager/get_notifications_cubit/get_notifications_cubit.dart';
 
 class CustomAdminAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onMenuPressed;
@@ -23,18 +23,11 @@ class CustomAdminAppBar extends StatelessWidget implements PreferredSizeWidget {
         onPressed: onMenuPressed,
       ),
       actions: [
-        Container(
-          padding: EdgeInsets.all(8),
-          child: SvgPicture.asset(
-            Assets.assetsImagesCart,
-            width: 34,
-            height: 34,
-            colorFilter: ColorFilter.mode(kSecondaryColor, BlendMode.srcIn),
-          ),
-        ),
         IconButton(
           icon: const Icon(Icons.notifications, color: kSecondaryColor),
           onPressed: () {
+            // Fetch notifications before navigating
+            context.read<GetNotificationsCubit>().getNotifications();
             GoRouter.of(context).push(AppRouter.kNotificationsView);
           },
           iconSize: 34,

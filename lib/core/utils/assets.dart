@@ -71,8 +71,8 @@ class Assets {
   static const String assetsImagesLock = "assets/images/lock.svg";
 
   /// Assets for assetsImagesLogo
-  /// assets/images/logo.svg
-  static const String assetsImagesLogo = "assets/images/logo.svg";
+  /// assets/images/logo.png
+  static const String assetsImagesLogo = "assets/images/logo.png";
 
   /// Assets for assetsImagesLogopng
   /// assets/images/logopng.png

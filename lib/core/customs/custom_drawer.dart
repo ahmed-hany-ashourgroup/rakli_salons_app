@@ -12,61 +12,70 @@ class CustomDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      child: Container(
-        color: const Color(0xFF8B1818),
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: const Color(0xFF8B1818).withOpacity(0.9),
+    return BlocListener<LogOutCubit, LogOutState>(
+      listener: (context, state) {
+        if (state is LogOutSuccess) {
+          GoRouter.of(context).go(AppRouter.kAccountSelectionView);
+        }
+      },
+      child: Drawer(
+        child: Container(
+          color: const Color(0xFF8B1818),
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  color: const Color(0xFF8B1818).withOpacity(0.9),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundImage: CachedNetworkImageProvider(
+                          SalonsUserCubit.user.photo ?? ''),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      SalonsUserCubit.user.name ?? '',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                    Text(
+                      SalonsUserCubit.user.email ?? '',
+                      style: TextStyle(color: Colors.white.withOpacity(0.7)),
+                    ),
+                  ],
+                ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundImage: CachedNetworkImageProvider(
-                        SalonsUserCubit.user.photo ?? ''),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    SalonsUserCubit.user.name ?? '',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
-                  Text(
-                    SalonsUserCubit.user.email ?? '',
-                    style: TextStyle(color: Colors.white.withOpacity(0.7)),
-                  ),
-                ],
-              ),
-            ),
-            _buildDrawerItem(Icons.add_box, 'My Products', () {
-              GoRouter.of(context).push(AppRouter.kMyProductsView);
-            }),
-            _buildDrawerItem(Icons.shopping_bag, 'Shop', () {
-              GoRouter.of(context).push(AppRouter.kShopView);
-            }),
-            _buildDrawerItem(Icons.card_membership, 'Subscription', () {}),
-            _buildDrawerItem(Icons.help, 'Help & Support', () {}),
-            Divider(),
-            _buildDrawerItem(Icons.logout, 'Sign Out', () {
-              showCustomConfirmationDialog(
-                context: context,
-                title: "Sign Out",
-                message:
-                    "Are you sure you want to sign out of your account?\nYou will need to log in again to access your account.",
-                confirmButtonText: "Sign Out",
-                onConfirm: () {
-                  Navigator.pop(context); // Close dialog
-                  context
-                      .read<LogOutCubit>()
-                      .logOut(); // Use context.read instead of BlocProvider.of
-                },
-              );
-            }),
-          ],
+              _buildDrawerItem(Icons.add_box, 'My Products', () {
+                GoRouter.of(context).push(AppRouter.kMyProductsView);
+              }),
+              _buildDrawerItem(Icons.shopping_bag, 'Shop', () {
+                GoRouter.of(context).push(AppRouter.kShopView);
+              }),
+              _buildDrawerItem(Icons.card_membership, 'Subscription', () {
+                GoRouter.of(context).push(AppRouter.kSubscriptionView);
+              }),
+              _buildDrawerItem(Icons.help, 'Help & Support', () {}),
+              Divider(),
+              _buildDrawerItem(Icons.logout, 'Sign Out', () {
+                showCustomConfirmationDialog(
+                  context: context,
+                  title: "Sign Out",
+                  message:
+                      "Are you sure you want to sign out of your account?\nYou will need to log in again to access your account.",
+                  confirmButtonText: "Sign Out",
+                  onConfirm: () {
+                    Navigator.pop(context); // Close dialog
+                    context
+                        .read<LogOutCubit>()
+                        .logOut(); // Use context.read instead of BlocProvider.of
+                  },
+                );
+              }),
+            ],
+          ),
         ),
       ),
     );

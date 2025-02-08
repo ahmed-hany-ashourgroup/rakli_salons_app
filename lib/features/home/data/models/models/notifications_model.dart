@@ -55,31 +55,57 @@ class NotificationModel {
 }
 
 class NotificationDataModel {
-  final String? title;
-  final String? image;
-  final String? createdAt;
+  final String? type;
+  final int? bookingId;
+  final int? userId;
+  final int? businessId;
+  final String? startTime;
+  final String? state;
+  final String? requestState;
+  final String? message;
+  final String? businessName;
+  final String? updatedAt;
 
   NotificationDataModel({
-    this.title,
-    this.image,
-    this.createdAt,
+    this.type,
+    this.bookingId,
+    this.userId,
+    this.businessId,
+    this.startTime,
+    this.state,
+    this.requestState,
+    this.message,
+    this.businessName,
+    this.updatedAt,
   });
 
-  // Factory method to create a NotificationDataModel from JSON
   factory NotificationDataModel.fromJson(Map<String, dynamic> json) {
     return NotificationDataModel(
-      title: json['title'] as String?,
-      image: json['image'] as String?,
-      createdAt: json['created_at'] as String?,
+      type: json['type'] as String?,
+      bookingId: json['booking_id'] as int?,
+      userId: json['user_id'] as int?,
+      businessId: json['business_id'] as int?,
+      startTime: json['start_time'] as String?,
+      state: json['state'] as String?,
+      requestState: json['request_state'] as String?,
+      message: json['message'] as String?,
+      businessName: json['business_name'] as String?,
+      updatedAt: json['updated_at'] as String?,
     );
   }
 
-  // Method to convert a NotificationDataModel to JSON
   Map<String, dynamic> toJson() {
     return {
-      'title': title,
-      'image': image,
-      'created_at': createdAt,
+      'type': type,
+      'booking_id': bookingId,
+      'user_id': userId,
+      'business_id': businessId,
+      'start_time': startTime,
+      'state': state,
+      'request_state': requestState,
+      'message': message,
+      'business_name': businessName,
+      'updated_at': updatedAt,
     };
   }
 }

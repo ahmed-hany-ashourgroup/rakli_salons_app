@@ -23,10 +23,10 @@ class ApiService {
         )) {
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) {
-        // final token = SalonsUserCubit.user.token;
-        final token = "13|D5igqdSuIduLsY5QpiAUhuI61cwIfbFvmRJnjg1212b04d0e";
+        final token = SalonsUserCubit.user.token;
+        // final token = "13|D5igqdSuIduLsY5QpiAUhuI61cwIfbFvmRJnjg1212b04d0e";
         SalonsUserCubit.user.id = 2;
-        if (token.isNotEmpty) {
+        if (token != null && token.isNotEmpty) {
           options.headers['Authorization'] = 'Bearer $token';
         }
         return handler.next(options);
