@@ -7,7 +7,11 @@ class UpdateAppointmentStateInitial extends UpdateAppointmentStateState {}
 
 class UpdateAppointmentStateLoading extends UpdateAppointmentStateState {}
 
-class UpdateAppointmentStateSuccess extends UpdateAppointmentStateState {}
+class UpdateAppointmentStateSuccess extends UpdateAppointmentStateState {
+  final String updatedState;
+
+  UpdateAppointmentStateSuccess({required this.updatedState});
+}
 
 class UpdateAppointmentStateFailed extends UpdateAppointmentStateState {
   final String errMessage;

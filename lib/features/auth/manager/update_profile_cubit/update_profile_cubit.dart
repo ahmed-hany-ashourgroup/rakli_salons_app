@@ -20,10 +20,11 @@ class UpdateProfileCubit extends Cubit<UpdateProfileState> {
     emit(UpdateProfileLoading());
     try {
       final response =
-          await _apiService.put('business/update-profile/$buissniesId', data: {
+          await _apiService.post('business/update-profile/$buissniesId', data: {
         'email': email,
         'business_name': name,
         'phone': phone,
+        '_method': 'PUT',
       });
 
       if (response['success'] == true && response['data'] != null) {

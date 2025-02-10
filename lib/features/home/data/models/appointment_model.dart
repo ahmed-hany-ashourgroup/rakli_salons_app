@@ -1,4 +1,4 @@
-enum AppointmentStatus { pending, confirmed, cancelled, completed }
+enum AppointmentStatus { pending, accepted, rejected }
 
 class AppointmentsModel {
   final int id;
@@ -33,12 +33,10 @@ class AppointmentsModel {
     switch (status) {
       case 'pending':
         return AppointmentStatus.pending;
-      case 'confirmed':
-        return AppointmentStatus.confirmed;
-      case 'cancelled':
-        return AppointmentStatus.cancelled;
-      case 'completed':
-        return AppointmentStatus.completed;
+      case 'accepted':
+        return AppointmentStatus.accepted;
+      case 'rejected':
+        return AppointmentStatus.rejected;
       default:
         return AppointmentStatus.pending;
     }

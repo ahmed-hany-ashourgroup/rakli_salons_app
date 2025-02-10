@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:rakli_salons_app/core/utils/api_service.dart';
+import 'package:rakli_salons_app/core/utils/logger.dart';
 import 'package:rakli_salons_app/core/utils/service_locator.dart';
 
 part 'update_appointment_state_state.dart';
@@ -14,14 +15,18 @@ class UpdateAppointmentStateCubit extends Cubit<UpdateAppointmentStateState> {
     required String state,
   }) async {
     emit(UpdateAppointmentStateLoading());
+    Logger.info(state);
     try {
-      final response = await _apiService.put(
-        'orders/orders/$appointmentId/state',
-        data: {'state': state},
+      final response = await _apiService.post(
+        'bookings/request-state/$appointmentId',
+        data: {
+          'request_state': state,
+        },
       );
 
       if (response['success'] == true) {
-        emit(UpdateAppointmentStateSuccess());
+        final updatedState = response['data']['request_state'] as String;
+        emit(UpdateAppointmentStateSuccess(updatedState: updatedState));
       } else {
         emit(UpdateAppointmentStateFailed(
           errMessage:
