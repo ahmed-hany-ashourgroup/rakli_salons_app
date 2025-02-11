@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rakli_salons_app/core/customs/custom_button.dart';
 import 'package:rakli_salons_app/core/theme/theme_constants.dart';
 import 'package:rakli_salons_app/core/utils/app_styles.dart';
+import 'package:rakli_salons_app/generated/l10n.dart';
 
 class CustomConfirmationDialog extends StatelessWidget {
   const CustomConfirmationDialog({
@@ -76,7 +77,7 @@ class CustomConfirmationDialog extends StatelessWidget {
             TextButton(
               onPressed: onCancel,
               child: Text(
-                "Cancel",
+                S.of(context).cancel,
                 style: AppStyles.bold16.copyWith(color: kSecondaryColor),
               ),
             ),

@@ -5,6 +5,7 @@ import 'package:rakli_salons_app/core/theme/theme_constants.dart';
 import 'package:rakli_salons_app/core/utils/app_router.dart';
 import 'package:rakli_salons_app/core/utils/app_styles.dart';
 import 'package:rakli_salons_app/core/utils/assets.dart';
+import 'package:rakli_salons_app/generated/l10n.dart';
 
 class AccountSelectionView extends StatelessWidget {
   const AccountSelectionView({super.key});
@@ -13,15 +14,15 @@ class AccountSelectionView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              const Color(0xFFFFE4D6), // Darker beige
-              const Color(0xFFFFF5EC), // Light beige
+              Color(0xFFFFE4D6), // Darker beige
+              Color(0xFFFFF5EC), // Light beige
             ],
-            stops: const [0.0, 1.0],
+            stops: [0.0, 1.0],
           ),
         ),
         child: Column(
@@ -38,16 +39,14 @@ class AccountSelectionView extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 28.0),
+              padding: const EdgeInsets.symmetric(horizontal: 28.0),
               child: Text(
-                "Transform Your Look, and Feel Confident Inside and Out!",
+                S.of(context).welcomeMessage,
                 style: AppStyles.bold32.copyWith(color: Colors.black),
                 textAlign: TextAlign.center,
               ),
             ),
-            Spacer(
-              flex: 4,
-            ),
+            const Spacer(flex: 4),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 28),
               child: Row(
@@ -59,14 +58,14 @@ class AccountSelectionView extends StatelessWidget {
                       },
                       title: FittedBox(
                         child: Text(
-                          "Sign Up",
+                          S.of(context).register,
                           style: AppStyles.medium20
                               .copyWith(color: kSecondaryColor),
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(width: 14),
+                  const SizedBox(width: 14),
                   Expanded(
                     child: CustomButton(
                       onPressed: () {
@@ -74,7 +73,7 @@ class AccountSelectionView extends StatelessWidget {
                       },
                       title: FittedBox(
                         child: Text(
-                          "Login",
+                          S.of(context).login,
                           style: AppStyles.medium20
                               .copyWith(color: kSecondaryColor),
                         ),
@@ -84,9 +83,7 @@ class AccountSelectionView extends StatelessWidget {
                 ],
               ),
             ),
-            Spacer(
-              flex: 8,
-            ),
+            const Spacer(flex: 8),
           ],
         ),
       ),

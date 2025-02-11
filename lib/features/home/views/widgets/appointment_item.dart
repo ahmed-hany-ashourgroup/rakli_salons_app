@@ -6,6 +6,7 @@ import 'package:rakli_salons_app/core/utils/app_styles.dart';
 import 'package:rakli_salons_app/features/home/data/models/appointment_model.dart';
 import 'package:rakli_salons_app/features/home/manager/get_appointments_cubit/get_appointments_cubit.dart';
 import 'package:rakli_salons_app/features/home/manager/update_appointment_state_cubit/update_appointment_state_cubit.dart';
+import 'package:rakli_salons_app/generated/l10n.dart';
 
 class AppointmentItem extends StatefulWidget {
   final AppointmentsModel appointment;
@@ -48,7 +49,7 @@ class _AppointmentItemState extends State<AppointmentItem> {
             });
 
             Fluttertoast.showToast(
-              msg: 'Appointment status updated successfully',
+              msg: S.of(context).appointmentStatusUpdated,
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               backgroundColor: Colors.green,
@@ -85,12 +86,14 @@ class _AppointmentItemState extends State<AppointmentItem> {
                         children: [
                           Text(
                             widget.appointment.requestUserName ??
-                                'Unknown Customer',
+                                S.of(context).unknownCustomer,
                             style: AppStyles.bold16,
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'Booking ID: #${widget.appointment.id}',
+                            S
+                                .of(context)
+                                .bookingId(widget.appointment.id.toString()),
                             style: AppStyles.regular14
                                 .copyWith(color: Colors.grey),
                           ),
@@ -120,7 +123,7 @@ class _AppointmentItemState extends State<AppointmentItem> {
                                 ),
                               ),
                               child: Text(
-                                'Accept',
+                                S.of(context).accept,
                                 style: AppStyles.medium14
                                     .copyWith(color: Colors.white),
                               ),
@@ -147,7 +150,7 @@ class _AppointmentItemState extends State<AppointmentItem> {
                                 ),
                               ),
                               child: Text(
-                                'Reject',
+                                S.of(context).reject,
                                 style: AppStyles.medium14
                                     .copyWith(color: Colors.white),
                               ),
@@ -164,7 +167,7 @@ class _AppointmentItemState extends State<AppointmentItem> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
-                            currentStatus.name.toUpperCase(),
+                            _getStatusText(currentStatus),
                             style: AppStyles.medium14.copyWith(
                                 color: _getStatusColor(currentStatus)),
                           ),
@@ -183,31 +186,35 @@ class _AppointmentItemState extends State<AppointmentItem> {
   }
 
   Widget _buildAppointmentDetails() {
+    final dateFormat = DateFormat('MMM dd, yyyy');
+    final timeFormat = DateFormat('hh:mm a');
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildDetailRow(
           icon: Icons.calendar_today,
-          label: 'Date',
-          value: DateFormat('MMM dd, yyyy').format(widget.appointment.date),
+          label: S.of(context).dateLabel,
+          value: dateFormat.format(widget.appointment.date),
         ),
         const SizedBox(height: 8),
         _buildDetailRow(
           icon: Icons.access_time,
-          label: 'Time',
-          value: DateFormat('hh:mm a').format(widget.appointment.date),
+          label: S.of(context).time,
+          value: timeFormat.format(widget.appointment.date),
         ),
         const SizedBox(height: 8),
         _buildDetailRow(
           icon: Icons.attach_money,
-          label: 'Total',
-          value: '\$${widget.appointment.price.toStringAsFixed(2)}',
+          label: S.of(context).total,
+          value:
+              '${S.of(context).currencySymbol}${widget.appointment.price.toStringAsFixed(2)}',
         ),
         if (widget.appointment.comment != null) ...[
           const SizedBox(height: 8),
           _buildDetailRow(
             icon: Icons.comment,
-            label: 'Comment',
+            label: S.of(context).comment,
             value: widget.appointment.comment!,
           ),
         ],
@@ -237,6 +244,17 @@ class _AppointmentItemState extends State<AppointmentItem> {
         ),
       ],
     );
+  }
+
+  String _getStatusText(AppointmentStatus status) {
+    switch (status) {
+      case AppointmentStatus.pending:
+        return S.of(context).pending.toUpperCase();
+      case AppointmentStatus.accepted:
+        return S.of(context).completed.toUpperCase();
+      case AppointmentStatus.rejected:
+        return S.of(context).canceled.toUpperCase();
+    }
   }
 
   Color _getStatusColor(AppointmentStatus status) {

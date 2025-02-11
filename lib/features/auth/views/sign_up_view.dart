@@ -14,6 +14,7 @@ import 'package:rakli_salons_app/core/utils/assets.dart';
 import 'package:rakli_salons_app/features/auth/manager/Business_Registration_Cubit/Business_Registration_Cubit.dart';
 import 'package:rakli_salons_app/features/auth/manager/Business_Registration_Cubit/Business_Registration_state.dart';
 import 'package:rakli_salons_app/features/auth/manager/user_cubit/user_cubit.dart';
+import 'package:rakli_salons_app/generated/l10n.dart';
 
 class BusinessSignUpView extends StatefulWidget {
   const BusinessSignUpView({super.key});
@@ -104,7 +105,7 @@ class _BusinessSignUpViewState extends State<BusinessSignUpView> {
                           size: 40, color: kbackGroundColor),
                       const SizedBox(height: 8),
                       Text(
-                        'Tap to upload',
+                        S.of(context).tapToUpload,
                         style: AppStyles.regular24.copyWith(
                           color: kbackGroundColor,
                           fontSize: 16,
@@ -167,18 +168,19 @@ class _BusinessSignUpViewState extends State<BusinessSignUpView> {
     if (_formKey.currentState?.validate() ?? false) {
       // Validate required images
       if (_profilePhoto == null) {
-        _showErrorSnackBar('Profile photo is required');
+        _showErrorSnackBar(S.of(context).profilePhotoRequired);
         return;
       }
 
       if (_isSalon) {
         if (_tradeLicenseImage == null || _taxRegistrationImage == null) {
-          _showErrorSnackBar('Trade license and tax registration are required');
+          _showErrorSnackBar(
+              S.of(context).tradeLicenseAndTaxRegistrationRequired);
           return;
         }
       } else {
         if (_idCardImage == null) {
-          _showErrorSnackBar('ID card is required');
+          _showErrorSnackBar(S.of(context).idCardRequired);
           return;
         }
       }
@@ -209,7 +211,7 @@ class _BusinessSignUpViewState extends State<BusinessSignUpView> {
           (user) => GoRouter.of(context).go(AppRouter.kConfirmationCodeView),
         );
       } catch (e) {
-        _showErrorSnackBar('An error occurred during registration');
+        _showErrorSnackBar(S.of(context).anErrorOccurredDuringRegistration);
       }
     } else {
       setState(() {
@@ -280,7 +282,7 @@ class _BusinessSignUpViewState extends State<BusinessSignUpView> {
                       ),
                     ),
                     Text(
-                      'Business Registration',
+                      S.of(context).businessRegistration,
                       style: AppStyles.bold24.copyWith(color: kbackGroundColor),
                       textAlign: TextAlign.center,
                     ),
@@ -289,26 +291,27 @@ class _BusinessSignUpViewState extends State<BusinessSignUpView> {
                     // Basic Information Section
                     CustomTextField(
                       controller: _businessNameController,
-                      hint: 'Business Name',
+                      hint: S.of(context).businessName,
                       borderColor: kbackGroundColor,
                       hintColor: kbackGroundColor.withOpacity(0.5),
                       validator: (value) => value?.isEmpty ?? true
-                          ? 'Please enter business name'
+                          ? S.of(context).pleaseEnterBusinessName
                           : null,
                     ),
                     const SizedBox(height: 16),
 
                     CustomTextField(
                       controller: _emailController,
-                      hint: 'Email',
+                      hint: S.of(context).email,
                       borderColor: kbackGroundColor,
                       hintColor: kbackGroundColor.withOpacity(0.5),
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) {
-                        if (value?.isEmpty ?? true) return 'Please enter email';
+                        if (value?.isEmpty ?? true)
+                          return S.of(context).pleaseEnterYourEmail;
                         final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
                         if (!emailRegex.hasMatch(value!)) {
-                          return 'Invalid email format';
+                          return S.of(context).pleaseEnterValidEmail;
                         }
                         return null;
                       },
@@ -317,42 +320,42 @@ class _BusinessSignUpViewState extends State<BusinessSignUpView> {
 
                     CustomTextField(
                       controller: _passwordController,
-                      hint: 'Password',
+                      hint: S.of(context).password,
                       borderColor: kbackGroundColor,
                       hintColor: kbackGroundColor.withOpacity(0.5),
                       obscureText: true,
                       validator: (value) => (value?.length ?? 0) < 8
-                          ? 'Password must be at least 8 characters'
+                          ? S.of(context).passwordMinLength
                           : null,
                     ),
                     const SizedBox(height: 16),
 
                     CustomTextField(
                       controller: _phoneController,
-                      hint: 'Phone',
+                      hint: S.of(context).phone,
                       borderColor: kbackGroundColor,
                       hintColor: kbackGroundColor.withOpacity(0.5),
                       keyboardType: TextInputType.phone,
                       validator: (value) => value?.isEmpty ?? true
-                          ? 'Please enter phone number'
+                          ? S.of(context).pleaseEnterPhone
                           : null,
                     ),
                     const SizedBox(height: 16),
 
                     CustomTextField(
                       controller: _addressController,
-                      hint: 'Address',
+                      hint: S.of(context).address,
                       borderColor: kbackGroundColor,
                       hintColor: kbackGroundColor.withOpacity(0.5),
                       validator: (value) => value?.isEmpty ?? true
-                          ? 'Please enter address'
+                          ? S.of(context).pleaseEnterAddress
                           : null,
                     ),
                     const SizedBox(height: 24),
 
                     // Role Selection
                     Text(
-                      'Business Type',
+                      S.of(context).businessType,
                       style: AppStyles.regular24.copyWith(
                         color: kbackGroundColor,
                         fontSize: 18,
@@ -425,7 +428,7 @@ class _BusinessSignUpViewState extends State<BusinessSignUpView> {
                       child: CustomButton(
                         onPressed: _handleRegistration,
                         title: Text(
-                          'Submit',
+                          S.of(context).submit,
                           style: AppStyles.bold16.copyWith(color: Colors.white),
                         ),
                       ),
@@ -437,7 +440,7 @@ class _BusinessSignUpViewState extends State<BusinessSignUpView> {
                         GoRouter.of(context).go(AppRouter.kLoginView);
                       },
                       child: Text(
-                        'Have an account? Login',
+                        S.of(context).haveAnAccount,
                         style: AppStyles.regular16
                             .copyWith(color: kbackGroundColor),
                       ),

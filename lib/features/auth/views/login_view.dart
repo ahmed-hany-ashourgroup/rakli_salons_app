@@ -9,6 +9,7 @@ import 'package:rakli_salons_app/core/utils/assets.dart';
 import 'package:rakli_salons_app/core/utils/logger.dart';
 import 'package:rakli_salons_app/core/utils/toast_service.dart';
 import 'package:rakli_salons_app/features/auth/manager/login_cubit/login_cubit.dart';
+import 'package:rakli_salons_app/generated/l10n.dart';
 
 import '../../../core/utils/app_styles.dart';
 
@@ -64,33 +65,33 @@ class _LoginViewState extends State<LoginView> {
                   CustomTextField(
                     hintColor: kbackGroundColor.withValues(alpha: 0.5),
                     borderColor: kbackGroundColor,
-                    hint: "Email Or Phone Number",
+                    hint: S.of(context).emailOrPhone,
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
+                        return S.of(context).pleaseEnterYourEmail;
                       }
                       // Simple email regex
                       final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
                       if (!emailRegex.hasMatch(value)) {
-                        return 'Please enter a valid email';
+                        return S.of(context).pleaseEnterValidEmail;
                       }
                       return null;
                     },
                   ),
                   SizedBox(height: 20),
                   CustomTextField(
-                    hint: "Password",
+                    hint: S.of(context).password,
                     hintColor: kbackGroundColor.withValues(alpha: 0.5),
                     borderColor: kbackGroundColor,
                     controller: passwordController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter a password';
+                        return S.of(context).pleaseEnterYourEmail;
                       }
                       if (value.length < 8) {
-                        return 'Password must be at least 8 characters';
+                        return S.of(context).passwordMinLength;
                       }
                       return null;
                     },
@@ -102,8 +103,8 @@ class _LoginViewState extends State<LoginView> {
                         GoRouter.of(context)
                             .push(AppRouter.kForgotPasswordView);
                       },
-                      child:
-                          Text("Forgot Password?", style: AppStyles.regular16)),
+                      child: Text(S.of(context).forgotPassword,
+                          style: AppStyles.regular16)),
                   SizedBox(height: 54),
                   CustomButton(
                       color: kPrimaryColor,
@@ -125,7 +126,7 @@ class _LoginViewState extends State<LoginView> {
                             );
                           } else {
                             return Text(
-                              "Login",
+                              S.of(context).login,
                               style: AppStyles.bold16
                                   .copyWith(color: Colors.white),
                             );
@@ -150,7 +151,7 @@ class _LoginViewState extends State<LoginView> {
                       GoRouter.of(context).go(AppRouter.kSignUpView);
                     },
                     child: Text(
-                      "Don`t have an account? Sign up",
+                      S.of(context).dontHaveAccount,
                       style:
                           AppStyles.regular16.copyWith(color: kbackGroundColor),
                     ),

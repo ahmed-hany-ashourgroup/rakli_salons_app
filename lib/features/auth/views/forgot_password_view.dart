@@ -7,6 +7,7 @@ import 'package:rakli_salons_app/core/customs/custom_textfield.dart';
 import 'package:rakli_salons_app/core/theme/theme_constants.dart';
 import 'package:rakli_salons_app/core/utils/app_styles.dart';
 import 'package:rakli_salons_app/features/auth/manager/reset_password_cubit/reset_password_cubit.dart';
+import 'package:rakli_salons_app/generated/l10n.dart';
 
 class ForgotPasswordView extends StatefulWidget {
   const ForgotPasswordView({super.key});
@@ -31,7 +32,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
         if (state is ResetPasswordSuccess) {
           if (step == 1) {
             Fluttertoast.showToast(
-              msg: 'Reset code sent to your email',
+              msg: S.of(context).emailSentConfirmation,
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               backgroundColor: Colors.green,
@@ -40,7 +41,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
             setState(() => step = 2);
           } else if (step == 2) {
             Fluttertoast.showToast(
-              msg: 'Code verified successfully',
+              msg: S.of(context).verifyCode,
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               backgroundColor: Colors.green,
@@ -49,7 +50,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
             setState(() => step = 3);
           } else if (step == 3) {
             Fluttertoast.showToast(
-              msg: 'Password reset successfully',
+              msg: S.of(context).passwordResetSuccess,
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               backgroundColor: Colors.green,
@@ -125,12 +126,12 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Enter your email address",
+          S.of(context).enterEmailAddress,
           style: AppStyles.regular16.copyWith(color: Colors.black),
         ),
         const SizedBox(height: 16),
         CustomTextField(
-          hint: "Email",
+          hint: S.of(context).email,
           hintColor: kbackGroundColor.withValues(alpha: 0.5),
           controller: emailController,
           keyboardType: TextInputType.emailAddress,
@@ -142,7 +143,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
             Expanded(
               child: CustomButton(
                 title: Text(
-                  "Send Code",
+                  S.of(context).sendCode,
                   style: AppStyles.bold16.copyWith(color: Colors.white),
                 ),
                 onPressed: () {
@@ -165,12 +166,12 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Please enter verification code sent to your email",
+          S.of(context).verificationCodeSent,
           style: AppStyles.regular16.copyWith(color: Colors.black),
         ),
         const SizedBox(height: 16),
         CustomTextField(
-          hint: "Code",
+          hint: S.of(context).resetCode,
           hintColor: kbackGroundColor.withValues(alpha: 0.5),
           controller: codeController,
           keyboardType: TextInputType.number,
@@ -182,7 +183,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
             Expanded(
               child: CustomButton(
                 title: Text(
-                  "Verify Code",
+                  S.of(context).verifyCode,
                   style: AppStyles.bold16.copyWith(color: Colors.white),
                 ),
                 onPressed: () {
@@ -206,12 +207,12 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Enter your new password",
+          S.of(context).pleaseEnterNewPassword,
           style: AppStyles.regular16.copyWith(color: Colors.black),
         ),
         const SizedBox(height: 16),
         CustomTextField(
-          hint: "New password",
+          hint: S.of(context).newPassword,
           controller: newPasswordController,
           hintColor: kbackGroundColor.withValues(alpha: 0.5),
           obscureText: true,
@@ -219,7 +220,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
         ),
         const SizedBox(height: 16),
         CustomTextField(
-          hint: "Confirm password",
+          hint: S.of(context).confirmPassword,
           controller: confirmPasswordController,
           hintColor: kbackGroundColor.withValues(alpha: 0.5),
           obscureText: true,
@@ -231,14 +232,14 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
             Expanded(
               child: CustomButton(
                 title: Text(
-                  "Reset Password",
+                  S.of(context).resetPassword,
                   style: AppStyles.bold16.copyWith(color: Colors.white),
                 ),
                 onPressed: () {
                   if (newPasswordController.text.isEmpty ||
                       confirmPasswordController.text.isEmpty) {
                     Fluttertoast.showToast(
-                      msg: "Please fill all fields",
+                      msg: S.of(context).pleaseFillAllFields,
                       toastLength: Toast.LENGTH_SHORT,
                       gravity: ToastGravity.BOTTOM,
                       backgroundColor: Colors.red,
@@ -250,7 +251,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                   if (newPasswordController.text !=
                       confirmPasswordController.text) {
                     Fluttertoast.showToast(
-                      msg: "Passwords do not match",
+                      msg: S.of(context).passwordsDoNotMatch,
                       toastLength: Toast.LENGTH_SHORT,
                       gravity: ToastGravity.BOTTOM,
                       backgroundColor: Colors.red,

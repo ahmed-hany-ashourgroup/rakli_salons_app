@@ -10,6 +10,7 @@ import 'package:rakli_salons_app/core/utils/assets.dart';
 import 'package:rakli_salons_app/core/utils/toast_service.dart';
 import 'package:rakli_salons_app/features/auth/manager/confirmation_code_cubit/confirmation_code_cubit.dart';
 import 'package:rakli_salons_app/features/auth/manager/user_cubit/user_cubit.dart';
+import 'package:rakli_salons_app/generated/l10n.dart';
 
 import '../../../core/customs/custom_textfield.dart';
 
@@ -89,10 +90,12 @@ class _SignUpViewState extends State<ConfirmationCodeView> {
                         controller: codeController,
                         borderColor: kbackGroundColor,
                         hintColor: kbackGroundColor.withValues(alpha: 0.5),
-                        hint: "Enter Code",
+                        hint: S.of(context).enterConfirmationCode,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter Your Confirmation Code';
+                            return S
+                                .of(context)
+                                .pleaseEnterYourConfirmationCode;
                           }
                           return null;
                         },
@@ -109,7 +112,7 @@ class _SignUpViewState extends State<ConfirmationCodeView> {
 
                               // Optionally show a success toast
                               ToastService.showCustomToast(
-                                message: "Signed up successfully!",
+                                message: S.of(context).signedUpSuccessfully,
                                 type: ToastType.success,
                               );
                             }
@@ -128,7 +131,7 @@ class _SignUpViewState extends State<ConfirmationCodeView> {
                               );
                             }
                             return Text(
-                              "Sign Up",
+                              S.of(context).submit,
                               style: AppStyles.bold16
                                   .copyWith(color: Colors.white),
                             );

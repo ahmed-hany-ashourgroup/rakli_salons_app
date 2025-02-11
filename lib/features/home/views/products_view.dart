@@ -16,6 +16,7 @@ import 'package:rakli_salons_app/features/home/manager/search_cubit/search_cubit
 import 'package:rakli_salons_app/features/home/views/widgets/cart_bottom_sheet.dart';
 import 'package:rakli_salons_app/features/home/views/widgets/filter_bottom_sheet.dart';
 import 'package:rakli_salons_app/features/home/views/widgets/product_card.dart';
+import 'package:rakli_salons_app/generated/l10n.dart';
 
 class ProductsView extends StatefulWidget {
   const ProductsView({super.key});
@@ -159,7 +160,7 @@ class _ProductsViewState extends State<ProductsView> {
                   ),
                 ),
                 Text(
-                  "Products",
+                  S.of(context).products,
                   textAlign: TextAlign.start,
                   style: AppStyles.bold24.copyWith(color: kbackGroundColor),
                 ),
@@ -263,7 +264,7 @@ class _ProductsViewState extends State<ProductsView> {
                         if (filteredProducts.isEmpty) {
                           return Center(
                             child: Text(
-                              'No products found',
+                              S.of(context).noProductsFoundMessage,
                               style: AppStyles.regular14
                                   .copyWith(color: Colors.grey),
                             ),

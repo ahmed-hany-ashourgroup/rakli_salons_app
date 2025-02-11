@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rakli_salons_app/core/customs/custom_app_bar.dart';
 import 'package:rakli_salons_app/core/theme/theme_constants.dart';
 import 'package:rakli_salons_app/core/utils/app_styles.dart';
+import 'package:rakli_salons_app/generated/l10n.dart';
 
 class SubscriptionView extends StatelessWidget {
   const SubscriptionView({super.key});
@@ -19,7 +20,7 @@ class SubscriptionView extends StatelessWidget {
             CustomAppBar(
               backButtonColor: kPrimaryColor,
               title: Text(
-                "Plans",
+                S.of(context).plans,
                 style: AppStyles.bold24.copyWith(color: Colors.black),
               ),
               icon: const SizedBox.shrink(),
@@ -29,18 +30,21 @@ class SubscriptionView extends StatelessWidget {
               child: ListView(
                 children: [
                   _buildPlanCard(
+                    context: context,
                     price: 150,
                     isSelected: true,
                     onTap: () {},
                   ),
                   const SizedBox(height: 16),
                   _buildPlanCard(
+                    context: context,
                     price: 120,
                     isSelected: false,
                     onTap: () {},
                   ),
                   const SizedBox(height: 16),
                   _buildPlanCard(
+                    context: context,
                     price: 100,
                     isSelected: false,
                     onTap: () {},
@@ -63,7 +67,7 @@ class SubscriptionView extends StatelessWidget {
                         ),
                       ),
                       child: Text(
-                        'Cancel',
+                        S.of(context).cancel,
                         style: AppStyles.medium14
                             .copyWith(color: Colors.grey[600]),
                       ),
@@ -83,7 +87,7 @@ class SubscriptionView extends StatelessWidget {
                         ),
                       ),
                       child: Text(
-                        'Confirm',
+                        S.of(context).confirm,
                         style: AppStyles.medium14.copyWith(color: Colors.white),
                       ),
                     ),
@@ -98,6 +102,7 @@ class SubscriptionView extends StatelessWidget {
   }
 
   Widget _buildPlanCard({
+    required BuildContext context,
     required double price,
     required bool isSelected,
     required VoidCallback onTap,
@@ -120,7 +125,7 @@ class SubscriptionView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Basic Plan',
+                  S.of(context).basicPlan,
                   style: AppStyles.bold16.copyWith(
                     color: isSelected ? Colors.white : Colors.black,
                   ),
@@ -135,26 +140,30 @@ class SubscriptionView extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Ideal for small salons starting out with basic management needs.',
+              S.of(context).basicPlanDescription,
               style: AppStyles.regular14.copyWith(
                 color: isSelected ? Colors.white70 : Colors.grey[600],
               ),
             ),
             const SizedBox(height: 16),
             _buildFeatureItem(
-              'Manage up to 50 appointments per month',
+              context,
+              S.of(context).manageAppointments,
               isSelected: isSelected,
             ),
             _buildFeatureItem(
-              'Add and manage up to 10 services',
+              context,
+              S.of(context).manageServices,
               isSelected: isSelected,
             ),
             _buildFeatureItem(
-              'Basic analytics and reporting',
+              context,
+              S.of(context).basicAnalytics,
               isSelected: isSelected,
             ),
             _buildFeatureItem(
-              'Email support',
+              context,
+              S.of(context).emailSupport,
               isSelected: isSelected,
             ),
           ],
@@ -163,7 +172,8 @@ class SubscriptionView extends StatelessWidget {
     );
   }
 
-  Widget _buildFeatureItem(String text, {required bool isSelected}) {
+  Widget _buildFeatureItem(BuildContext context, String text,
+      {required bool isSelected}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(

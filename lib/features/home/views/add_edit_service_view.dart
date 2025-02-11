@@ -8,6 +8,7 @@ import 'package:rakli_salons_app/core/utils/toast_service.dart';
 import 'package:rakli_salons_app/features/home/data/models/models/service_model.dart';
 import 'package:rakli_salons_app/features/home/manager/add_new_service_cubit/add_service_cubit.dart';
 import 'package:rakli_salons_app/features/home/manager/get_services_cubit/get_services_cubit.dart';
+import 'package:rakli_salons_app/generated/l10n.dart';
 
 class AddEditServiceView extends StatefulWidget {
   final ServiceModel? service;
@@ -149,13 +150,15 @@ class _AddEditServiceViewState extends State<AddEditServiceView> {
       ),
       child: CustomAppBar(
         title: Text(
-          widget.isEditMode ? 'Edit Service' : 'Add Service',
+          widget.isEditMode
+              ? S.of(context).editService
+              : S.of(context).addService,
           style: AppStyles.bold20.copyWith(color: Colors.black),
         ),
         icon: TextButton(
           onPressed: _resetForm,
           child: Text(
-            "Reset",
+            S.of(context).reset,
             style: AppStyles.regular16.copyWith(color: Colors.black),
           ),
         ),
@@ -181,37 +184,37 @@ class _AddEditServiceViewState extends State<AddEditServiceView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSectionTitle('Basic Information'),
+          _buildSectionTitle(S.of(context).basicInformation),
           const SizedBox(height: 24),
           _buildTextField(
             controller: _titleController,
-            label: 'Service Title',
-            hint: 'Enter service title',
+            label: S.of(context).serviceTitle,
+            hint: S.of(context).enterServiceTitle,
             prefixIcon: Icons.title,
           ),
           const SizedBox(height: 20),
           _buildTextField(
             controller: _descriptionController,
-            label: 'Description',
-            hint: 'Enter service description',
+            label: S.of(context).description,
+            hint: S.of(context).enterDescription,
             maxLines: 6,
             prefixIcon: Icons.description,
           ),
           const SizedBox(height: 32),
-          _buildSectionTitle('Pricing & Details'),
+          _buildSectionTitle(S.of(context).pricingAndDetails),
           const SizedBox(height: 24),
           _buildTextField(
             controller: _priceController,
-            label: 'Price',
-            hint: 'Enter service price',
+            label: S.of(context).total,
+            hint: S.of(context).enterPrice,
             keyboardType: TextInputType.number,
             prefixIcon: Icons.attach_money,
           ),
           const SizedBox(height: 20),
           _buildTextField(
             controller: _promotionsController,
-            label: 'Promotions (Optional)',
-            hint: 'Enter promotion amount',
+            label: S.of(context).promotions,
+            hint: S.of(context).enterPromotionAmount,
             keyboardType: TextInputType.number,
             prefixIcon: Icons.local_offer,
             isRequired: false,
@@ -272,11 +275,11 @@ class _AddEditServiceViewState extends State<AddEditServiceView> {
           validator: isRequired
               ? (value) {
                   if (value == null || value.isEmpty) {
-                    return '$label is required';
+                    return "$label ${S.of(context).isRequired}";
                   }
                   if (keyboardType == TextInputType.number &&
                       double.tryParse(value) == null) {
-                    return 'Please enter a valid number';
+                    return S.of(context).pleaseEnterValidNumber;
                   }
                   return null;
                 }
@@ -291,7 +294,7 @@ class _AddEditServiceViewState extends State<AddEditServiceView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Gender',
+          S.of(context).gender,
           style: AppStyles.regular14.copyWith(color: Colors.grey[700]),
         ),
         const SizedBox(height: 8),
@@ -339,7 +342,7 @@ class _AddEditServiceViewState extends State<AddEditServiceView> {
           Icon(Icons.toggle_on, color: kPrimaryColor, size: 20),
           const SizedBox(width: 12),
           Text(
-            'Service Status',
+            S.of(context).serviceStatus,
             style: AppStyles.regular16,
           ),
           const Spacer(),
@@ -355,7 +358,9 @@ class _AddEditServiceViewState extends State<AddEditServiceView> {
           ),
           const SizedBox(width: 8),
           Text(
-            _selectedState == ServiceState.active ? 'Active' : 'Inactive',
+            _selectedState == ServiceState.active
+                ? S.of(context).active
+                : S.of(context).inactive,
             style: AppStyles.regular14.copyWith(
               color: _selectedState == ServiceState.active
                   ? kPrimaryColor
@@ -373,7 +378,7 @@ class _AddEditServiceViewState extends State<AddEditServiceView> {
         Expanded(
           child: CustomButton(
             title: Text(
-              'Reset',
+              S.of(context).reset,
               style: AppStyles.regular16.copyWith(color: Colors.white),
             ),
             onPressed: state is AddServiceLoading ? () {} : _resetForm,
@@ -385,7 +390,9 @@ class _AddEditServiceViewState extends State<AddEditServiceView> {
           child: CustomButton(
             title: FittedBox(
               child: Text(
-                widget.isEditMode ? 'Save Changes' : 'Add Service',
+                widget.isEditMode
+                    ? S.of(context).saveChanges
+                    : S.of(context).addService,
                 style: AppStyles.regular16.copyWith(color: Colors.white),
               ),
             ),

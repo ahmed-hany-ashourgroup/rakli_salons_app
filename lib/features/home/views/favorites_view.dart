@@ -5,6 +5,7 @@ import 'package:rakli_salons_app/core/utils/app_styles.dart';
 import 'package:rakli_salons_app/features/home/data/models/models/product_model.dart';
 import 'package:rakli_salons_app/features/home/manager/Products_wish_list_cubit/products_wish_list_cubit.dart';
 import 'package:rakli_salons_app/features/home/views/widgets/product_card.dart';
+import 'package:rakli_salons_app/generated/l10n.dart';
 
 class FavoritesView extends StatefulWidget {
   const FavoritesView({super.key});
@@ -25,7 +26,7 @@ class _FavoritesViewState extends State<FavoritesView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Favorites"),
+        title: Text(S.of(context).favorites),
         centerTitle: true,
       ),
       body: BlocBuilder<ProductsWishListCubit, ProductsWishListState>(
@@ -49,7 +50,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'No favorites yet',
+                      S.of(context).noFavoritesYet,
                       style: AppStyles.regular16.copyWith(
                         color: Colors.grey[600],
                       ),
@@ -71,7 +72,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    state.errMessage,
+                    "Error: ${state.errMessage}",
                     style: AppStyles.regular16.copyWith(
                       color: Colors.grey[600],
                     ),
@@ -84,7 +85,7 @@ class _FavoritesViewState extends State<FavoritesView> {
                           .read<ProductsWishListCubit>()
                           .getProductsWishlist();
                     },
-                    child: const Text('Try Again'),
+                    child: Text(S.of(context).tryAgain),
                   ),
                 ],
               ),

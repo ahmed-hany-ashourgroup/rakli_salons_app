@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rakli_salons_app/core/theme/theme_constants.dart';
+import 'package:rakli_salons_app/generated/l10n.dart';
 
 import '../utils/assets.dart';
 
@@ -43,25 +44,25 @@ class CustomBottomNavBar extends StatelessWidget {
                 children: [
                   _NavBarItem(
                     icon: Assets.assetsImagesHomeSVg,
-                    label: "Home",
+                    label: S.of(context).home,
                     isSelected: selectedIndex == 0,
                     onTap: () => onTap(0),
                   ),
                   _NavBarItem(
                     icon: Assets.assetsImagesAppointments,
-                    label: "Appointments",
+                    label: S.of(context).appointments,
                     isSelected: selectedIndex == 1,
                     onTap: () => onTap(1),
                   ),
                   _NavBarItem(
                     icon: Assets.assetsImagesServices,
-                    label: "Services",
+                    label: S.of(context).services,
                     isSelected: selectedIndex == 2,
                     onTap: () => onTap(2),
                   ),
                   _NavBarItem(
                     icon: Assets.assetsImagesProfileSvg,
-                    label: "Profile",
+                    label: S.of(context).profile,
                     isSelected: selectedIndex == 3,
                     onTap: () => onTap(3),
                   ),

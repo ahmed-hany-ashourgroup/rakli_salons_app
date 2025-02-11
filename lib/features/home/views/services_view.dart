@@ -7,6 +7,7 @@ import 'package:rakli_salons_app/core/utils/app_router.dart';
 import 'package:rakli_salons_app/core/utils/app_styles.dart';
 import 'package:rakli_salons_app/features/home/manager/get_services_cubit/get_services_cubit.dart';
 import 'package:rakli_salons_app/features/home/views/widgets/service_item.dart';
+import 'package:rakli_salons_app/generated/l10n.dart';
 
 class ServicesView extends StatefulWidget {
   const ServicesView({super.key});
@@ -55,7 +56,7 @@ class _ServicesViewState extends State<ServicesView> {
             // ),
             // const SizedBox(height: 32),
             Text(
-              "Services",
+              S.of(context).services,
               style: AppStyles.bold20,
             ),
             const SizedBox(height: 16),
@@ -76,8 +77,8 @@ class _ServicesViewState extends State<ServicesView> {
 
                   if (state is GetServicesSuccess) {
                     return state.services.isEmpty
-                        ? const Center(
-                            child: Text('No services available'),
+                        ? Center(
+                            child: Text(S.of(context).noServicesAvailable),
                           )
                         : ListView.builder(
                             itemCount: state.services.length,

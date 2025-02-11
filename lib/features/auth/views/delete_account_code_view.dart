@@ -10,6 +10,7 @@ import 'package:rakli_salons_app/core/utils/app_styles.dart';
 import 'package:rakli_salons_app/core/utils/assets.dart';
 import 'package:rakli_salons_app/core/utils/toast_service.dart';
 import 'package:rakli_salons_app/features/auth/manager/confirmation_code_cubit/confirmation_code_cubit.dart';
+import 'package:rakli_salons_app/generated/l10n.dart';
 
 class DeleteAccountCode extends StatefulWidget {
   const DeleteAccountCode({super.key});
@@ -87,10 +88,12 @@ class _SignUpViewState extends State<DeleteAccountCode> {
                         controller: codeController,
                         borderColor: kbackGroundColor,
                         hintColor: kbackGroundColor.withValues(alpha: 0.5),
-                        hint: "Enter Code",
+                        hint: S.of(context).enterConfirmationCode,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter Your Confirmation Code';
+                            return S
+                                .of(context)
+                                .pleaseEnterYourConfirmationCode;
                           }
                           return null;
                         },
@@ -102,7 +105,8 @@ class _SignUpViewState extends State<DeleteAccountCode> {
                           listener: (context, state) {
                             if (state is ConfirmationCodeSuccess) {
                               ToastService.showCustomToast(
-                                  message: "Account Deleted Successfully");
+                                  message:
+                                      S.of(context).accountDeletedSuccessfully);
                               GoRouter.of(context).go(AppRouter.kSignUpView);
                             }
                             if (state is ConfirmationCodeFailed) {
@@ -115,7 +119,7 @@ class _SignUpViewState extends State<DeleteAccountCode> {
                               return const CircularProgressIndicator();
                             }
                             return Text(
-                              "Delete Account",
+                              S.of(context).deleteAccount,
                               style: AppStyles.bold16
                                   .copyWith(color: Colors.white),
                             );

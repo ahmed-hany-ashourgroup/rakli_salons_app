@@ -5,6 +5,7 @@ import 'package:rakli_salons_app/core/customs/custom_textfield.dart';
 import 'package:rakli_salons_app/core/theme/theme_constants.dart';
 import 'package:rakli_salons_app/core/utils/app_styles.dart';
 import 'package:rakli_salons_app/core/utils/toast_service.dart';
+import 'package:rakli_salons_app/generated/l10n.dart';
 
 class EditProfileView extends StatefulWidget {
   const EditProfileView({super.key});
@@ -31,14 +32,14 @@ class _EditProfileViewState extends State<EditProfileView> {
             CustomAppBar(
               backButtonColor: kPrimaryColor,
               title: Text(
-                "Edit Account",
+                S.of(context).editAccount,
                 style: AppStyles.bold24.copyWith(color: Colors.black),
               ),
               icon: const SizedBox.shrink(),
             ),
             const Spacer(),
             CustomTextField(
-              hint: "Email",
+              hint: S.of(context).email,
               hintColor: Colors.black,
               controller: emailController,
               keyboardType: TextInputType.emailAddress,
@@ -49,7 +50,7 @@ class _EditProfileViewState extends State<EditProfileView> {
             ),
             const SizedBox(height: 16),
             CustomTextField(
-              hint: "Name",
+              hint: S.of(context).name,
               hintColor: Colors.black,
               controller: nameController,
               keyboardType: TextInputType.text,
@@ -60,7 +61,7 @@ class _EditProfileViewState extends State<EditProfileView> {
             ),
             const SizedBox(height: 16),
             CustomTextField(
-              hint: "Phone",
+              hint: S.of(context).phone,
               hintColor: Colors.black,
               controller: phoneController,
               keyboardType: TextInputType.phone,
@@ -75,13 +76,13 @@ class _EditProfileViewState extends State<EditProfileView> {
                 Expanded(
                   child: CustomButton(
                     title: Text(
-                      "Confirm",
+                      S.of(context).confirm,
                       style: AppStyles.bold16.copyWith(color: kSecondaryColor),
                     ),
                     onPressed: () {
                       // Handle update logic
                       ToastService.showCustomToast(
-                          message: "Account details updated!");
+                          message: S.of(context).accountDetailsUpdated);
                     },
                   ),
                 ),

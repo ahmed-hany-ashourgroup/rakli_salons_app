@@ -5,6 +5,7 @@ import 'package:rakli_salons_app/core/utils/app_styles.dart';
 import 'package:rakli_salons_app/core/utils/size_config.dart';
 import 'package:rakli_salons_app/features/home/manager/get_appointments_cubit/get_appointments_cubit.dart';
 import 'package:rakli_salons_app/features/home/views/widgets/appointment_item.dart';
+import 'package:rakli_salons_app/generated/l10n.dart';
 
 class AppointmentsView extends StatefulWidget {
   const AppointmentsView({super.key});
@@ -26,7 +27,7 @@ class _AppointmentsViewState extends State<AppointmentsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffEFEFEF),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Padding(
         padding: const EdgeInsets.all(22),
         child: Column(
@@ -60,7 +61,7 @@ class _AppointmentsViewState extends State<AppointmentsView> {
                   return PopupMenuItem<ViewPeriod>(
                     value: period,
                     child: Text(
-                      period.toString().split('.').last,
+                      _getViewPeriodText(period),
                       style: AppStyles.regular16.copyWith(color: Colors.white),
                     ),
                   );
@@ -81,7 +82,7 @@ class _AppointmentsViewState extends State<AppointmentsView> {
                 bloc: _appointmentsCubit,
                 builder: (context, state) {
                   if (state is GetAppointmentsLoading) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   } else if (state is GetAppointmentsFailed) {
                     return Center(child: Text(state.errMessage));
                   } else if (state is GetAppointmentsSuccess) {
@@ -101,7 +102,7 @@ class _AppointmentsViewState extends State<AppointmentsView> {
                       ],
                     );
                   }
-                  return Center(child: Text("No appointments found"));
+                  return Center(child: Text(S.of(context).noAppointmentsFound));
                 },
               ),
             ),
@@ -114,13 +115,26 @@ class _AppointmentsViewState extends State<AppointmentsView> {
   String _getPeriodText(ViewPeriod period) {
     switch (period) {
       case ViewPeriod.daily:
-        return "Today's Appointments";
+        return S.of(context).todaysAppointments;
       case ViewPeriod.weekly:
-        return "This Week's Appointments";
+        return S.of(context).thisWeeksAppointments;
       case ViewPeriod.monthly:
-        return "This Month's Appointments";
+        return S.of(context).thisMonthsAppointments;
       case ViewPeriod.yearly:
-        return "This Year's Appointments";
+        return S.of(context).thisYearsAppointments;
+    }
+  }
+
+  String _getViewPeriodText(ViewPeriod period) {
+    switch (period) {
+      case ViewPeriod.daily:
+        return S.of(context).daily;
+      case ViewPeriod.weekly:
+        return S.of(context).weekly;
+      case ViewPeriod.monthly:
+        return S.of(context).monthly;
+      case ViewPeriod.yearly:
+        return S.of(context).yearly;
     }
   }
 }

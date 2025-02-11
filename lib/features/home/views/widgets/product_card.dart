@@ -8,6 +8,7 @@ import 'package:rakli_salons_app/core/utils/toast_service.dart';
 import 'package:rakli_salons_app/features/home/data/models/models/add_to_cart_item_model.dart';
 import 'package:rakli_salons_app/features/home/data/models/models/product_model.dart';
 import 'package:rakli_salons_app/features/home/manager/add_to_cart_cubit/add_to_cart_cubit.dart';
+import 'package:rakli_salons_app/generated/l10n.dart';
 
 import '../../manager/Products_wish_list_cubit/products_wish_list_cubit.dart';
 
@@ -86,7 +87,7 @@ class _ProductCardState extends State<ProductCard>
 
     if (!mounted) return;
 
-    _showToast('Added to cart');
+    _showToast(S.of(context).addedToCart);
   }
 
   void _handleWishlistToggle() async {
@@ -108,8 +109,9 @@ class _ProductCardState extends State<ProductCard>
       });
 
       if (success) {
-        final message =
-            wasInWishlist ? 'Removed from favorites' : 'Added to favorites';
+        final message = wasInWishlist
+            ? S.of(context).removedFromFavorites
+            : S.of(context).addedToFavorites;
         ToastService.showCustomToast(message: message);
       }
     }
@@ -173,7 +175,7 @@ class _ProductCardState extends State<ProductCard>
                     children: [
                       // Title
                       Text(
-                        widget.product.name ?? 'Unknown Product',
+                        widget.product.name ?? S.of(context).unknownProduct,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: AppStyles.medium14,
@@ -192,7 +194,7 @@ class _ProductCardState extends State<ProductCard>
                               children: [
                                 // Price
                                 Text(
-                                  '\$${widget.product.price?.toStringAsFixed(2) ?? '0.00'}',
+                                  '${S.of(context).currencySymbol}${widget.product.price?.toStringAsFixed(2) ?? '0.00'}',
                                   style: AppStyles.bold16
                                       .copyWith(color: kPrimaryColor),
                                 ),
@@ -213,7 +215,7 @@ class _ProductCardState extends State<ProductCard>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '\$${widget.product.price?.toStringAsFixed(2) ?? '0.00'}',
+                                  '${S.of(context).currencySymbol}${widget.product.price?.toStringAsFixed(2) ?? '0.00'}',
                                   style: AppStyles.bold16
                                       .copyWith(color: kPrimaryColor),
                                 ),

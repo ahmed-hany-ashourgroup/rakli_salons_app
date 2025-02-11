@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:rakli_salons_app/core/theme/theme_constants.dart';
 import 'package:rakli_salons_app/core/utils/app_styles.dart';
 import 'package:rakli_salons_app/features/home/views/appointments_view.dart';
+import 'package:rakli_salons_app/generated/l10n.dart';
 
 class HomeContent extends StatefulWidget {
   const HomeContent({super.key});
@@ -26,8 +27,8 @@ class _HomeContentState extends State<HomeContent> {
           const SizedBox(height: 20),
           _buildStatisticsCards(),
           const SizedBox(height: 32),
-          const Text(
-            'Analytics',
+          Text(
+            S.of(context).analytics,
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -104,13 +105,13 @@ class _HomeContentState extends State<HomeContent> {
   String _getPeriodText(ViewPeriod period) {
     switch (period) {
       case ViewPeriod.daily:
-        return 'Daily';
+        return S.of(context).daily;
       case ViewPeriod.weekly:
-        return 'Weekly';
+        return S.of(context).weekly;
       case ViewPeriod.monthly:
-        return 'Monthly';
+        return S.of(context).monthly;
       case ViewPeriod.yearly:
-        return 'Yearly';
+        return S.of(context).yearly;
     }
   }
 
@@ -120,14 +121,14 @@ class _HomeContentState extends State<HomeContent> {
       runSpacing: 16,
       children: [
         _buildStatCard(
-          'Total Bookings',
+          S.of(context).totalBookings,
           '2004',
           Icons.calendar_today,
           Colors.pink,
           null,
         ),
         _buildStatCard(
-          'Customers',
+          S.of(context).customers,
           '3000',
           Icons.people,
           Colors.blue,
@@ -137,14 +138,14 @@ class _HomeContentState extends State<HomeContent> {
           ),
         ),
         _buildStatCard(
-          'Active Services',
+          S.of(context).activeServices,
           '3',
           Icons.design_services,
           Colors.blue,
           null,
         ),
         _buildStatCard(
-          'Upcoming\nAppointments',
+          S.of(context).upcomingAppointments,
           '4',
           Icons.schedule,
           Colors.orange,
@@ -155,7 +156,7 @@ class _HomeContentState extends State<HomeContent> {
         ),
       ].map((card) {
         return SizedBox(
-          height: 150, // Set a fixed height for all cards
+          height: 150,
           width: MediaQuery.of(context).size.width / 2 - 24,
           child: card,
         );
@@ -186,18 +187,20 @@ class _HomeContentState extends State<HomeContent> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
+          FittedBox(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-              Icon(icon, color: color, size: 20),
-            ],
+                Icon(icon, color: color, size: 20),
+              ],
+            ),
           ),
           const SizedBox(height: 8),
           Row(
@@ -236,9 +239,9 @@ class _HomeContentState extends State<HomeContent> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Analytics',
-            style: TextStyle(
+          Text(
+            S.of(context).analytics,
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
@@ -258,15 +261,15 @@ class _HomeContentState extends State<HomeContent> {
                     sideTitles: SideTitles(
                       showTitles: true,
                       getTitlesWidget: (value, meta) {
-                        const months = [
-                          'Jan',
-                          'Feb',
-                          'Mar',
-                          'Apr',
-                          'May',
-                          'Jun',
-                          'Jul',
-                          'Aug'
+                        final months = [
+                          S.of(context).january,
+                          S.of(context).february,
+                          S.of(context).march,
+                          S.of(context).april,
+                          S.of(context).may,
+                          S.of(context).june,
+                          S.of(context).july,
+                          S.of(context).august
                         ];
                         return Text(
                           months[value.toInt()],
@@ -323,23 +326,38 @@ class _HomeContentState extends State<HomeContent> {
           ),
         ],
       ),
-      child: PieChart(
-        PieChartData(
-          sections: [
-            PieChartSectionData(
-              value: 30,
-              color: Colors.blue,
-              title: 'Male\n30%',
-              radius: 80,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            S.of(context).genderDistribution,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
-            PieChartSectionData(
-              value: 70,
-              color: Colors.pink,
-              title: 'Female\n70%',
-              radius: 80,
+          ),
+          const SizedBox(height: 16),
+          Expanded(
+            child: PieChart(
+              PieChartData(
+                sections: [
+                  PieChartSectionData(
+                    value: 30,
+                    color: Colors.blue,
+                    title: "${S.of(context).male}\n30%",
+                    radius: 80,
+                  ),
+                  PieChartSectionData(
+                    value: 70,
+                    color: Colors.pink,
+                    title: "${S.of(context).female}\n70%",
+                    radius: 80,
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -359,60 +377,75 @@ class _HomeContentState extends State<HomeContent> {
           ),
         ],
       ),
-      child: LineChart(
-        LineChartData(
-          gridData: FlGridData(show: false),
-          titlesData: FlTitlesData(
-            leftTitles: AxisTitles(
-              sideTitles: SideTitles(showTitles: false),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            S.of(context).revenue,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                getTitlesWidget: (value, meta) {
-                  const months = [
-                    'Jan',
-                    'Feb',
-                    'Mar',
-                    'Apr',
-                    'May',
-                    'Jun',
-                    'Jul',
-                    'Aug'
-                  ];
-                  return Text(
-                    months[value.toInt()],
-                    style: const TextStyle(fontSize: 10),
-                  );
-                },
+          ),
+          const SizedBox(height: 16),
+          Expanded(
+            child: LineChart(
+              LineChartData(
+                gridData: FlGridData(show: false),
+                titlesData: FlTitlesData(
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      getTitlesWidget: (value, meta) {
+                        final months = [
+                          S.of(context).january,
+                          S.of(context).february,
+                          S.of(context).march,
+                          S.of(context).april,
+                          S.of(context).may,
+                          S.of(context).june,
+                          S.of(context).july,
+                          S.of(context).august
+                        ];
+                        return Text(
+                          months[value.toInt()],
+                          style: const TextStyle(fontSize: 10),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                borderData: FlBorderData(show: false),
+                lineBarsData: [
+                  LineChartBarData(
+                    spots: const [
+                      FlSpot(0, 1000),
+                      FlSpot(1, 1800),
+                      FlSpot(2, 1600),
+                      FlSpot(3, 2200),
+                      FlSpot(4, 1800),
+                      FlSpot(5, 2000),
+                      FlSpot(6, 1800),
+                      FlSpot(7, 1600),
+                    ],
+                    isCurved: true,
+                    color: Colors.blue.withOpacity(0.5),
+                    barWidth: 4,
+                    isStrokeCapRound: true,
+                    dotData: FlDotData(show: false),
+                    belowBarData: BarAreaData(
+                      show: true,
+                      color: Colors.blue.withOpacity(0.1),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
-          borderData: FlBorderData(show: false),
-          lineBarsData: [
-            LineChartBarData(
-              spots: const [
-                FlSpot(0, 1000),
-                FlSpot(1, 1800),
-                FlSpot(2, 1600),
-                FlSpot(3, 2200),
-                FlSpot(4, 1800),
-                FlSpot(5, 2000),
-                FlSpot(6, 1800),
-                FlSpot(7, 1600),
-              ],
-              isCurved: true,
-              color: Colors.blue.withOpacity(0.5),
-              barWidth: 4,
-              isStrokeCapRound: true,
-              dotData: FlDotData(show: false),
-              belowBarData: BarAreaData(
-                show: true,
-                color: Colors.blue.withOpacity(0.1),
-              ),
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }

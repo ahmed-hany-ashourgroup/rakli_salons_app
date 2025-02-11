@@ -7,6 +7,7 @@ import 'package:rakli_salons_app/features/home/data/models/models/cart_item_mode
 import 'package:rakli_salons_app/features/home/manager/add_to_cart_cubit/add_to_cart_cubit.dart';
 import 'package:rakli_salons_app/features/home/manager/check_out_cubit/check_out_cubit.dart';
 import 'package:rakli_salons_app/features/home/manager/get_cart_items_cubit/get_cart_items_cubit.dart';
+import 'package:rakli_salons_app/generated/l10n.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CartBottomSheet extends StatefulWidget {
@@ -219,7 +220,7 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
             ),
             child: Center(
               child: Text(
-                'No items in cart',
+                S.of(context).noItemsInCart,
                 style: AppStyles.medium14.copyWith(color: Colors.black54),
               ),
             ),
@@ -245,7 +246,7 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
       child: Row(
         children: [
           Text(
-            'Shopping Cart',
+            S.of(context).shoppingCart,
             style: AppStyles.bold20.copyWith(color: kPrimaryColor),
           ),
           const Spacer(),
@@ -286,12 +287,12 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
           ),
           const SizedBox(height: 24),
           Text(
-            'Your cart is empty',
+            S.of(context).yourCartIsEmpty,
             style: AppStyles.bold16.copyWith(color: kPrimaryColor),
           ),
           const SizedBox(height: 8),
           Text(
-            'Add items to get started',
+            S.of(context).addItemsToGetStarted,
             style: AppStyles.regular14.copyWith(color: Colors.black38),
           ),
           const SizedBox(height: 32),
@@ -304,7 +305,7 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
                 const SizedBox(width: 8),
                 FittedBox(
                   child: Text(
-                    'Start Shopping',
+                    S.of(context).startShopping,
                     style: AppStyles.medium14.copyWith(color: kSecondaryColor),
                   ),
                 ),
@@ -351,7 +352,7 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Total Amount',
+                      S.of(context).totalAmount,
                       style: AppStyles.medium14.copyWith(color: Colors.black54),
                     ),
                     const SizedBox(height: 4),
@@ -371,7 +372,7 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    '$itemCount ${itemCount == 1 ? 'item' : 'items'}',
+                    '$itemCount ${itemCount == 1 ? S.of(context).item : S.of(context).items}',
                     style: AppStyles.medium14.copyWith(color: kPrimaryColor),
                   ),
                 ),
@@ -386,7 +387,7 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Proceed to Checkout',
+                    S.of(context).proceedToCheckout,
                     style: AppStyles.bold16.copyWith(color: kSecondaryColor),
                   ),
                   const SizedBox(width: 8),
@@ -436,7 +437,7 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
             ),
             const SizedBox(width: 12),
             Text(
-              'Payment Method',
+              S.of(context).paymentMethod,
               style: AppStyles.bold20.copyWith(color: Colors.black),
             ),
           ],
@@ -674,7 +675,7 @@ class CartItemTile extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'No Image',
+                  S.of(context).noImage,
                   style: AppStyles.regular10.copyWith(
                     color: Colors.grey.shade500,
                   ),

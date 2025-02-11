@@ -4,11 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rakli_salons_app/core/customs/custom_confirmation_dialog.dart';
-import 'package:rakli_salons_app/core/customs/custom_search_field.dart';
 import 'package:rakli_salons_app/core/utils/app_router.dart';
 import 'package:rakli_salons_app/features/home/data/models/models/product_model.dart';
 import 'package:rakli_salons_app/features/home/manager/delete_product_cubit/delete_product_cubit.dart';
 import 'package:rakli_salons_app/features/home/manager/get_my_products_cubit.dart/get_my_products_cubit.dart';
+import 'package:rakli_salons_app/generated/l10n.dart';
 
 class MyProductsView extends StatelessWidget {
   const MyProductsView({super.key});
@@ -17,7 +17,7 @@ class MyProductsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Products'),
+        title: Text(S.of(context).myProducts),
       ),
       body: BlocProvider(
         create: (context) => GetMyProductsCubit()..getMyProducts(),
@@ -29,10 +29,6 @@ class MyProductsView extends StatelessWidget {
               final products = state.products;
               return Column(
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: CustomSearchField(),
-                  ),
                   Expanded(
                     child: ListView.builder(
                       itemCount: products.length,
@@ -47,7 +43,7 @@ class MyProductsView extends StatelessWidget {
             } else if (state is GetMyProductsFailed) {
               return Center(child: Text(state.errMessage));
             } else {
-              return const Center(child: Text('No products found.'));
+              return Center(child: Text(S.of(context).noProductsFound));
             }
           },
         ),
@@ -77,7 +73,7 @@ class ProductItem extends StatelessWidget {
         listener: (context, state) {
           if (state is DeleteProductSuccess) {
             Fluttertoast.showToast(
-              msg: 'Product deleted successfully',
+              msg: S.of(context).productDeletedSuccessfully,
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               backgroundColor: Colors.green,
@@ -136,7 +132,7 @@ class ProductItem extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Text(
-                                product.name ?? 'No Name',
+                                product.name ?? S.of(context).noName,
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -161,10 +157,10 @@ class ProductItem extends StatelessWidget {
                               onTap: () {
                                 showCustomConfirmationDialog(
                                   context: context,
-                                  title: "Delete Product",
-                                  message:
-                                      "Are you sure you want to delete this product? This action is permanent and cannot be undone. All associated data will be permanently removed.",
-                                  confirmButtonText: "Delete Product",
+                                  title: S.of(context).deleteProductTitle,
+                                  message: S.of(context).deleteProductMessage,
+                                  confirmButtonText:
+                                      S.of(context).deleteProductTitle,
                                   onConfirm: () {
                                     if (product.id != null) {
                                       context
@@ -183,7 +179,7 @@ class ProductItem extends StatelessWidget {
 
                         // Price
                         Text(
-                          '\$${product.price ?? '0.00'}',
+                          '\$${product.price?.toStringAsFixed(2) ?? '0.00'}',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -194,7 +190,7 @@ class ProductItem extends StatelessWidget {
 
                         // Description
                         Text(
-                          product.description ?? 'No Description',
+                          product.description ?? S.of(context).noDescription,
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.grey,
@@ -207,16 +203,16 @@ class ProductItem extends StatelessWidget {
                         // State Indicator
                         Row(
                           children: [
-                            const Text(
-                              'State: ',
-                              style: TextStyle(
+                            Text(
+                              S.of(context).stateLabel,
+                              style: const TextStyle(
                                   fontSize: 14, fontWeight: FontWeight.bold),
                             ),
                             const Icon(Icons.circle,
                                 size: 10, color: Colors.green),
                             const SizedBox(width: 6),
                             Text(
-                              'Available',
+                              S.of(context).itemStateAvailable,
                               style: TextStyle(
                                   fontSize: 14, color: Colors.grey[700]),
                             ),

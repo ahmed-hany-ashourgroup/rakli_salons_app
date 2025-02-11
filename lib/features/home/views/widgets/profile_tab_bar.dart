@@ -12,6 +12,7 @@ import 'package:rakli_salons_app/features/auth/manager/reset_password_cubit/rese
 import 'package:rakli_salons_app/features/auth/manager/update_profile_cubit/update_profile_cubit.dart';
 import 'package:rakli_salons_app/features/auth/manager/user_cubit/user_cubit.dart';
 import 'package:rakli_salons_app/features/home/manager/get_orders_cubit/get_orders_cubit.dart';
+import 'package:rakli_salons_app/generated/l10n.dart';
 
 class ProfileTabBar extends StatelessWidget {
   const ProfileTabBar({super.key});
@@ -19,9 +20,9 @@ class ProfileTabBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TabBar(
-      tabs: const [
-        Tab(text: 'Profile'),
-        Tab(text: 'Account'),
+      tabs: [
+        Tab(text: S.of(context).profile),
+        Tab(text: S.of(context).account),
       ],
       labelColor: kPrimaryColor,
       labelStyle: AppStyles.bold14,
@@ -62,15 +63,17 @@ class SalonInformation extends StatelessWidget {
       children: [
         Row(
           children: [
-            Text(user.name ?? 'Business Name', style: AppStyles.bold24),
+            Text(user.name ?? S.of(context).businessName,
+                style: AppStyles.bold24),
             const SizedBox(width: 8),
             const Icon(Icons.verified, color: kPrimaryColor),
           ],
         ),
         const SizedBox(height: 16),
-        Text('Address', style: AppStyles.medium20),
+        Text(S.of(context).address, style: AppStyles.medium20),
         const SizedBox(height: 8),
-        Text(user.address ?? 'No address provided', style: AppStyles.regular16),
+        Text(user.address ?? S.of(context).noAddressProvided,
+            style: AppStyles.regular16),
         const SizedBox(height: 16),
         const LocationInfo(),
       ],
@@ -91,7 +94,7 @@ class LocationInfo extends StatelessWidget {
           children: [
             const Icon(Icons.location_on, color: kPrimaryColor),
             const SizedBox(width: 8),
-            Text(user.address ?? 'Location not set',
+            Text(user.address ?? S.of(context).locationNotSet,
                 style: AppStyles.regular16),
           ],
         ),
@@ -100,7 +103,8 @@ class LocationInfo extends StatelessWidget {
           children: [
             const Icon(Icons.phone, color: kPrimaryColor),
             const SizedBox(width: 8),
-            Text(user.phone ?? 'No phone number', style: AppStyles.regular16),
+            Text(user.phone ?? S.of(context).noPhoneNumber,
+                style: AppStyles.regular16),
           ],
         ),
       ],
@@ -119,17 +123,17 @@ class AccountTab extends StatelessWidget {
         children: [
           CustomProfileTile(
             iconPath: Assets.assetsImagesHeart,
-            title: 'Favorite',
+            title: S.of(context).favorite,
             onTap: () => GoRouter.of(context).push(AppRouter.kFavoritesView),
           ),
           CustomProfileTile(
             iconPath: Assets.assetsImagesLock,
-            title: 'Change Password',
+            title: S.of(context).changePassword,
             onTap: () => _showChangePasswordBottomSheet(context),
           ),
           CustomProfileTile(
             iconPath: Assets.assetsImagesOrder,
-            title: 'Orders',
+            title: S.of(context).orders,
             onTap: () {
               context.read<GetOrdersCubit>().getOrders();
               GoRouter.of(context).push(AppRouter.kOrdersView);
@@ -137,7 +141,7 @@ class AccountTab extends StatelessWidget {
           ),
           CustomProfileTile(
             iconPath: Assets.assetsImagesEdit,
-            title: 'Edit Profile',
+            title: S.of(context).editProfile,
             onTap: () => _showEditProfileBottomSheet(context),
           ),
         ],
@@ -227,7 +231,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
           if (state is ResetPasswordSuccess) {
             if (step == 1) {
               Fluttertoast.showToast(
-                msg: 'Reset code sent to your email',
+                msg: S.of(context).emailSentConfirmation,
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.BOTTOM,
                 backgroundColor: Colors.green,
@@ -236,7 +240,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
               setState(() => step = 2);
             } else if (step == 2) {
               Fluttertoast.showToast(
-                msg: 'Code verified successfully',
+                msg: S.of(context).verifyCode,
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.BOTTOM,
                 backgroundColor: Colors.green,
@@ -245,7 +249,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
               setState(() => step = 3);
             } else if (step == 3) {
               Fluttertoast.showToast(
-                msg: 'Password changed successfully',
+                msg: S.of(context).passwordChangedSuccessfully,
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.BOTTOM,
                 backgroundColor: Colors.green,
@@ -274,34 +278,34 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
                 children: [
                   Text(
                     step == 1
-                        ? 'Request Password Change'
+                        ? S.of(context).requestPasswordChange
                         : step == 2
-                            ? 'Verify Code'
-                            : 'Change Password',
+                            ? S.of(context).verifyCode
+                            : S.of(context).changePassword,
                     style: AppStyles.bold20.copyWith(color: kPrimaryColor),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 24),
                   if (step == 1)
                     Text(
-                      "We'll send a verification code to your email",
+                      S.of(context).verificationCodeMessage,
                       style: AppStyles.regular14.copyWith(color: Colors.grey),
                       textAlign: TextAlign.center,
                     ),
                   if (step == 2) ...[
                     Text(
-                      "Enter the verification code sent to your email",
+                      S.of(context).enterVerificationCode,
                       style: AppStyles.regular14.copyWith(color: Colors.grey),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 16),
                     CustomTextField(
-                      hint: "Verification Code",
+                      hint: S.of(context).verificationCode,
                       controller: _codeController,
                       keyboardType: TextInputType.number,
                       validator: (value) {
                         if (value?.isEmpty ?? true) {
-                          return 'Please enter the verification code';
+                          return S.of(context).pleaseEnterVerificationCode;
                         }
                         return null;
                       },
@@ -309,27 +313,27 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
                   ],
                   if (step == 3) ...[
                     CustomTextField(
-                      hint: 'New Password',
+                      hint: S.of(context).newPassword,
                       controller: _newPasswordController,
                       obscureText: true,
                       validator: (value) {
                         if (value?.isEmpty ?? true) {
-                          return 'Please enter new password';
+                          return S.of(context).pleaseEnterNewPassword;
                         }
                         if (value!.length < 8) {
-                          return 'Password must be at least 8 characters';
+                          return S.of(context).passwordMinLength;
                         }
                         return null;
                       },
                     ),
                     const SizedBox(height: 16),
                     CustomTextField(
-                      hint: 'Confirm Password',
+                      hint: S.of(context).confirmPassword,
                       controller: _confirmPasswordController,
                       obscureText: true,
                       validator: (value) {
                         if (value != _newPasswordController.text) {
-                          return 'Passwords do not match';
+                          return S.of(context).passwordsDoNotMatch;
                         }
                         return null;
                       },
@@ -349,7 +353,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
                             ),
                           ),
                           child: Text(
-                            'Cancel',
+                            S.of(context).cancel,
                             style: AppStyles.medium14
                                 .copyWith(color: Colors.grey[600]),
                           ),
@@ -401,10 +405,10 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
                                 )
                               : Text(
                                   step == 1
-                                      ? 'Send Code'
+                                      ? S.of(context).sendCode
                                       : step == 2
-                                          ? 'Verify'
-                                          : 'Change Password',
+                                          ? S.of(context).verify
+                                          : S.of(context).changePassword,
                                   style: AppStyles.medium14
                                       .copyWith(color: Colors.white),
                                 ),
@@ -461,7 +465,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
           if (state is UpdateProfileSuccess) {
             Navigator.pop(context);
             Fluttertoast.showToast(
-              msg: 'Profile updated successfully',
+              msg: S.of(context).profileUpdatedSuccessfully,
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               backgroundColor: Colors.green,
@@ -487,44 +491,44 @@ class _EditProfileFormState extends State<EditProfileForm> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    'Edit Profile',
+                    S.of(context).editProfile,
                     style: AppStyles.bold20.copyWith(color: kPrimaryColor),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 24),
                   CustomTextField(
-                    hint: 'Email',
+                    hint: S.of(context).email,
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter email';
+                        return S.of(context).pleaseEnterYourEmail;
                       }
                       if (!value.contains('@')) {
-                        return 'Please enter a valid email';
+                        return S.of(context).pleaseEnterValidEmail;
                       }
                       return null;
                     },
                   ),
                   const SizedBox(height: 16),
                   CustomTextField(
-                    hint: 'Name',
+                    hint: S.of(context).name,
                     controller: _nameController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter name';
+                        return S.of(context).pleaseEnterName;
                       }
                       return null;
                     },
                   ),
                   const SizedBox(height: 16),
                   CustomTextField(
-                    hint: 'Phone',
+                    hint: S.of(context).phone,
                     controller: _phoneController,
                     keyboardType: TextInputType.phone,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter phone';
+                        return S.of(context).pleaseEnterPhone;
                       }
                       return null;
                     },
@@ -543,7 +547,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
                             ),
                           ),
                           child: Text(
-                            'Cancel',
+                            S.of(context).cancel,
                             style: AppStyles.medium14
                                 .copyWith(color: Colors.grey[600]),
                           ),
@@ -585,7 +589,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
                                   ),
                                 )
                               : Text(
-                                  'Save Changes',
+                                  S.of(context).saveChanges,
                                   style: AppStyles.medium14
                                       .copyWith(color: Colors.white),
                                 ),

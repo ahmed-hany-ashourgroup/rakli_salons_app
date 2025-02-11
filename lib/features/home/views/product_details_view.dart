@@ -11,6 +11,7 @@ import 'package:rakli_salons_app/core/utils/toast_service.dart';
 import 'package:rakli_salons_app/features/home/data/models/models/add_to_cart_item_model.dart';
 import 'package:rakli_salons_app/features/home/data/models/models/product_model.dart';
 import 'package:rakli_salons_app/features/home/manager/add_to_cart_cubit/add_to_cart_cubit.dart';
+import 'package:rakli_salons_app/generated/l10n.dart';
 
 class ProductDetailsView extends StatefulWidget {
   final ProductModel product;
@@ -101,7 +102,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Description',
+                    S.of(context).description,
                     style: AppStyles.bold20.copyWith(color: Colors.black),
                   ),
                   const SizedBox(height: 8),
@@ -121,6 +122,11 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
                 children: [
+                  Text(
+                    S.of(context).rating,
+                    style: AppStyles.bold20.copyWith(color: Colors.black),
+                  ),
+                  const SizedBox(width: 8),
                   RatingBarIndicator(
                     rating: 4.9, // Example rating
                     itemBuilder: (context, index) => const Icon(
@@ -130,11 +136,6 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                     itemCount: 5,
                     itemSize: 24.0,
                   ),
-                  const SizedBox(width: 8),
-                  // Text(
-                  //   widget.product.rating?.toStringAsFixed(1) ?? 'N/A',
-                  //   style: AppStyles.light16.copyWith(color: Colors.black),
-                  // ),
                 ],
               ),
             ),
@@ -148,7 +149,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Product Quantity',
+                    S.of(context).productQuantity,
                     style: AppStyles.bold20.copyWith(color: Colors.black),
                   ),
                   Row(
@@ -198,7 +199,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                 listener: (context, state) {
                   if (state is AddToCartSuccess) {
                     ToastService.showCustomToast(
-                        message: 'Product added to cart successfully');
+                        message: S.of(context).productAddedToCart);
                   } else if (state is AddToCartFailed) {
                     ToastService.showCustomToast(message: state.errMessage);
                   }
@@ -215,7 +216,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                                   color: kSecondaryColor,
                                 )
                               : Text(
-                                  'Add to Cart',
+                                  S.of(context).addToCart,
                                   style: AppStyles.medium20.copyWith(
                                     color: kSecondaryColor,
                                   ),

@@ -5,6 +5,7 @@ import 'package:rakli_salons_app/core/customs/custom_textfield.dart';
 import 'package:rakli_salons_app/core/theme/theme_constants.dart';
 import 'package:rakli_salons_app/core/utils/app_styles.dart';
 import 'package:rakli_salons_app/core/utils/toast_service.dart';
+import 'package:rakli_salons_app/generated/l10n.dart';
 
 class ChangePasswordView extends StatefulWidget {
   const ChangePasswordView({super.key});
@@ -55,14 +56,14 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
               ),
               const SizedBox(height: 100),
               CustomTextField(
-                hint: "Enter new password",
+                hint: S.of(context).enterNewPassword,
                 controller: newPasswordController,
                 hintColor: Colors.black,
                 obscureText: true,
               ),
               const SizedBox(height: 16),
               CustomTextField(
-                hint: "Confirm password",
+                hint: S.of(context).confirmPassword,
                 controller: confirmPasswordController,
                 hintColor: Colors.black,
                 obscureText: true,
@@ -73,7 +74,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                   Expanded(
                     child: CustomButton(
                       title: Text(
-                        "Done",
+                        S.of(context).done,
                         style:
                             AppStyles.bold16.copyWith(color: kSecondaryColor),
                       ),
@@ -84,7 +85,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                           Navigator.pop(context);
                         } else {
                           ToastService.showCustomToast(
-                              message: "Passwords do not match");
+                              message: S.of(context).passwordsDoNotMatch);
                         }
                       },
                     ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rakli_salons_app/core/utils/app_styles.dart';
 import 'package:rakli_salons_app/features/auth/data/models/user_model.dart';
+import 'package:rakli_salons_app/generated/l10n.dart';
 
 // ------------------------------
 class ProfileHeader extends StatelessWidget {
@@ -48,7 +49,7 @@ class ProfileHeader extends StatelessWidget {
                 top: MediaQuery.of(context).padding.top + 8,
                 left: 16,
                 child: Text(
-                  user.name ?? 'Unknown',
+                  user.name ?? S.of(context).unknown,
                   style: AppStyles.bold24.copyWith(color: Colors.white),
                 ),
               ),

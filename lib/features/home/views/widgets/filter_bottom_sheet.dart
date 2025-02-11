@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rakli_salons_app/core/theme/theme_constants.dart';
 import 'package:rakli_salons_app/core/utils/app_styles.dart';
 import 'package:rakli_salons_app/features/home/manager/filter_cubit/filter_cubit.dart';
+import 'package:rakli_salons_app/generated/l10n.dart';
 
 class FilterBottomSheet extends StatefulWidget {
   const FilterBottomSheet({super.key});
@@ -75,7 +76,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
       child: Row(
         children: [
           Text(
-            'Filter',
+            S.of(context).filter,
             style: AppStyles.bold20.copyWith(color: kPrimaryColor),
           ),
           const Spacer(),
@@ -89,7 +90,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               });
             },
             child: Text(
-              'Reset',
+              S.of(context).reset,
               style: AppStyles.regular14.copyWith(color: Colors.grey),
             ),
           ),
@@ -103,7 +104,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Price Range',
+          S.of(context).priceRange,
           style: AppStyles.bold16.copyWith(color: Colors.black87),
         ),
         const SizedBox(height: 8),
@@ -146,7 +147,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Rating',
+          S.of(context).rating,
           style: AppStyles.bold16.copyWith(color: Colors.black87),
         ),
         const SizedBox(height: 16),
@@ -201,7 +202,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Sort By',
+          S.of(context).sortBy,
           style: AppStyles.bold16.copyWith(color: Colors.black87),
         ),
         const SizedBox(height: 16),
@@ -209,11 +210,11 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           spacing: 8,
           runSpacing: 8,
           children: [
-            _buildSortOptionChip(1, 'Price: Low to High'),
-            _buildSortOptionChip(2, 'Price: High to Low'),
-            _buildSortOptionChip(3, 'Most Popular'),
-            _buildSortOptionChip(4, 'Best Rating'),
-            _buildSortOptionChip(5, 'Newest'),
+            _buildSortOptionChip(1, S.of(context).sortByPriceLowToHigh),
+            _buildSortOptionChip(2, S.of(context).sortByPriceHighToLow),
+            _buildSortOptionChip(3, S.of(context).sortByMostPopular),
+            _buildSortOptionChip(4, S.of(context).sortByBestRating),
+            _buildSortOptionChip(5, S.of(context).sortByNewest),
           ],
         ),
       ],
@@ -269,7 +270,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 ),
               ),
               child: Text(
-                'Cancel',
+                S.of(context).cancel,
                 style: AppStyles.medium14.copyWith(color: Colors.grey[600]),
               ),
             ),
@@ -292,7 +293,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 ),
               ),
               child: Text(
-                'Apply',
+                S.of(context).apply,
                 style: AppStyles.medium14.copyWith(color: Colors.white),
               ),
             ),

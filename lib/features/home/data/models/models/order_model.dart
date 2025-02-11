@@ -1,5 +1,3 @@
-import 'package:rakli_salons_app/features/auth/data/models/user_model.dart';
-
 class OrderModel {
   final int? id;
   final int? userId;
@@ -10,7 +8,7 @@ class OrderModel {
   final String? createdAt;
   final String? updatedAt;
   final String? state;
-  final BuisnessUserModel? user;
+  final String? gift;
 
   OrderModel({
     this.id,
@@ -22,29 +20,36 @@ class OrderModel {
     this.createdAt,
     this.updatedAt,
     this.state,
-    this.user,
+    this.gift,
   });
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
+    List<OrderItemModel> parseItems(dynamic itemsData) {
+      List<OrderItemModel> result = [];
+      if (itemsData is List) {
+        result =
+            itemsData.map((item) => OrderItemModel.fromJson(item)).toList();
+      } else if (itemsData is Map) {
+        result = itemsData.values
+            .map((item) => OrderItemModel.fromJson(item))
+            .toList();
+      }
+      return result;
+    }
+
     return OrderModel(
-      id: json['id'] as int?,
-      userId: json['user_id'] as int?,
-      userType: json['user_type'] as String?,
-      paymentType: json['payment_type'] as String?,
-      items: json['id_item'] != null
-          ? (json['id_item'] as List)
-              .map((item) => OrderItemModel.fromJson(item))
-              .toList()
-          : null,
+      id: json['id'],
+      userId: json['user_id'],
+      userType: json['user_type'],
+      paymentType: json['payment_type'],
+      items: json['id_item'] != null ? parseItems(json['id_item']) : null,
       totalPrice: json['total_price'] != null
           ? double.parse(json['total_price'].toString())
           : null,
-      createdAt: json['created_at'] as String?,
-      updatedAt: json['updated_at'] as String?,
-      state: json['state'] as String?,
-      user: json['user'] != null
-          ? BuisnessUserModel.fromJson(json['user'])
-          : null,
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
+      state: json['state'],
+      gift: json['gift'],
     );
   }
 }
@@ -70,14 +75,14 @@ class OrderItemModel {
 
   factory OrderItemModel.fromJson(Map<String, dynamic> json) {
     return OrderItemModel(
-      id: json['id'] as int?,
-      size: json['size'] as String?,
-      type: json['type'] as String?,
-      image: json['image'] as String?,
+      id: json['id'],
+      size: json['size'],
+      type: json['type'],
+      image: json['image'],
       price:
           json['price'] != null ? double.parse(json['price'].toString()) : null,
-      title: json['title'] as String?,
-      quantity: json['quantity'] as int?,
+      title: json['title'],
+      quantity: json['quantity'],
     );
   }
 }

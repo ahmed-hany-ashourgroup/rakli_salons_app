@@ -13,7 +13,7 @@ class GetOrdersCubit extends Cubit<GetOrdersState> {
   Future<void> getOrders() async {
     emit(GetOrdersLoading());
     try {
-      final response = await _apiService.get('orders');
+      final response = await _apiService.get('orders/business');
       if (response['success'] == true && response['data'] != null) {
         final List<OrderModel> orders = (response['data']['data'] as List)
             .map((order) => OrderModel.fromJson(order))

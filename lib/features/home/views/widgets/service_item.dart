@@ -10,6 +10,7 @@ import 'package:rakli_salons_app/features/home/data/models/appointment_model.dar
 import 'package:rakli_salons_app/features/home/data/models/models/service_model.dart';
 import 'package:rakli_salons_app/features/home/manager/delete_service_cubit/delete_service_cubit.dart';
 import 'package:rakli_salons_app/features/home/manager/get_services_cubit/get_services_cubit.dart';
+import 'package:rakli_salons_app/generated/l10n.dart';
 
 class ServicetItem extends StatefulWidget {
   final ServiceModel serviceModel;
@@ -48,7 +49,7 @@ class _AppointmentItemState extends State<ServicetItem> {
         listener: (context, state) {
           if (state is DeleteServiceSuccess) {
             Fluttertoast.showToast(
-              msg: 'Service deleted successfully',
+              msg: S.of(context).serviceDeletedSuccessfully,
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               backgroundColor: Colors.green,
@@ -85,7 +86,7 @@ class _AppointmentItemState extends State<ServicetItem> {
                       Row(
                         children: [
                           Text(
-                            widget.serviceModel.title ?? "Unknown",
+                            widget.serviceModel.title ?? S.of(context).unknown,
                             style: AppStyles.bold22,
                           ),
                           const SizedBox(width: 8),
@@ -118,10 +119,10 @@ class _AppointmentItemState extends State<ServicetItem> {
                             onPressed: () {
                               showCustomConfirmationDialog(
                                 context: context,
-                                title: "Delete Service",
+                                title: S.of(context).deleteService,
                                 message:
-                                    "Are you sure you want to delete this service? This action is permanent and cannot be undone. All associated data will be permanently removed.",
-                                confirmButtonText: "Delete Service",
+                                    S.of(context).deleteServiceConfirmation,
+                                confirmButtonText: S.of(context).deleteService,
                                 onConfirm: () {
                                   if (widget.serviceModel.id != null) {
                                     context
@@ -150,7 +151,7 @@ class _AppointmentItemState extends State<ServicetItem> {
                   Row(
                     children: [
                       Text(
-                        "State: ",
+                        S.of(context).state,
                         style: AppStyles.regular14,
                       ),
                       Icon(

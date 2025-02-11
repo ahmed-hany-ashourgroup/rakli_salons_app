@@ -11,6 +11,7 @@ import 'package:rakli_salons_app/core/utils/app_styles.dart';
 import 'package:rakli_salons_app/core/utils/toast_service.dart';
 import 'package:rakli_salons_app/features/home/data/models/models/product_model.dart';
 import 'package:rakli_salons_app/features/home/manager/add_edit_product_cubit/add_edit_prodcut_cubit.dart';
+import 'package:rakli_salons_app/generated/l10n.dart';
 
 class AddEditProductView extends StatefulWidget {
   final ProductModel? product;
@@ -82,8 +83,9 @@ class _AddEditProductViewState extends State<AddEditProductView> {
         listener: (context, state) {
           if (state is AddEditProductSuccess) {
             ToastService.showCustomToast(
-              message:
-                  'Product ${widget.isEditMode ? 'updated' : 'added'} successfully!',
+              message: widget.isEditMode
+                  ? S.of(context).productUpdated
+                  : S.of(context).productAdded,
               type: ToastType.success,
             );
             Navigator.pop(context, true);
@@ -165,13 +167,15 @@ class _AddEditProductViewState extends State<AddEditProductView> {
       ),
       child: CustomAppBar(
         title: Text(
-          widget.isEditMode ? 'Edit Product' : 'Add Product',
+          widget.isEditMode
+              ? S.of(context).editProduct
+              : S.of(context).addProduct,
           style: AppStyles.bold20.copyWith(color: Colors.black),
         ),
         icon: TextButton(
           onPressed: _resetForm,
           child: Text(
-            "Reset",
+            S.of(context).reset,
             style: AppStyles.regular16.copyWith(color: Colors.black),
           ),
         ),
@@ -197,47 +201,47 @@ class _AddEditProductViewState extends State<AddEditProductView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSectionTitle('Basic Information'),
+          _buildSectionTitle(S.of(context).basicInformation),
           const SizedBox(height: 24),
           _buildImagePicker(),
           const SizedBox(height: 20),
           _buildTextField(
             controller: _titleController,
-            label: 'Product Title',
-            hint: 'Enter product title',
+            label: S.of(context).productTitle,
+            hint: S.of(context).enterProductTitle,
             prefixIcon: Icons.title,
           ),
           const SizedBox(height: 20),
           _buildTextField(
             controller: _descriptionController,
-            label: 'Description',
-            hint: 'Enter product description',
+            label: S.of(context).description,
+            hint: S.of(context).enterDescription,
             maxLines: 6,
             prefixIcon: Icons.description,
           ),
           const SizedBox(height: 32),
-          _buildSectionTitle('Pricing & Details'),
+          _buildSectionTitle(S.of(context).pricingAndDetails),
           const SizedBox(height: 24),
           _buildTextField(
             controller: _priceController,
-            label: 'Price',
-            hint: 'Enter product price',
+            label: S.of(context).total,
+            hint: S.of(context).enterPrice,
             keyboardType: TextInputType.number,
             prefixIcon: Icons.attach_money,
           ),
           const SizedBox(height: 20),
           _buildTextField(
             controller: _sizeController,
-            label: 'Size',
-            hint: 'Enter product size',
+            label: S.of(context).size,
+            hint: S.of(context).enterSize,
             keyboardType: TextInputType.number,
             prefixIcon: Icons.straighten,
           ),
           const SizedBox(height: 20),
           _buildTextField(
             controller: _collectionIdController,
-            label: 'Collection ID',
-            hint: 'Enter collection ID (optional)',
+            label: S.of(context).collectionId,
+            hint: S.of(context).enterCollectionId,
             keyboardType: TextInputType.number,
             prefixIcon: Icons.category,
             isRequired: false,
@@ -252,7 +256,7 @@ class _AddEditProductViewState extends State<AddEditProductView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Product Image',
+          S.of(context).productImage,
           style: AppStyles.regular14.copyWith(color: Colors.grey[700]),
         ),
         const SizedBox(height: 8),
@@ -342,11 +346,11 @@ class _AddEditProductViewState extends State<AddEditProductView> {
           validator: isRequired
               ? (value) {
                   if (value == null || value.isEmpty) {
-                    return '$label is required';
+                    return "$label ${S.of(context).isRequired}";
                   }
                   if (keyboardType == TextInputType.number &&
                       double.tryParse(value) == null) {
-                    return 'Please enter a valid number';
+                    return S.of(context).pleaseEnterValidNumber;
                   }
                   return null;
                 }
@@ -362,7 +366,7 @@ class _AddEditProductViewState extends State<AddEditProductView> {
         Expanded(
           child: CustomButton(
             title: Text(
-              'Reset',
+              S.of(context).reset,
               style: AppStyles.regular16.copyWith(color: Colors.white),
             ),
             onPressed: state is AddEditProductLoading ? () {} : _resetForm,
@@ -374,7 +378,9 @@ class _AddEditProductViewState extends State<AddEditProductView> {
           child: CustomButton(
             title: FittedBox(
               child: Text(
-                widget.isEditMode ? 'Save Changes' : 'Add Product',
+                widget.isEditMode
+                    ? S.of(context).saveChanges
+                    : S.of(context).addProduct,
                 style: AppStyles.regular16.copyWith(color: Colors.white),
               ),
             ),
@@ -433,7 +439,7 @@ class _AddEditProductViewState extends State<AddEditProductView> {
       } else {
         if (_pickedImage == null) {
           ToastService.showCustomToast(
-            message: 'Please select an image',
+            message: S.of(context).pleaseSelectImage,
             type: ToastType.error,
           );
           return;
