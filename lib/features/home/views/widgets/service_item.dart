@@ -156,8 +156,7 @@ class _AppointmentItemState extends State<ServicetItem> {
                       Icon(
                         Icons.circle,
                         size: 12,
-                        color: _getStatusColor(
-                            widget.serviceModel.state ?? ServiceState.inactive),
+                        color: _getStatusColor(widget.serviceModel.state),
                       ),
                       const SizedBox(width: 4),
                       DropdownButton<ServiceState>(
@@ -168,7 +167,7 @@ class _AppointmentItemState extends State<ServicetItem> {
                             List.generate(4, (index) {
                           return DropdownMenuItem<AppointmentStatus>(
                             child: Text(
-                              widget.serviceModel.state.name ?? "",
+                              widget.serviceModel.state.name,
                               style: AppStyles.regular14
                                   .copyWith(color: Colors.black),
                             ),

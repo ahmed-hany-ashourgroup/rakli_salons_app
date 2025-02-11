@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rakli_salons_app/core/customs/custom_button.dart';
@@ -10,7 +11,6 @@ import 'package:rakli_salons_app/core/theme/theme_constants.dart';
 import 'package:rakli_salons_app/core/utils/app_router.dart';
 import 'package:rakli_salons_app/core/utils/app_styles.dart';
 import 'package:rakli_salons_app/core/utils/assets.dart';
-import 'package:rakli_salons_app/core/utils/toast_service.dart';
 import 'package:rakli_salons_app/features/auth/manager/Business_Registration_Cubit/Business_Registration_Cubit.dart';
 import 'package:rakli_salons_app/features/auth/manager/Business_Registration_Cubit/Business_Registration_state.dart';
 import 'package:rakli_salons_app/features/auth/manager/user_cubit/user_cubit.dart';
@@ -219,7 +219,13 @@ class _BusinessSignUpViewState extends State<BusinessSignUpView> {
   }
 
   void _showErrorSnackBar(String message) {
-    ToastService.showCustomToast(message: message);
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+    );
   }
 
   @override

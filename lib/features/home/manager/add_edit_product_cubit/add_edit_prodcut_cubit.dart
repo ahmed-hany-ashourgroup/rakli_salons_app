@@ -16,7 +16,7 @@ class AddEditProductCubit extends Cubit<AddEditProductState> {
   }) async {
     emit(AddEditProductLoading());
     try {
-      final response = await _apiService.post(
+      await _apiService.post(
         'products/store',
         data: data,
       );
@@ -32,7 +32,7 @@ class AddEditProductCubit extends Cubit<AddEditProductState> {
   }) async {
     emit(AddEditProductLoading());
     try {
-      final response = await _apiService.post(
+      await _apiService.post(
         'products/update/$id',
         data: data,
       );

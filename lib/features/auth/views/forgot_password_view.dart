@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rakli_salons_app/core/customs/custom_app_bar.dart';
 import 'package:rakli_salons_app/core/customs/custom_button.dart';
 import 'package:rakli_salons_app/core/customs/custom_textfield.dart';
 import 'package:rakli_salons_app/core/theme/theme_constants.dart';
 import 'package:rakli_salons_app/core/utils/app_styles.dart';
-import 'package:rakli_salons_app/core/utils/toast_service.dart';
-import 'package:rakli_salons_app/features/auth/manager/confirmation_code_cubit/confirmation_code_cubit.dart';
 import 'package:rakli_salons_app/features/auth/manager/reset_password_cubit/reset_password_cubit.dart';
 
 class ForgotPasswordView extends StatefulWidget {
@@ -27,35 +26,47 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<ResetPasswordCubit, ResetPasswordState>(
-          listener: (context, state) {
-            if (state is ResetPasswordSuccess) {
-              if (step == 1) {
-                setState(() => step = 2);
-              } else if (step == 3) {
-                Navigator.pop(context);
-              }
-            } else if (state is ResetPasswordFailed) {
-              ToastService.showCustomToast(
-                message: state.errMessage,
-              );
-            }
-          },
-        ),
-        BlocListener<ConfirmationCodeCubit, ConfirmationCodeState>(
-          listener: (context, state) {
-            if (state is ConfirmationCodeSuccess) {
-              setState(() => step = 3);
-            } else if (state is ConfirmationCodeFailed) {
-              ToastService.showCustomToast(
-                message: state.errMessage,
-              );
-            }
-          },
-        ),
-      ],
+    return BlocListener<ResetPasswordCubit, ResetPasswordState>(
+      listener: (context, state) {
+        if (state is ResetPasswordSuccess) {
+          if (step == 1) {
+            Fluttertoast.showToast(
+              msg: 'Reset code sent to your email',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+            );
+            setState(() => step = 2);
+          } else if (step == 2) {
+            Fluttertoast.showToast(
+              msg: 'Code verified successfully',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+            );
+            setState(() => step = 3);
+          } else if (step == 3) {
+            Fluttertoast.showToast(
+              msg: 'Password reset successfully',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+            );
+            Navigator.pop(context);
+          }
+        } else if (state is ResetPasswordFailed) {
+          Fluttertoast.showToast(
+            msg: state.errMessage,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+          );
+        }
+      },
       child: Scaffold(
         backgroundColor: Colors.white,
         body: Padding(
@@ -90,28 +101,21 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
 
   Widget _buildCurrentStep() {
     return BlocBuilder<ResetPasswordCubit, ResetPasswordState>(
-      builder: (context, resetState) {
-        return BlocBuilder<ConfirmationCodeCubit, ConfirmationCodeState>(
-          builder: (context, confirmState) {
-            final bool isLoading = resetState is ResetPasswordLoading ||
-                confirmState is ConfirmationCodeLoading;
+      builder: (context, state) {
+        if (state is ResetPasswordLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-            if (isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            switch (step) {
-              case 1:
-                return _buildEmailStep();
-              case 2:
-                return _buildVerificationStep();
-              case 3:
-                return _buildNewPasswordStep();
-              default:
-                return const SizedBox.shrink();
-            }
-          },
-        );
+        switch (step) {
+          case 1:
+            return _buildEmailStep();
+          case 2:
+            return _buildVerificationStep();
+          case 3:
+            return _buildNewPasswordStep();
+          default:
+            return const SizedBox.shrink();
+        }
       },
     );
   }
@@ -120,6 +124,11 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text(
+          "Enter your email address",
+          style: AppStyles.regular16.copyWith(color: Colors.black),
+        ),
+        const SizedBox(height: 16),
         CustomTextField(
           hint: "Email",
           hintColor: kbackGroundColor.withValues(alpha: 0.5),
@@ -152,57 +161,43 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
   }
 
   Widget _buildVerificationStep() {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            const Color(0xFFFFE4D6), // Darker beige
-            const Color(0xFFFFF5EC), // Light beige
-          ],
-          stops: const [0.0, 1.0],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Please enter verification code sent to your email",
+          style: AppStyles.regular16.copyWith(color: Colors.black),
         ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Please enter verification code sent to your email",
-            style: AppStyles.regular16.copyWith(color: Colors.black),
-          ),
-          const SizedBox(height: 16),
-          CustomTextField(
-            hint: "Code",
-            hintColor: kbackGroundColor.withValues(alpha: 0.5),
-            controller: codeController,
-            keyboardType: TextInputType.number,
-            borderColor: kbackGroundColor,
-          ),
-          const SizedBox(height: 24),
-          Row(
-            children: [
-              Expanded(
-                child: CustomButton(
-                  title: Text(
-                    "Verify Code",
-                    style: AppStyles.bold16.copyWith(color: Colors.white),
-                  ),
-                  onPressed: () {
-                    if (codeController.text.isNotEmpty) {
-                      context
-                          .read<ConfirmationCodeCubit>()
-                          .confirmCodeResetPassword(
-                              code: codeController.text,
-                              email: emailController.text);
-                    }
-                  },
+        const SizedBox(height: 16),
+        CustomTextField(
+          hint: "Code",
+          hintColor: kbackGroundColor.withValues(alpha: 0.5),
+          controller: codeController,
+          keyboardType: TextInputType.number,
+          borderColor: kbackGroundColor,
+        ),
+        const SizedBox(height: 24),
+        Row(
+          children: [
+            Expanded(
+              child: CustomButton(
+                title: Text(
+                  "Verify Code",
+                  style: AppStyles.bold16.copyWith(color: Colors.white),
                 ),
+                onPressed: () {
+                  if (codeController.text.isNotEmpty) {
+                    context.read<ResetPasswordCubit>().verifyPasswordRest(
+                          email: emailController.text,
+                          resetCode: codeController.text,
+                        );
+                  }
+                },
               ),
-            ],
-          ),
-        ],
-      ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -210,11 +205,17 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text(
+          "Enter your new password",
+          style: AppStyles.regular16.copyWith(color: Colors.black),
+        ),
+        const SizedBox(height: 16),
         CustomTextField(
-          hint: "Enter new password",
+          hint: "New password",
           controller: newPasswordController,
           hintColor: kbackGroundColor.withValues(alpha: 0.5),
           obscureText: true,
+          borderColor: kbackGroundColor,
         ),
         const SizedBox(height: 16),
         CustomTextField(
@@ -236,24 +237,32 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                 onPressed: () {
                   if (newPasswordController.text.isEmpty ||
                       confirmPasswordController.text.isEmpty) {
-                    ToastService.showCustomToast(
-                      message: "Please fill all fields",
+                    Fluttertoast.showToast(
+                      msg: "Please fill all fields",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
                     );
                     return;
                   }
 
                   if (newPasswordController.text !=
                       confirmPasswordController.text) {
-                    ToastService.showCustomToast(
-                      message: "Passwords do not match",
+                    Fluttertoast.showToast(
+                      msg: "Passwords do not match",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
                     );
                     return;
                   }
 
                   context.read<ResetPasswordCubit>().resetPassword(
-                        code: codeController.text,
-                        newPassword: newPasswordController.text,
                         email: emailController.text,
+                        newPassword: newPasswordController.text,
+                        resetCode: codeController.text,
                       );
                 },
               ),

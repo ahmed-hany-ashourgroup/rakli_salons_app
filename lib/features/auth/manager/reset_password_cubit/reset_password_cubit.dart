@@ -15,7 +15,20 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> {
     try {
       await _apiService.post('business/request-password-reset', data: {
         'email': email,
-        'method': 'email',
+      });
+      emit(ResetPasswordSuccess());
+    } catch (e) {
+      emit(ResetPasswordFailed(errMessage: e.toString()));
+    }
+  }
+
+  Future<void> verifyPasswordRest(
+      {required String email, required String resetCode}) async {
+    emit(ResetPasswordLoading());
+    try {
+      await _apiService.post('business/verify-reset-code', data: {
+        'email': email,
+        'reset_code': resetCode,
       });
       emit(ResetPasswordSuccess());
     } catch (e) {
@@ -24,15 +37,15 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> {
   }
 
   Future<void> resetPassword(
-      {required String code,
-      required String newPassword,
-      required String email}) async {
+      {required String newPassword,
+      required String email,
+      required String resetCode}) async {
     try {
       emit(ResetPasswordLoading());
-      final response = await _apiService.post('auth/reset-password', data: {
+      final response = await _apiService.post('business/reset-password', data: {
         "email": email,
-        "reset_code": code,
-        'new_password': newPassword
+        'password': newPassword,
+        'reset_code': resetCode
       });
       emit(ResetPasswordSuccess());
       Logger.info(response.toString());

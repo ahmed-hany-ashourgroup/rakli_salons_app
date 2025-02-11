@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rakli_salons_app/core/customs/custom_textfield.dart';
 import 'package:rakli_salons_app/core/theme/theme_constants.dart';
@@ -10,7 +12,6 @@ import 'package:rakli_salons_app/features/auth/manager/reset_password_cubit/rese
 import 'package:rakli_salons_app/features/auth/manager/update_profile_cubit/update_profile_cubit.dart';
 import 'package:rakli_salons_app/features/auth/manager/user_cubit/user_cubit.dart';
 import 'package:rakli_salons_app/features/home/manager/get_orders_cubit/get_orders_cubit.dart';
-import 'package:rakli_salons_app/features/home/views/profile_view.dart';
 
 class ProfileTabBar extends StatelessWidget {
   const ProfileTabBar({super.key});
@@ -30,9 +31,6 @@ class ProfileTabBar extends StatelessWidget {
   }
 }
 
-// ------------------------------
-// Profile Tab
-// ------------------------------
 class ProfileTab extends StatelessWidget {
   const ProfileTab({super.key});
 
@@ -110,9 +108,6 @@ class LocationInfo extends StatelessWidget {
   }
 }
 
-// ------------------------------
-// Account Tab
-// ------------------------------
 class AccountTab extends StatelessWidget {
   const AccountTab({super.key});
 
@@ -209,15 +204,17 @@ class ChangePasswordForm extends StatefulWidget {
 }
 
 class _ChangePasswordFormState extends State<ChangePasswordForm> {
-  final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final _newPasswordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  final _codeController = TextEditingController();
+  int step = 1;
 
   @override
   void dispose() {
     _newPasswordController.dispose();
     _confirmPasswordController.dispose();
+    _codeController.dispose();
     super.dispose();
   }
 
@@ -228,13 +225,41 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
       child: BlocConsumer<ResetPasswordCubit, ResetPasswordState>(
         listener: (context, state) {
           if (state is ResetPasswordSuccess) {
-            Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Password changed successfully')),
-            );
+            if (step == 1) {
+              Fluttertoast.showToast(
+                msg: 'Reset code sent to your email',
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                backgroundColor: Colors.green,
+                textColor: Colors.white,
+              );
+              setState(() => step = 2);
+            } else if (step == 2) {
+              Fluttertoast.showToast(
+                msg: 'Code verified successfully',
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                backgroundColor: Colors.green,
+                textColor: Colors.white,
+              );
+              setState(() => step = 3);
+            } else if (step == 3) {
+              Fluttertoast.showToast(
+                msg: 'Password changed successfully',
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                backgroundColor: Colors.green,
+                textColor: Colors.white,
+              );
+              Navigator.pop(context);
+            }
           } else if (state is ResetPasswordFailed) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.errMessage)),
+            Fluttertoast.showToast(
+              msg: state.errMessage,
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
             );
           }
         },
@@ -248,37 +273,68 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    'Change Password',
+                    step == 1
+                        ? 'Request Password Change'
+                        : step == 2
+                            ? 'Verify Code'
+                            : 'Change Password',
                     style: AppStyles.bold20.copyWith(color: kPrimaryColor),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 24),
-                  CustomTextField(
-                    hint: 'New Password',
-                    controller: _newPasswordController,
-                    obscureText: true,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter new password';
-                      }
-                      if (value.length < 6) {
-                        return 'Password must be at least 6 characters';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  CustomTextField(
-                    hint: 'Confirm Password',
-                    controller: _confirmPasswordController,
-                    obscureText: true,
-                    validator: (value) {
-                      if (value != _newPasswordController.text) {
-                        return 'Passwords do not match';
-                      }
-                      return null;
-                    },
-                  ),
+                  if (step == 1)
+                    Text(
+                      "We'll send a verification code to your email",
+                      style: AppStyles.regular14.copyWith(color: Colors.grey),
+                      textAlign: TextAlign.center,
+                    ),
+                  if (step == 2) ...[
+                    Text(
+                      "Enter the verification code sent to your email",
+                      style: AppStyles.regular14.copyWith(color: Colors.grey),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 16),
+                    CustomTextField(
+                      hint: "Verification Code",
+                      controller: _codeController,
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value?.isEmpty ?? true) {
+                          return 'Please enter the verification code';
+                        }
+                        return null;
+                      },
+                    ),
+                  ],
+                  if (step == 3) ...[
+                    CustomTextField(
+                      hint: 'New Password',
+                      controller: _newPasswordController,
+                      obscureText: true,
+                      validator: (value) {
+                        if (value?.isEmpty ?? true) {
+                          return 'Please enter new password';
+                        }
+                        if (value!.length < 8) {
+                          return 'Password must be at least 8 characters';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    CustomTextField(
+                      hint: 'Confirm Password',
+                      controller: _confirmPasswordController,
+                      obscureText: true,
+                      validator: (value) {
+                        if (value != _newPasswordController.text) {
+                          return 'Passwords do not match';
+                        }
+                        return null;
+                      },
+                    ),
+                  ],
                   const SizedBox(height: 24),
                   Row(
                     children: [
@@ -306,16 +362,24 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
                               ? null
                               : () {
                                   if (_formKey.currentState!.validate()) {
-                                    context
-                                        .read<ResetPasswordCubit>()
-                                        .resetPassword(
-                                          email:
-                                              SalonsUserCubit.user.email ?? '',
-                                          code:
-                                              '', // This will be handled by the API
-                                          newPassword:
-                                              _newPasswordController.text,
-                                        );
+                                    final cubit =
+                                        context.read<ResetPasswordCubit>();
+                                    if (step == 1) {
+                                      cubit.requestResetPassword(
+                                          SalonsUserCubit.user.email ?? '');
+                                    } else if (step == 2) {
+                                      cubit.verifyPasswordRest(
+                                        email: SalonsUserCubit.user.email ?? '',
+                                        resetCode: _codeController.text,
+                                      );
+                                    } else if (step == 3) {
+                                      cubit.resetPassword(
+                                        email: SalonsUserCubit.user.email ?? '',
+                                        newPassword:
+                                            _newPasswordController.text,
+                                        resetCode: _codeController.text,
+                                      );
+                                    }
                                   }
                                 },
                           style: ElevatedButton.styleFrom(
@@ -336,7 +400,11 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
                                   ),
                                 )
                               : Text(
-                                  'Change Password',
+                                  step == 1
+                                      ? 'Send Code'
+                                      : step == 2
+                                          ? 'Verify'
+                                          : 'Change Password',
                                   style: AppStyles.medium14
                                       .copyWith(color: Colors.white),
                                 ),
@@ -392,12 +460,20 @@ class _EditProfileFormState extends State<EditProfileForm> {
         listener: (context, state) {
           if (state is UpdateProfileSuccess) {
             Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Profile updated successfully')),
+            Fluttertoast.showToast(
+              msg: 'Profile updated successfully',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
             );
           } else if (state is UpdateProfileFailed) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.errMessage)),
+            Fluttertoast.showToast(
+              msg: state.errMessage,
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
             );
           }
         },
@@ -523,6 +599,51 @@ class _EditProfileFormState extends State<EditProfileForm> {
           );
         },
       ),
+    );
+  }
+}
+
+class CustomProfileTile extends StatelessWidget {
+  final String iconPath;
+  final String title;
+  final String? subtitle;
+  final VoidCallback? onTap;
+  final Color iconColor;
+
+  const CustomProfileTile({
+    super.key,
+    required this.iconPath,
+    required this.title,
+    this.subtitle,
+    this.onTap,
+    this.iconColor = Colors.white,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ListTile(
+          leading: Container(
+            height: 40,
+            width: 40,
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: kPrimaryColor,
+            ),
+            child: SvgPicture.asset(
+              iconPath,
+              colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+            ),
+          ),
+          title: Text(title),
+          subtitle: subtitle != null ? Text(subtitle!) : null,
+          trailing: const Icon(Icons.arrow_forward_ios),
+          onTap: onTap,
+        ),
+        const Divider(),
+      ],
     );
   }
 }

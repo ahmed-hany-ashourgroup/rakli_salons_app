@@ -247,8 +247,6 @@ class _AppointmentItemState extends State<AppointmentItem> {
         return Colors.blue;
       case AppointmentStatus.rejected:
         return Colors.red;
-      default:
-        return Colors.grey;
     }
   }
 }

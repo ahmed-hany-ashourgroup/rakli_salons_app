@@ -24,7 +24,7 @@ class CartItemModel {
       isCollection: json['is_collection'] as bool?,
       quantity: json['quantity'] as int?,
       size: json['size'] as String?,
-      price: json['price'] as String ?? '',
+      price: json['price'] as String,
       title: json['title'] as String?,
       image: json['image'] as String?,
     );
